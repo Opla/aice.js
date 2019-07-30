@@ -33,11 +33,9 @@ class LazzyUnorderComparator extends Comparator {
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
   compare(linkedListI, linkedListU) {
-    let result = { context: [], match: false, confidence: 1.0 };
+    let result = { context: [], match: true, confidence: 1.0 };
 
     // Unorder Expressioned equality check
-    result.match = true;
-
     result.iteratorGeneratorI = linkedListI.values();
     result.iteratorGeneratorU = linkedListU.values();
     result.iteratorI = result.iteratorGeneratorI.next();
