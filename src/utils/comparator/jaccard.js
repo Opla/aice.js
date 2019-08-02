@@ -29,7 +29,7 @@ const jaccardSimilarity = (a, b) => {
  */
 module.exports = (a, b) => {
   const A = [...a.values()].map(e => (e.expression && e.expression.name) || e.text);
-  const B = [...b.values()].map(e => (e.ner && (e.ner.name || e.ner.row)) || e.text);
+  const B = [...b.values()].map(e => (e.ner && (e.ner.row || e.ner.name)) || e.text);
 
   const result = { score: jaccardSimilarity(A, B) };
   result.distance = 1 - result.score;
