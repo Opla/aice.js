@@ -82,13 +82,14 @@ class AICE {
    * @param {String} lang Language of the input.
    * @param {String} intentid Intent name/id.
    * @param {String} input Text of the input includes Input NLX syntax.
+   * @param {String} topic The topic, is used to attach a input to a group that only can be reach if in that topic.
    */
-  addInput(lang, intentid, input) {
+  addInput(lang, intentid, input, topic = '*') {
     if (!lang || !input || !intentid) {
       throw new Error('AICE addInput - Has some missing mandatory parameters');
     }
     const tokenizedInput = this.InputExpressionTokenizer.tokenize(input);
-    const document = { lang, input, tokenizedInput, intentid };
+    const document = { lang, input, tokenizedInput, intentid, topic };
 
     if (this.inputs.filter(i => i.lang === lang && i.input === input && i.intentid === intentid).length === 0) {
       this.inputs.push(document);
