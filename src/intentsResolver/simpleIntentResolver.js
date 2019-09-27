@@ -15,15 +15,15 @@ class SimpleIntentResolver extends IntentResolver {
     this.comparator = comparator;
   }
 
-  process(lang, sentence) {
+  process(lang, sentence, topic) {
     // Preprocess filter lang
-    const inputs = super.process(lang);
+    const inputs = super.process(lang, topic);
 
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
       // Case - Fallback (lower score) // NOT SO GOOD even with threshold + infitesimal
       if (input.input === '{{*}}' || input.input === '{{^}}') {
-        comparatorResult.confidence = 0.75;
+        comparatorResult.confidence = this.settings.threshold + 0.01;
       }
       return {
         intentid: input.intentid,
@@ -32,7 +32,6 @@ class SimpleIntentResolver extends IntentResolver {
         context: comparatorResult.context,
       };
     });
-    result.sort((d1, d2) => parseFloat(d2.score) - parseFloat(d1.score));
     return result;
   }
 }

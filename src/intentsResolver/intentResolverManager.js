@@ -10,7 +10,7 @@ const { Utils } = require('../utils');
 
 class IntentResolverManager {
   constructor({ settings }) {
-    this.settings = settings || {};
+    this.settings = { threshold: 0.75, ...settings };
     this.intentResolvers = [];
     if (this.settings.intentResolvers && this.settings.intentResolvers.length > 0) {
       this.intentResolvers = this.settings.intentResolvers;
@@ -31,8 +31,8 @@ class IntentResolverManager {
    * Process sentence througth all IntentsResolvers
    * @returns {Intents}
    */
-  process(lang, sentence) {
-    const res = Utils.flatten(this.intentResolvers.map(ir => ir.process(lang, sentence))).sort(
+  process(lang, sentence, topic) {
+    const res = Utils.flatten(this.intentResolvers.map(ir => ir.process(lang, sentence, topic))).sort(
       (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
     );
     return res;
@@ -42,10 +42,20 @@ class IntentResolverManager {
    * Process utterance througth all IntentsResolvers and return best scores
    * @returns {Intents}
    */
-  processBest(lang, utterance) {
-    const res = Utils.flatten(this.intentResolvers.map(ir => ir.processBest(lang, utterance))).sort(
+  processBest(lang, utterance, topic) {
+    let res;
+    // Try to match current topic (domain)
+    res = Utils.flatten(this.intentResolvers.map(ir => ir.processBest(lang, utterance, topic))).sort(
       (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
     );
+
+    // It wasn't the main one and has no result
+    if (res[0] && res[0].score < this.settings.threshold && topic !== '*') {
+      res = Utils.flatten(this.intentResolvers.map(ir => ir.processBest(lang, utterance, '*'))).sort(
+        (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
+      );
+    }
+
     return res;
   }
 }

@@ -17,8 +17,8 @@ const { NERManager, SystemEntities } = require('../streamTransformers');
 const LANG = 'fr';
 
 class AICE {
-  constructor(settings) {
-    this.settings = settings || {};
+  constructor(settings = {}) {
+    this.settings = settings;
     this.inputs = [];
     this.outputs = [];
     // StreamsTransformers
@@ -160,7 +160,8 @@ class AICE {
     const tokenizedUtterance = this.NERTokenizer.tokenize(lang, utterance);
 
     // Intents Resolvers
-    const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance);
+    const { topic = '*' } = context;
+    const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance, topic);
     context = { ...context, ...((result && result[0]) || {}).context };
 
     // Output Rendering
