@@ -50,6 +50,39 @@ describe('IntentResolverManager', () => {
     expect(result[1].score).to.equal(0);
   });
 
+  it('Should process all sub-intentResolver with filter using LANG & TOPIC', () => {
+    const resolverManager = new IntentResolverManager({});
+    resolverManager.train([
+      { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
+      {
+        lang: 'fr',
+        topic: 'anOtherDomain',
+        intentid: 2,
+        tokenizedInput: tokenizerInput.tokenize('Hello'),
+        input: 'Hello',
+      },
+      { lang: 'fr', topic: '*', intentid: 3, tokenizedInput: tokenizerInput.tokenize('Bye'), input: 'Bye' },
+    ]);
+
+    // First test topic is *
+    let result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Hello'), '*');
+    // Intent 'Hello' (topic = *) -> match
+    expect(result[0].intentid).to.equal(1);
+    expect(result[0].score).to.equal(1);
+
+    // Seconde test topic is 'anOtherDomain'
+    result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Hello'), 'anOtherDomain');
+    // Intent 'Hello' (topic = anOtherDomain) -> match
+    expect(result[0].intentid).to.equal(2);
+    expect(result[0].score).to.equal(1);
+
+    // Third test topic is 'anOtherDomain' but match main domain (*)
+    result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Bye'), 'anOtherDomain');
+    // Intent 'Hello' (topic = *) -> match
+    expect(result[0].intentid).to.equal(3);
+    expect(result[0].score).to.equal(1);
+  });
+
   it('Should custom intentResolvers using settings', () => {
     const resolverManager = new IntentResolverManager({
       settings: { intentResolvers: [new SimpleIntentResolver({})] },

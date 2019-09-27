@@ -26,16 +26,16 @@ class IntentResolver {
    * Base process function - Need to be redefine in sub-class
    * @returns {Inputs} Inputs filtered by lang
    */
-  process(lang) {
-    return this.inputs.filter(i => i.lang === lang);
+  process(lang, topic) {
+    return this.inputs.filter(i => i.lang === lang && i.topic === topic);
   }
 
   /**
    * ProcessBest Intent
    * @returns {Intent} Intent with the best score
    */
-  processBest(lang, sentence) {
-    return this.process(lang, sentence)[0];
+  processBest(lang, sentence, topic) {
+    return this.process(lang, sentence, topic).sort((d1, d2) => parseFloat(d2.score) - parseFloat(d1.score))[0];
   }
 }
 
