@@ -15,9 +15,9 @@ class SimpleIntentResolver extends IntentResolver {
     this.comparator = comparator;
   }
 
-  process(lang, sentence, topic) {
+  process(lang, sentence, context) {
     // Preprocess filter lang
-    const inputs = super.process(lang, topic);
+    const inputs = super.process(lang, context);
 
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
@@ -28,6 +28,7 @@ class SimpleIntentResolver extends IntentResolver {
       return {
         intentid: input.intentid,
         input: input.input,
+        previous: input.previous ? input.previous : [],
         score: comparatorResult.match ? comparatorResult.confidence : 0,
         context: comparatorResult.context,
       };

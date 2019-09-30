@@ -25,9 +25,9 @@ describe('IntentResolver', () => {
 
   it('Should process with filter using LANG', () => {
     const resolver = new IntentResolver({ name: 'test-resolver' });
-    resolver.train([{ lang: 'fr', id: 1 }, { lang: 'en', id: 2 }]);
+    resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
 
-    const result = resolver.process('fr');
+    const result = resolver.process('fr', {});
     expect(result.length).to.equal(1);
     expect(result[0].id).to.equal(1);
   });
