@@ -13,7 +13,6 @@ const { NERTokenizer } = require('../streamTransformers/tokenizer');
 
 const { NERManager, SystemEntities } = require('../streamTransformers');
 
-// TODO Remove this for the v0.2.0
 const LANG = 'fr';
 
 class AICE {
