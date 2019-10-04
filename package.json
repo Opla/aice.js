@@ -1,6 +1,6 @@
 {
   "name": "aice.js",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "main": "src/index.js",
   "license": "MIT",
   "description": "Artificial Intelligence Conversational Engine",
