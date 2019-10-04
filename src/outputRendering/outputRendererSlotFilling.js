@@ -76,9 +76,9 @@ class OutputRendererSlotFilling {
         };
       }
 
+      const res = { intentid: context.slotfilling.intent.intentid, score: 1.0, context };
       // eslint-disable-next-line no-param-reassign
       context.slotfilling = null;
-      const res = { intentid: context.slotfilling.intent.intentid, score: 0.95, context };
       return res;
     }
     return undefined;
