@@ -56,6 +56,12 @@ class IntentResolverManager {
       res = Utils.flatten(
         this.intentResolvers.map(ir => ir.processBest(lang, utterance, { ...context, topic: '*' })),
       ).sort((d1, d2) => parseFloat(d2.score) - parseFloat(d1.score));
+
+      // Assign new topic
+      res.forEach(r => {
+        // eslint-disable-next-line no-param-reassign
+        r.context.topic = '*';
+      });
     }
     return res;
   }

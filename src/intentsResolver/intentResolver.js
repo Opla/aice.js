@@ -42,7 +42,6 @@ class IntentResolver {
 
     // Previous handling
     const { previous } = context;
-
     const r = res.map(i => ({
       intentid: i.intentid,
       input: i.input,

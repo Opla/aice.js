@@ -81,6 +81,8 @@ describe('IntentResolverManager', () => {
     // Intent 'Hello' (topic = *) -> match
     expect(result[0].intentid).to.equal(3);
     expect(result[0].score).to.equal(1);
+    // Topic change in this case
+    expect(result[0].context.topic).to.equal('*');
   });
 
   it('Should process with previous (input intent condition)', () => {
