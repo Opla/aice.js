@@ -42,12 +42,6 @@ class OutputRendererSlotFilling {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  clearSlotFilling(context) {
-    // eslint-disable-next-line no-param-reassign
-    context.slotfilling = null;
-  }
-
   async process(intent, entities, context) {
     if (this.wasInSlot(context)) {
       entities.forEach(e => {
@@ -60,7 +54,7 @@ class OutputRendererSlotFilling {
     } else if (this.hasSlots(intent.intentid)) {
       this.setSlotFillingIntent(intent, context, entities);
     } else {
-      return false;
+      return undefined;
     }
     if (context.slotfilling && context.slotfilling.intent.intentid) {
       const unsatisfiedSlots = this.slots[context.slotfilling.intent.intentid]
@@ -74,17 +68,20 @@ class OutputRendererSlotFilling {
 
       if (unsatisfiedSlots && unsatisfiedSlots.length > 0) {
         return {
-          answer: unsatisfiedSlots[0].answer,
+          intentid: context.slotfilling.intent.intentid,
+          renderResponse: unsatisfiedSlots[0].answer,
           score: 1,
+          context,
           entity: unsatisfiedSlots[0].entity.name,
         };
       }
 
-      const res = { intentid: context.slotfilling.intent.intentid, score: 0.95 };
-      this.clearSlotFilling(context);
+      // eslint-disable-next-line no-param-reassign
+      context.slotfilling = null;
+      const res = { intentid: context.slotfilling.intent.intentid, score: 0.95, context };
       return res;
     }
-    return false;
+    return undefined;
   }
 }
 
