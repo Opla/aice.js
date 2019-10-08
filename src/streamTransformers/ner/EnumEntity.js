@@ -39,7 +39,11 @@ class EnumEntity extends NamedEntity {
     enumeration.forEach(enume => {
       enume.values.forEach(e => {
         const le = e.toLowerCase();
-        const located = utterance.toLowerCase().indexOf(le);
+        const located = utterance
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .indexOf(le.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
         if (located >= 0) {
           const entity = new Entity({
             match: utterance.slice(located, located + le.length),

@@ -36,6 +36,7 @@ describe('EnumEntity', () => {
       { key: 'S', values: ['small'] },
       { key: 'M', values: ['medium'] },
       { key: 'L', values: ['large', 'grande'] },
+      { key: 'E', values: ['énorme'] },
     ],
   });
 
@@ -51,9 +52,14 @@ describe('EnumEntity', () => {
     expect(result[1]).to.deep.include({ match: 'grande' });
   });
   it('Should find nothing if no enum element is in the utterance', () => {
-    const utterance = 'Je veux un tee-shirt de taille moyenne et un en taille énorme';
+    const utterance = 'Je veux un tee-shirt de taille moyenne et un en taille giga';
     const result = enumEntity.extract(LANG, utterance);
     expect(result).to.deep.equal([]);
+  });
+  it('Should find match with accents in the utterance', () => {
+    const utterance = 'Je veux un tee-shirt de taille moyenne et un en taille enorme';
+    const result = enumEntity.extract(LANG, utterance);
+    expect(result[0]).to.deep.include({ resolution: 'énorme' });
   });
 });
 
