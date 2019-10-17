@@ -1,10 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { NERTokenizer, NERManager, SystemEntities } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { NERTokenizer } = require('../../src/streamTransformers');
-
-const { NERManager, SystemEntities } = require('../../src/streamTransformers');
 
 const { EmailRegExpEntity, UrlRegExpEntity } = SystemEntities;
 

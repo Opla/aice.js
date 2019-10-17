@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { Utils } from '../../src/utils';
 
 const { expect } = chai;
-
-const { Utils } = require('../../src/utils');
 
 describe('Utils', () => {
   it('Utils - flatten', () => {

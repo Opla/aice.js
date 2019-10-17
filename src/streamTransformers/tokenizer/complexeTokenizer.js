@@ -7,7 +7,7 @@
  * Authors: Morgan Perre
  */
 
-const { DoubleLinkedList } = require('../models/');
+import { DoubleLinkedList } from '../models';
 
 const isSeparator = charToken =>
   charToken === '*' ||
@@ -17,7 +17,7 @@ const isSeparator = charToken =>
   (charToken > 'z' && charToken.charCodeAt(0) < 127) ||
   charToken < '!';
 
-class ComplexeTokenizer {
+export default class ComplexeTokenizer {
   static tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
     const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
     const appendToken = acc => {
@@ -40,5 +40,3 @@ class ComplexeTokenizer {
     return list;
   }
 }
-
-module.exports = ComplexeTokenizer;

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = (a, b) => {
+export default (a, b) => {
   if (!a) return 0;
   if (!b) return a.length;
 

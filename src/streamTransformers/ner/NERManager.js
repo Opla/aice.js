@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class NERManager {
+export default class NERManager {
   constructor(settings = {}) {
     this.language = settings.language || 'fr';
     this.entities = [];
@@ -61,5 +61,3 @@ class NERManager {
     return result;
   }
 }
-
-module.exports = NERManager;

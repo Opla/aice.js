@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const charMap = require('./charMap');
+import charMap from './charMap';
 
 /* eslint-disable no-bitwise */
 export const charNormalizer = (char, toLowerCase = false) => {

@@ -5,10 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Sentence = require('./sentence');
-const DoubleLinkedList = require('./doubleLinkedList');
+import Sentence from './sentence';
+import DoubleLinkedList from './doubleLinkedList';
 
-module.exports = {
-  DoubleLinkedList,
-  Sentence,
-};
+export { DoubleLinkedList, Sentence };

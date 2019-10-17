@@ -10,7 +10,7 @@
  * All NamedEntity extracted should extends this class
  */
 
-class Entity {
+export default class Entity {
   constructor({ match, row, confidence, type, name, resolution, start, end }) {
     this.match = match;
     this.row = row;
@@ -22,5 +22,3 @@ class Entity {
     this.end = end;
   }
 }
-
-module.exports = Entity;

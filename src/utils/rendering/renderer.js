@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ValueEvaluator = require('../evaluator/valueEvaluator');
+import ValueEvaluator from '../evaluator/valueEvaluator';
 
-const ContextMutator = require('../contextMutator');
+import ContextMutator from '../contextMutator';
 
-class Renderer {
+export default class Renderer {
   static isRenderable(tokenizedOutput, context) {
     let renderable = true;
     for (const {
@@ -71,5 +71,3 @@ class Renderer {
     return outputMesssage;
   }
 }
-
-module.exports = Renderer;

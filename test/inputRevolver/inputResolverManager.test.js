@@ -1,12 +1,8 @@
-const chai = require('chai');
+import chai from 'chai';
+import { IntentResolverManager, SimpleIntentResolver } from '../../src/intentsResolver';
+import { InputExpressionTokenizer, ComplexeTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { IntentResolverManager, SimpleIntentResolver } = require('../../src/intentsResolver');
-
-const { InputExpressionTokenizer } = require('../../src/streamTransformers');
-
-const { ComplexeTokenizer } = require('../../src/streamTransformers');
 
 const tokenizerInput = new InputExpressionTokenizer();
 const tokenizerUtterance = ComplexeTokenizer;

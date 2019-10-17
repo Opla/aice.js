@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const SimpleIntentResolver = require('./simpleIntentResolver');
-const { Utils } = require('../utils');
+import SimpleIntentResolver from './simpleIntentResolver';
+import { Utils } from '../utils';
 
-class IntentResolverManager {
+export default class IntentResolverManager {
   constructor({ settings }) {
     this.settings = { threshold: 0.75, ...settings };
     this.intentResolvers = [];
@@ -66,5 +66,3 @@ class IntentResolverManager {
     return res;
   }
 }
-
-module.exports = IntentResolverManager;

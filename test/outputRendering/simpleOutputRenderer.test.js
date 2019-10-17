@@ -1,12 +1,9 @@
-const chai = require('chai');
+import chai from 'chai';
+import fetch from 'node-fetch';
+import { SimpleOutputRenderer } from '../../src/outputRendering';
+import { OutputExpressionTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const fetch = require('node-fetch');
-
-const { SimpleOutputRenderer } = require('../../src/outputRendering');
-
-const { OutputExpressionTokenizer } = require('../../src/streamTransformers');
 
 describe('SimpleOutputRenderer', () => {
   const tokenizerOutput = new OutputExpressionTokenizer();

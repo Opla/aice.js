@@ -6,16 +6,15 @@
  */
 
 /* eslint-disable no-param-reassign */
-const { IntentResolverManager } = require('../intentsResolver');
-const { OutputRenderingManager } = require('../outputRendering');
-const { InputExpressionTokenizer, OutputExpressionTokenizer } = require('../streamTransformers/expression');
-const { NERTokenizer } = require('../streamTransformers/tokenizer');
-
-const { NERManager, SystemEntities } = require('../streamTransformers');
+import { IntentResolverManager } from '../intentsResolver';
+import { OutputRenderingManager } from '../outputRendering';
+import { InputExpressionTokenizer, OutputExpressionTokenizer } from '../streamTransformers/expression';
+import { NERTokenizer } from '../streamTransformers/tokenizer';
+import { NERManager, SystemEntities } from '../streamTransformers';
 
 const LANG = 'fr';
 
-class AICE {
+export default class AICE {
   constructor(settings = {}) {
     this.settings = settings;
     this.inputs = [];
@@ -173,5 +172,3 @@ class AICE {
     };
   }
 }
-
-module.exports = AICE;

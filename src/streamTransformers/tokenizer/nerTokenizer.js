@@ -7,7 +7,7 @@
  * Authors: Morgan Perre
  */
 
-const { DoubleLinkedList } = require('../models/');
+import { DoubleLinkedList } from '../models';
 
 const isSeparator = charToken =>
   charToken === '*' ||
@@ -17,7 +17,7 @@ const isSeparator = charToken =>
   (charToken > 'z' && charToken.charCodeAt(0) < 127) ||
   charToken < '!';
 
-class NERTokenizer {
+export default class NERTokenizer {
   constructor(namedEntityRecognizer) {
     if (!namedEntityRecognizer) {
       throw new Error('Invalid NERTokenizer constructor - NamedEntityRecognizer is required');
@@ -64,5 +64,3 @@ class NERTokenizer {
     return list;
   }
 }
-
-module.exports = NERTokenizer;

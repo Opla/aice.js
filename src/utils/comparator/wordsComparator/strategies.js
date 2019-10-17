@@ -1,5 +1,5 @@
-const Levenshtein = require('./levenshtein');
-const Damerau = require('./damerau');
+import Levenshtein from './levenshtein';
+import Damerau from './damerau';
 
 class StrategyWordComparator {
   constructor(name) {
@@ -60,4 +60,4 @@ class DamerauLevenshteinStrategy extends StrategyWordComparator {
   }
 }
 
-module.exports = { StrategyWordComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy };
+export { StrategyWordComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy };

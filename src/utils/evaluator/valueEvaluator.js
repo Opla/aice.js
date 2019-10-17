@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class ValueEvaluator {
+export default class ValueEvaluator {
   /**
    * Evaluate a value that can be a litteral or a variable that refer to context variable
    * @param {Object} value
@@ -27,5 +27,3 @@ class ValueEvaluator {
     return !variable || variable === '' || context[variable];
   }
 }
-
-module.exports = ValueEvaluator;

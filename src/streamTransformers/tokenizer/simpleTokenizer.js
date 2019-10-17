@@ -7,9 +7,9 @@
  * Authors: Morgan Perre
  */
 
-const { DoubleLinkedList } = require('../models/');
+import { DoubleLinkedList } from '../models';
 
-class SimpleTokenizer {
+export default class SimpleTokenizer {
   static tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
     const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
     normalized.split(/[^a-z0-9äâàéèëêïîöôùüûœç]+/i).forEach(token => {
@@ -21,5 +21,3 @@ class SimpleTokenizer {
     return list;
   }
 }
-
-module.exports = SimpleTokenizer;

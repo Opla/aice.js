@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { ConditionEvaluator, ValueEvaluator } from '../../src/utils';
 
 const { expect } = chai;
-
-const { ConditionEvaluator, ValueEvaluator } = require('../../src/utils');
 
 // TEST ConditionEvaluator
 describe('ConditionEvaluator', () => {

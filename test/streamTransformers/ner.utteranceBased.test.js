@@ -1,9 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { NERManager, EnumEntity, SystemEntities } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { NERManager, EnumEntity, SystemEntities } = require('../../src/streamTransformers');
-
 const { EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRegExpEntity } = SystemEntities;
 
 const LANG = 'fr';

@@ -1,10 +1,8 @@
-const chai = require('chai');
+import chai from 'chai';
+import { LazzyUnorderComparator, UnorderComparator } from '../../src/utils';
+import { InputExpressionTokenizer, NERTokenizer, NERManager, SystemEntities } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { LazzyUnorderComparator, UnorderComparator } = require('../../src/utils');
-
-const { InputExpressionTokenizer, NERTokenizer, NERManager, SystemEntities } = require('../../src/streamTransformers');
 
 const tokenizerInput = new InputExpressionTokenizer();
 const ner = new NERManager();

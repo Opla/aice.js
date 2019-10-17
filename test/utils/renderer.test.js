@@ -1,10 +1,8 @@
-const chai = require('chai');
+import chai from 'chai';
+import { Renderer } from '../../src/utils';
+import { OutputExpressionTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { Renderer } = require('../../src/utils');
-
-const { OutputExpressionTokenizer } = require('../../src/streamTransformers');
 
 const tokenizerOutput = new OutputExpressionTokenizer();
 describe('Renderer - render', () => {

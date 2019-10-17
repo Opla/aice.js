@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class IntentResolver {
+export default class IntentResolver {
   constructor({ name, settings }) {
     if (!name) {
       throw new Error('Invalid IntentsResolver constructor - Missing name');
@@ -51,5 +51,3 @@ class IntentResolver {
     return r.sort((d1, d2) => parseFloat(d2.score) - parseFloat(d1.score))[0];
   }
 }
-
-module.exports = IntentResolver;

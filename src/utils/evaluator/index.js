@@ -5,10 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ValueEvaluator = require('./valueEvaluator');
-const ConditionEvaluator = require('./conditionEvaluator');
+import ValueEvaluator from './valueEvaluator';
+import ConditionEvaluator from './conditionEvaluator';
 
-module.exports = {
-  ValueEvaluator,
-  ConditionEvaluator,
-};
+export { ValueEvaluator, ConditionEvaluator };

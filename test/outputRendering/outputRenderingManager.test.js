@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { OutputRenderingManager, OutputRenderer } from '../../src/outputRendering';
 
 const { expect } = chai;
-
-const { OutputRenderingManager, OutputRenderer } = require('../../src/outputRendering');
 
 describe('OutputRenderingManager', () => {
   it('Should train all sub-outputRenderer ', () => {

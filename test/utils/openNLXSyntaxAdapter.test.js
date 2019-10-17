@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { openNLXSyntaxAdapter } from '../../src/utils';
 
 const { expect } = chai;
-
-const { openNLXSyntaxAdapter } = require('../../src/utils');
 
 const { parseAdaptOpenNLXSyntax, parseAdaptOpenNLXSyntaxV3 } = openNLXSyntaxAdapter;
 

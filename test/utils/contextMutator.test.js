@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { ContextMutator } from '../../src/utils';
 
 const { expect } = chai;
-
-const { ContextMutator } = require('../../src/utils');
 
 describe('ContextMutator', () => {
   it('Context mutation setToContext', () => {

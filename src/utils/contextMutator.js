@@ -7,7 +7,7 @@
 
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-param-reassign */
-class ContextMutator {
+export default class ContextMutator {
   /**
    * Set variable to context - re-affect context !
    */
@@ -59,5 +59,3 @@ class ContextMutator {
     }
   }
 }
-
-module.exports = ContextMutator;

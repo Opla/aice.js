@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { SimpleOutputRenderer } = require('./outputRenderer');
+import { SimpleOutputRenderer } from './outputRenderer';
 
-class OutputRenderingManager {
+export default class OutputRenderingManager {
   constructor({ settings }) {
     this.settings = settings || {};
     this.outputRenderers = [];
@@ -35,5 +35,3 @@ class OutputRenderingManager {
     return this.outputRenderers[0].process(lang, intents, context);
   }
 }
-
-module.exports = OutputRenderingManager;

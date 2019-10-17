@@ -7,6 +7,9 @@
 
 /* eslint-disable no-console */
 
+import fs from 'fs';
+import OpenNLXSyntaxAdapter from '../../src/utils/openNLXSyntaxAdapter';
+
 const bot = {
   name: 'OplaZap',
   description: 'Super bot de démonstration des fonctionnalités de la v0.3 après le sprint 1 (OplaZap)',
@@ -175,9 +178,6 @@ const bot = {
   ],
   variables: [],
 };
-
-const fs = require('fs');
-const OpenNLXSyntaxAdapter = require('../../src/utils/openNLXSyntaxAdapter');
 
 const json = JSON.stringify(OpenNLXSyntaxAdapter(bot));
 

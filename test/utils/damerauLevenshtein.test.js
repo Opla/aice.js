@@ -1,9 +1,8 @@
-const chai = require('chai');
+import chai from 'chai';
+import Damerau from '../../src/utils/comparator/wordsComparator/damerau';
+import levenshteinDistance from '../../src/utils/comparator/wordsComparator/levenshtein';
 
 const { expect } = chai;
-
-const Damerau = require('../../src/utils/comparator/wordsComparator/damerau');
-const levenshteinDistance = require('../../src/utils/comparator/wordsComparator/levenshtein');
 
 describe('Levenshtein distance', () => {
   const baseString = 'antidisestablishmentarianism';

@@ -1,10 +1,8 @@
-const chai = require('chai');
+import chai from 'chai';
+import { AICE } from '../src';
+import { SystemEntities, RegExpEntity } from '../src/streamTransformers';
 
 const { expect } = chai;
-
-const { AICE } = require('../src/');
-
-const { SystemEntities, RegExpEntity } = require('../src/streamTransformers');
 
 describe('AICE NLP', () => {
   it('Basic Use Case - All API', async () => {

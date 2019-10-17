@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { Comparator } = require('./comparator');
+import { Comparator } from './comparator';
 
-const { ExactStrategy } = require('./wordsComparator');
+import { ExactStrategy } from './wordsComparator';
 
 /**
  * @class LazzyUnorderComparator
@@ -178,4 +178,4 @@ class UnorderComparator extends Comparator {
   }
 }
 
-module.exports = { LazzyUnorderComparator, UnorderComparator };
+export { LazzyUnorderComparator, UnorderComparator };

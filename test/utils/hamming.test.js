@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import hammingDistance from '../../src/utils/comparator/wordsComparator/hamming';
 
 const { expect } = chai;
-
-const hammingDistance = require('../../src/utils/comparator/wordsComparator/hamming');
 
 describe('Hamming distance', () => {
   const baseString = 'antidisestablishmentarianism';

@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { IntentResolver } from '../../src/intentsResolver';
 
 const { expect } = chai;
-
-const { IntentResolver } = require('../../src/intentsResolver');
 
 describe('IntentResolver', () => {
   it('Should throw error if no name provided', () => {

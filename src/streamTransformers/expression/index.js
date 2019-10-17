@@ -5,12 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ExpressionParser } = require('./expressionParser');
-const { InputExpressionTokenizer } = require('./inputExpressionTokenizer');
-const { OutputExpressionTokenizer } = require('./outputExpressionTokenizer');
+import ExpressionParser from './expressionParser';
+import InputExpressionTokenizer from './inputExpressionTokenizer';
+import OutputExpressionTokenizer from './outputExpressionTokenizer';
 
-module.exports = {
-  ExpressionParser,
-  InputExpressionTokenizer,
-  OutputExpressionTokenizer,
-};
+export { ExpressionParser, InputExpressionTokenizer, OutputExpressionTokenizer };

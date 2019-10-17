@@ -5,11 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const IntentResolver = require('./intentResolver');
+import IntentResolver from './intentResolver';
+import { Comparator, DamerauLevenshteinStrategy } from '../utils';
 
-const { Comparator, DamerauLevenshteinStrategy } = require('../utils');
-
-class SimpleIntentResolver extends IntentResolver {
+export default class SimpleIntentResolver extends IntentResolver {
   constructor({ settings }, comparator = new Comparator(new DamerauLevenshteinStrategy())) {
     super({ settings, name: 'simple-intents-resolver' });
     this.comparator = comparator;
@@ -36,5 +35,3 @@ class SimpleIntentResolver extends IntentResolver {
     return result;
   }
 }
-
-module.exports = SimpleIntentResolver;

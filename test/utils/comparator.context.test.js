@@ -1,12 +1,8 @@
-const chai = require('chai');
+import chai from 'chai';
+import { Comparator } from '../../src/utils';
+import { InputExpressionTokenizer, ComplexeTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { Comparator } = require('../../src/utils');
-
-const { InputExpressionTokenizer } = require('../../src/streamTransformers');
-
-const { ComplexeTokenizer } = require('../../src/streamTransformers');
 
 const tokenizerInput = new InputExpressionTokenizer();
 const tokenizerUtterance = ComplexeTokenizer;

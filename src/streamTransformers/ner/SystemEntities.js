@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const RegExpEntity = require('./RegExpEntity');
+import RegExpEntity from './RegExpEntity';
 
 const SYSTEM_SCOPE = 'system';
 
@@ -36,12 +36,14 @@ const PhoneNumberRegExpEntity = new RegExpEntity({
   regex: /(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})/gi,
 });
 
-const getSystemEntities = () => [EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRegExpEntity];
+export default class SystemEntities {
+  static getSystemEntities() {
+    return [EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRegExpEntity];
+  }
+}
+SystemEntities.EmailRegExpEntity = EmailRegExpEntity;
+SystemEntities.UrlRegExpEntity = UrlRegExpEntity;
+SystemEntities.EmojiRegExpEntity = EmojiRegExpEntity;
+SystemEntities.PhoneNumberRegExpEntity = PhoneNumberRegExpEntity;
 
-module.exports = {
-  EmailRegExpEntity,
-  UrlRegExpEntity,
-  EmojiRegExpEntity,
-  PhoneNumberRegExpEntity,
-  getSystemEntities,
-};
+export { EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRegExpEntity };

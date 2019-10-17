@@ -57,10 +57,6 @@ npm install aice.js
 import { AICE } from 'aice.js';
 ```
 
-```js
-const { AICE } = require('aice.js');
-```
-
 **Simple use case**
 ```js
 const aice = new AICE();

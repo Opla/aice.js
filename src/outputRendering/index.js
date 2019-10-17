@@ -5,11 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const OutputRenderingManager = require('./outputRenderingManager');
-const { OutputRenderer, SimpleOutputRenderer } = require('./outputRenderer');
+import OutputRenderingManager from './outputRenderingManager';
+import { OutputRenderer, SimpleOutputRenderer } from './outputRenderer';
 
-module.exports = {
-  OutputRenderingManager,
-  OutputRenderer,
-  SimpleOutputRenderer,
-};
+export { OutputRenderingManager, OutputRenderer, SimpleOutputRenderer };

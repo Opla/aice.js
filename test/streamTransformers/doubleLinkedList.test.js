@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { DoubleLinkedList } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { DoubleLinkedList } = require('../../src/streamTransformers');
 
 describe('DoubleLinkedList', () => {
   it('Get(-1) from empty DoubleLinkedList', () => {

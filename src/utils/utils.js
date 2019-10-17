@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class Utils {
+export default class Utils {
   static flatten(array) {
     return array.reduce((x, y) => x.concat(Array.isArray(y) ? Utils.flatten(y) : y), []);
   }
@@ -19,5 +19,3 @@ class Utils {
     return array.filter((value, index) => filterMap[index]);
   }
 }
-
-module.exports = Utils;

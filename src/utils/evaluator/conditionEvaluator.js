@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ValueEvaluator = require('./valueEvaluator');
+import ValueEvaluator from './valueEvaluator';
 
-class ConditionEvaluator {
+export default class ConditionEvaluator {
   /**
    * Evaluate a condition
    * @param {Object} condition a condition
@@ -92,5 +92,3 @@ class ConditionEvaluator {
     return result;
   }
 }
-
-module.exports = ConditionEvaluator;

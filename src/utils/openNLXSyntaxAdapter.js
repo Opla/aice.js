@@ -158,4 +158,10 @@ const parseAdaptOpenNLXSyntaxV3 = oldBotDocument => {
   return document;
 };
 
-module.exports = { parseAdaptOpenNLXSyntax, parseAdaptOpenNLXSyntaxV3 };
+class openNLXSyntaxAdapter {}
+openNLXSyntaxAdapter.parseAdaptOpenNLXSyntax = parseAdaptOpenNLXSyntax;
+openNLXSyntaxAdapter.parseAdaptOpenNLXSyntaxV3 = parseAdaptOpenNLXSyntaxV3;
+
+export default openNLXSyntaxAdapter;
+
+export { parseAdaptOpenNLXSyntax, parseAdaptOpenNLXSyntaxV3 };

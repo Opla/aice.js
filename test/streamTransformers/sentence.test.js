@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { Sentence } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { Sentence } = require('../../src/streamTransformers');
 
 describe('Sentence', () => {
   it('Create a new sentence', () => {

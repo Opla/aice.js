@@ -5,12 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const SimpleIntentResolver = require('./simpleIntentResolver');
-const IntentResolverManager = require('./intentResolverManager');
-const IntentResolver = require('./intentResolver');
+import SimpleIntentResolver from './simpleIntentResolver';
+import IntentResolverManager from './intentResolverManager';
+import IntentResolver from './intentResolver';
 
-module.exports = {
-  IntentResolverManager,
-  IntentResolver,
-  SimpleIntentResolver,
-};
+export { IntentResolverManager, IntentResolver, SimpleIntentResolver };

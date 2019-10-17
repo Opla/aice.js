@@ -6,10 +6,10 @@
  */
 
 /* eslint-disable no-console */
-const readline = require('readline');
+import readline from 'readline';
+import { AICE } from '../../src';
 
 const threshold = 0.5;
-const { AICE } = require('../../src');
 
 const BOT_NAME = 'jarvich';
 const isSilent = process.argv[2] === '--silent';

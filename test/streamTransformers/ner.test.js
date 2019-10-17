@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { NamedEntity, EnumEntity, RegExpEntity } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { NamedEntity, EnumEntity, RegExpEntity } = require('../../src/streamTransformers');
 
 describe('Named/EnumEntity', () => {
   it('EnumEntity should throw err if no enumeration is passed', () => {

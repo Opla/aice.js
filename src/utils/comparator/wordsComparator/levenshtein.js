@@ -7,7 +7,7 @@
  * Authors: Morgan Perre, Jeff Ladiray
  */
 
-module.exports = (a, b) => {
+export default (a, b) => {
   if (!a) return 0;
   if (!b) return a.length;
   const m = [];

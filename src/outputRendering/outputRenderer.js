@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ConditionEvaluator, Renderer, Utils } = require('../utils');
+import { ConditionEvaluator, Renderer, Utils } from '../utils';
 
 class OutputRenderer {
   constructor({ name, settings, outputs }) {
@@ -94,4 +94,4 @@ class SimpleOutputRenderer extends OutputRenderer {
   }
 }
 
-module.exports = { SimpleOutputRenderer, OutputRenderer };
+export { SimpleOutputRenderer, OutputRenderer };

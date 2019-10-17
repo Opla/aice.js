@@ -1,8 +1,7 @@
-const chai = require('chai');
+import chai from 'chai';
+import { OutputRenderer } from '../../src/outputRendering';
 
 const { expect } = chai;
-
-const { OutputRenderer } = require('../../src/outputRendering');
 
 describe('OutputRenderer', () => {
   it('Should throw error if no name provided', () => {

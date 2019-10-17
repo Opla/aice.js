@@ -5,15 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ContextMutator = require('../contextMutator');
-const { ExactStrategy } = require('./wordsComparator/strategies');
+import ContextMutator from '../contextMutator';
+import { ExactStrategy } from './wordsComparator/strategies';
 
 const equalsText = (a, b) => a.length === b.length && a.every((t, i) => t.text === b[i].text);
 
 /**
  * @class Comparator
  */
-class Comparator {
+export default class Comparator {
   constructor(wordComparator = new ExactStrategy()) {
     this.wordComparator = wordComparator;
   }
@@ -170,4 +170,4 @@ class Comparator {
   }
 }
 
-module.exports = { Comparator };
+export { Comparator };

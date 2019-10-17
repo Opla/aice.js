@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const NamedEntity = require('./NamedEntity');
-const Entity = require('./Entity');
+import NamedEntity from './NamedEntity';
+import Entity from './Entity';
 
-class EnumEntity extends NamedEntity {
+export default class EnumEntity extends NamedEntity {
   constructor({ name, scope, enumeration, resolve }) {
     if (!enumeration || enumeration.length < 1) {
       throw new Error('Invalid Entity constructor - Missing enum');
@@ -62,5 +62,3 @@ class EnumEntity extends NamedEntity {
     return extracted;
   }
 }
-
-module.exports = EnumEntity;

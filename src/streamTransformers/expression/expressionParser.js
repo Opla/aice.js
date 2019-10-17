@@ -7,7 +7,7 @@
  * Authors: Morgan Perre, Jeff Ladiray, Arnaud Moncel
  */
 
-class ExpressionParser {
+export default class ExpressionParser {
   constructor(expressionTypes) {
     this.expressionTypes = expressionTypes;
     this.regexString = this.expressionTypes.map(b => b.regex.source).join('|');
@@ -46,5 +46,3 @@ class ExpressionParser {
     return children;
   }
 }
-
-module.exports = { ExpressionParser };

@@ -1,16 +1,14 @@
-const chai = require('chai');
-
-const { expect } = chai;
-
-const { Comparator } = require('../../src/utils');
-
-const {
+import chai from 'chai';
+import { Comparator } from '../../src/utils';
+import {
   EnumEntity,
   NERTokenizer,
   NERManager,
   SystemEntities,
   InputExpressionTokenizer,
-} = require('../../src/streamTransformers');
+} from '../../src/streamTransformers';
+
+const { expect } = chai;
 
 const LANG = 'fr';
 
