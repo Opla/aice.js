@@ -135,4 +135,22 @@ describe('AICE NLP', () => {
     const variables = aice.getAllVariables();
     expect(variables).to.eql(['anyornothing', 'name', 'email']);
   });
+
+  it('AICE - Intent reference WIP', async () => {
+    const aice = new AICE();
+    // Initialization
+    aice.addInput('fr', 'agent.presentation', 'Hello {{name=*}}');
+    aice.addOutput('fr', 'agent.presentation', 'Hello {{name}} :)');
+
+    aice.addInput('fr', 'agent.yeah', 'Yeah');
+    aice.addOutput('fr', 'agent.yeah', 'Your Welcome !');
+    aice.train();
+
+    // Tests
+    const context = {};
+    const res = await aice.evaluate('Yeah', context);
+    expect(res.score).to.equal(1.0);
+    expect(res.intent).to.equal('agent.yeah');
+    expect(res.answer).to.equal('Your Welcome !');
+  });
 });

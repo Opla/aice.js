@@ -47,19 +47,18 @@ export default class Renderer {
               name: expression.contextName,
               value: variableEvaluated,
             });
-
             outputMesssage += variableEvaluated;
           } else {
             outputMesssage += ValueEvaluator.evaluateContext(expression.contextName, context);
           }
-
           // TYPE CODE
         } else if (expression.type === 'CODE') {
           ContextMutator.setToContext(context, {
             name: expression.contextName,
             value: ValueEvaluator.evaluateValue(expression.value, context),
           });
-
+        } else if (expression.type === 'REFERENCE') {
+          throw new Error('Invalid OutputRendering Render - TODO Reference expression');
           // ERROR
         } else {
           throw new Error('Invalid OutputRendering Render - Unknown expression');
