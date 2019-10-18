@@ -6,11 +6,11 @@
  */
 
 /* eslint-disable no-param-reassign */
-import { IntentsResolverManager } from '../intentsResolver';
-import { OutputRenderingManager } from '../outputRendering';
-import { InputExpressionTokenizer, OutputExpressionTokenizer } from '../streamTransformers/expression';
-import { NamedEntityTokenizer } from '../streamTransformers/tokenizer';
-import { NERManager, SystemEntities } from '../streamTransformers';
+import { IntentsResolverManager } from './intentsResolver';
+import { OutputRenderingManager } from './outputRendering';
+import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
+import { NamedEntityTokenizer } from './streamTransformers/tokenizer';
+import { NERManager, SystemEntities } from './streamTransformers';
 
 const LANG = 'fr';
 

@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { OutputExpressionTokenizer } from '../streamTransformers/expression';
-import { Renderer } from '../utils';
+import { OutputExpressionTokenizer } from './streamTransformers/expression';
+import { Renderer } from './utils';
 
 const outputExpressionTokenizer = new OutputExpressionTokenizer();
 

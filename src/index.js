@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import AICE from './aice';
-import Tools from './aice/tools';
+import AICE from './AICE';
+import Tools from './Tools';
 
 export { AICE, Tools };
