@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import ExpressionParser from './expressionParser';
-import InputExpressionTokenizer from './inputExpressionTokenizer';
-import OutputExpressionTokenizer from './outputExpressionTokenizer';
+import ExpressionParser from './TMPExpressionParser';
+import InputExpressionTokenizer from './TMPInputExpressionTokenizer';
+import OutputExpressionTokenizer from './TMPOutputExpressionTokenizer';
 
 export { ExpressionParser, InputExpressionTokenizer, OutputExpressionTokenizer };

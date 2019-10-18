@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import ValueEvaluator from './valueEvaluator';
-import ConditionEvaluator from './conditionEvaluator';
+import ValueEvaluator from './Value';
+import ConditionEvaluator from './Condition';
 
 export { ValueEvaluator, ConditionEvaluator };

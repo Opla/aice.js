@@ -8,19 +8,19 @@
 import { Sentence, DoubleLinkedList } from './models';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from './expression';
 import { EnumEntity, NamedEntity, NERManager, RegExpEntity, SystemEntities } from './ner';
-import { ComplexeTokenizer, SimpleTokenizer, NERTokenizer } from './tokenizer';
+import { AdvancedTokenizer, BasicTokenizer, NamedEntityTokenizer } from './tokenizer';
 
 export {
-  ComplexeTokenizer,
+  AdvancedTokenizer,
   DoubleLinkedList,
   EnumEntity,
   InputExpressionTokenizer,
   OutputExpressionTokenizer,
   NamedEntity,
   NERManager,
-  NERTokenizer,
+  NamedEntityTokenizer,
   RegExpEntity,
   Sentence,
-  SimpleTokenizer,
+  BasicTokenizer,
   SystemEntities,
 };

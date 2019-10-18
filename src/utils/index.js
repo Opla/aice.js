@@ -7,25 +7,25 @@
 
 import {
   Comparator,
-  UnorderComparator,
-  LazzyUnorderComparator,
+  UnorderedComparator,
+  LazzyUnorderedComparator,
   StrategyWordComparator,
   ExactStrategy,
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
 } from './comparator';
-import Utils from './utils';
-import ContextMutator from './contextMutator';
+import Utils from './TMPUtils';
+import ContextMutator from './TMPContextMutator';
 import { ConditionEvaluator, ValueEvaluator } from './evaluator';
-import Renderer from './rendering/renderer';
+import Renderer from './rendering/TMPRenderer';
 import openNLXSyntaxAdapter from './openNLXSyntaxAdapter';
 
 export default Utils;
 
 export {
   Comparator,
-  UnorderComparator,
-  LazzyUnorderComparator,
+  UnorderedComparator,
+  LazzyUnorderedComparator,
   ContextMutator,
   ConditionEvaluator,
   StrategyWordComparator,

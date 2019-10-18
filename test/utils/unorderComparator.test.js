@@ -1,6 +1,17 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import chai from 'chai';
-import { LazzyUnorderComparator, UnorderComparator } from '../../src/utils';
-import { InputExpressionTokenizer, NERTokenizer, NERManager, SystemEntities } from '../../src/streamTransformers';
+import { LazzyUnorderedComparator, UnorderedComparator } from '../../src/utils';
+import {
+  InputExpressionTokenizer,
+  NamedEntityTokenizer,
+  NERManager,
+  SystemEntities,
+} from '../../src/streamTransformers';
 
 const { expect } = chai;
 
@@ -9,11 +20,11 @@ const ner = new NERManager();
 SystemEntities.getSystemEntities().forEach(e => {
   ner.addNamedEntity(e);
 });
-const tokenizerUtterance = new NERTokenizer(ner);
+const tokenizerUtterance = new NamedEntityTokenizer(ner);
 const LANG = 'en';
 
-describe('LazzyUnorderComparator', () => {
-  const simpleUnorderComparator = new LazzyUnorderComparator();
+describe('LazzyUnorderedComparator', () => {
+  const simpleUnorderedComparator = new LazzyUnorderedComparator();
 
   it('Should not match different sentences', () => {
     const input = 'My name is what';
@@ -22,7 +33,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
     expect(result.confidence).to.equal(0.0);
   });
@@ -34,7 +45,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -46,7 +57,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -58,7 +69,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -70,7 +81,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -82,7 +93,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -94,7 +105,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -106,7 +117,7 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(0.75); // score: 6/8
   });
@@ -118,14 +129,14 @@ describe('LazzyUnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(0.25); // score: 2/8
   });
 });
 
-describe('UnorderComparator', () => {
-  const simpleUnorderComparator = new UnorderComparator();
+describe('UnorderedComparator', () => {
+  const simpleUnorderedComparator = new UnorderedComparator();
 
   it('Should not match different sentences', () => {
     const input = 'My name is what';
@@ -134,7 +145,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
     expect(result.confidence).to.equal(0.0);
   });
@@ -146,7 +157,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -158,7 +169,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.be.closeTo(0.82, 0.01);
   });
@@ -170,7 +181,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(0.5);
   });
@@ -182,7 +193,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -194,7 +205,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.be.closeTo(0.82, 0.01);
   });
@@ -206,7 +217,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
@@ -218,7 +229,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.be.closeTo(0.71, 0.01); // score: 6/8 but entropy lower the score
   });
@@ -230,7 +241,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.be.closeTo(0.625, 0.01); // score: 5/8
   });
@@ -242,7 +253,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.be.equal(1);
   });
@@ -254,7 +265,7 @@ describe('UnorderComparator', () => {
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
-    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    const result = simpleUnorderedComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(0.25); // score: 2/8
   });

@@ -8,7 +8,7 @@
  */
 
 import { DoubleLinkedList } from '../models';
-import ExpressionParser from './expressionParser';
+import ExpressionParser from './TMPExpressionParser';
 
 const isSeparator = charToken =>
   charToken < '0' ||

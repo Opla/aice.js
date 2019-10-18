@@ -1,11 +1,17 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import chai from 'chai';
 import { StrategyWordComparator, Comparator, LevenshteinStrategy, DamerauLevenshteinStrategy } from '../../src/utils';
-import { InputExpressionTokenizer, ComplexeTokenizer } from '../../src/streamTransformers';
+import { InputExpressionTokenizer, AdvancedTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
 
 const tokenizerInput = new InputExpressionTokenizer();
-const tokenizerUtterance = ComplexeTokenizer;
+const tokenizerUtterance = AdvancedTokenizer;
 
 describe('Simple Comparator', () => {
   const simpleComparator = new Comparator();

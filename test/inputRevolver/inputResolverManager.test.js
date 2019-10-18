@@ -1,22 +1,28 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import chai from 'chai';
-import { IntentResolverManager, SimpleIntentResolver } from '../../src/intentsResolver';
-import { InputExpressionTokenizer, ComplexeTokenizer } from '../../src/streamTransformers';
+import { IntentsResolverManager, SimpleIntentsResolver } from '../../src/intentsResolver';
+import { InputExpressionTokenizer, AdvancedTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
 
 const tokenizerInput = new InputExpressionTokenizer();
-const tokenizerUtterance = ComplexeTokenizer;
+const tokenizerUtterance = AdvancedTokenizer;
 
-describe('IntentResolverManager', () => {
+describe('IntentsResolverManager', () => {
   it('Should train all sub-intentResolver ', () => {
-    const resolverManager = new IntentResolverManager({});
+    const resolverManager = new IntentsResolverManager({});
     resolverManager.train([1]);
 
     expect(resolverManager.intentResolvers[0].inputs.length).to.equal(1);
   });
 
   it('Should processBests from all sub-intentResolver with filter using LANG', () => {
-    const resolverManager = new IntentResolverManager({});
+    const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
       { lang: 'fr', topic: '*', intentid: 2, tokenizedInput: tokenizerInput.tokenize('Bye'), input: 'Bye' },
@@ -30,7 +36,7 @@ describe('IntentResolverManager', () => {
   });
 
   it('Should process all sub-intentResolver with filter using LANG', () => {
-    const resolverManager = new IntentResolverManager({});
+    const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
       { lang: 'fr', topic: '*', intentid: 2, tokenizedInput: tokenizerInput.tokenize('Bye'), input: 'Bye' },
@@ -47,7 +53,7 @@ describe('IntentResolverManager', () => {
   });
 
   it('Should process all sub-intentResolver with filter using LANG & TOPIC', () => {
-    const resolverManager = new IntentResolverManager({});
+    const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
       {
@@ -82,7 +88,7 @@ describe('IntentResolverManager', () => {
   });
 
   it('Should process with previous (input intent condition)', () => {
-    const resolverManager = new IntentResolverManager({});
+    const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('nogard'), input: 'nogard' },
       {
@@ -107,8 +113,8 @@ describe('IntentResolverManager', () => {
   });
 
   it('Should custom intentResolvers using settings', () => {
-    const resolverManager = new IntentResolverManager({
-      settings: { intentResolvers: [new SimpleIntentResolver({})] },
+    const resolverManager = new IntentsResolverManager({
+      settings: { intentResolvers: [new SimpleIntentsResolver({})] },
     });
     expect(resolverManager.intentResolvers.length).to.equal(1);
   });

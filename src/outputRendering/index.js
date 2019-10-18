@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import OutputRenderingManager from './outputRenderingManager';
-import { OutputRenderer, SimpleOutputRenderer } from './outputRenderer';
+import OutputRenderingManager from './TMPOutputRenderingManager';
+import { OutputRenderer, SimpleOutputRenderer } from './TMPOutputRenderer';
 
 export { OutputRenderingManager, OutputRenderer, SimpleOutputRenderer };

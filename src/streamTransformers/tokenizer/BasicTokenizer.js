@@ -9,7 +9,7 @@
 
 import { DoubleLinkedList } from '../models';
 
-export default class SimpleTokenizer {
+export default class BasicTokenizer {
   static tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
     const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
     normalized.split(/[^a-z0-9äâàéèëêïîöôùüûœç]+/i).forEach(token => {

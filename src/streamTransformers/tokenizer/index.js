@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import ComplexeTokenizer from './complexeTokenizer';
-import SimpleTokenizer from './simpleTokenizer';
-import NERTokenizer from './nerTokenizer';
+import AdvancedTokenizer from './AdvancedTokenizer';
+import BasicTokenizer from './BasicTokenizer';
+import NamedEntityTokenizer from './NamedEntityTokenizer';
 
-export { ComplexeTokenizer, SimpleTokenizer, NERTokenizer };
+export { AdvancedTokenizer, BasicTokenizer, NamedEntityTokenizer };

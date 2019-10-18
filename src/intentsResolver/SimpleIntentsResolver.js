@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import IntentResolver from './intentResolver';
+import IntentsResolver from './IntentsResolver';
 import { Comparator, DamerauLevenshteinStrategy } from '../utils';
 
-export default class SimpleIntentResolver extends IntentResolver {
+export default class SimpleIntentsResolver extends IntentsResolver {
   constructor({ settings }, comparator = new Comparator(new DamerauLevenshteinStrategy())) {
     super({ settings, name: 'simple-intents-resolver' });
     this.comparator = comparator;

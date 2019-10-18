@@ -17,10 +17,10 @@ const isSeparator = charToken =>
   (charToken > 'z' && charToken.charCodeAt(0) < 127) ||
   charToken < '!';
 
-export default class NERTokenizer {
+export default class NamedEntityTokenizer {
   constructor(namedEntityRecognizer) {
     if (!namedEntityRecognizer) {
-      throw new Error('Invalid NERTokenizer constructor - NamedEntityRecognizer is required');
+      throw new Error('Invalid NamedEntityTokenizer constructor - NamedEntityRecognizer is required');
     }
     this.namedEntityRecognizer = namedEntityRecognizer;
   }

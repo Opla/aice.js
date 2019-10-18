@@ -1,5 +1,11 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import chai from 'chai';
-import { NERTokenizer, NERManager, SystemEntities } from '../../src/streamTransformers';
+import { NamedEntityTokenizer, NERManager, SystemEntities } from '../../src/streamTransformers';
 
 const { expect } = chai;
 
@@ -11,7 +17,7 @@ describe('NER Tokenizer', () => {
   const ner = new NERManager();
   ner.addNamedEntity(UrlRegExpEntity);
   ner.addNamedEntity(EmailRegExpEntity);
-  const nerTokenizer = new NERTokenizer(ner);
+  const nerTokenizer = new NamedEntityTokenizer(ner);
 
   it('Should tokenize (with NER pipe) - One Token', () => {
     const textToTokenize = 'jeff@opla.ai';
@@ -52,7 +58,9 @@ describe('NER Tokenizer', () => {
     expect(emailToken.value.ner.name).to.equal('email');
   });
 
-  it('NERTokenizer - Should throw error required constructor parameters', () => {
-    expect(() => new NERTokenizer()).to.throw('Invalid NERTokenizer constructor - NamedEntityRecognizer is required');
+  it('NamedEntityTokenizer - Should throw error required constructor parameters', () => {
+    expect(() => new NamedEntityTokenizer()).to.throw(
+      'Invalid NamedEntityTokenizer constructor - NamedEntityRecognizer is required',
+    );
   });
 });

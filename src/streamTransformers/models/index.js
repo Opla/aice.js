@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Sentence from './sentence';
-import DoubleLinkedList from './doubleLinkedList';
+import Sentence from './TMPSentence';
+import DoubleLinkedList from './TMPDoubleLinkedList';
 
 export { DoubleLinkedList, Sentence };

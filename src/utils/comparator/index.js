@@ -6,7 +6,8 @@
  */
 import { Comparator } from './comparator';
 
-import { UnorderComparator, LazzyUnorderComparator } from './unorderComparator';
+import LazzyUnorderedComparator from './LazzyUnorderedComparator';
+import UnorderedComparator from './UnorderedComparator';
 import {
   StrategyWordComparator,
   ExactStrategy,
@@ -16,8 +17,8 @@ import {
 
 export {
   Comparator,
-  UnorderComparator,
-  LazzyUnorderComparator,
+  UnorderedComparator,
+  LazzyUnorderedComparator,
   StrategyWordComparator,
   ExactStrategy,
   LevenshteinStrategy,

@@ -1,29 +1,35 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import chai from 'chai';
-import { IntentResolver } from '../../src/intentsResolver';
+import { IntentsResolver } from '../../src/intentsResolver';
 
 const { expect } = chai;
 
-describe('IntentResolver', () => {
+describe('IntentsResolver', () => {
   it('Should throw error if no name provided', () => {
-    expect(() => new IntentResolver({})).to.throw('Invalid IntentsResolver constructor - Missing name');
+    expect(() => new IntentsResolver({})).to.throw('Invalid IntentsResolver constructor - Missing name');
   });
 
   it('Should train model - Empty case', () => {
-    const resolver = new IntentResolver({ name: 'test-resolver' });
+    const resolver = new IntentsResolver({ name: 'test-resolver' });
     resolver.train();
 
     expect(resolver.inputs).to.eql([]);
   });
 
   it('Should train model', () => {
-    const resolver = new IntentResolver({ name: 'test-resolver' });
+    const resolver = new IntentsResolver({ name: 'test-resolver' });
     resolver.train([1]);
 
     expect(resolver.inputs).to.eql([1]);
   });
 
   it('Should process with filter using LANG', () => {
-    const resolver = new IntentResolver({ name: 'test-resolver' });
+    const resolver = new IntentsResolver({ name: 'test-resolver' });
     resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
 
     const result = resolver.process('fr', {});

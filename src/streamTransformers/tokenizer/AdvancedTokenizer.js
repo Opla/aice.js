@@ -17,7 +17,7 @@ const isSeparator = charToken =>
   (charToken > 'z' && charToken.charCodeAt(0) < 127) ||
   charToken < '!';
 
-export default class ComplexeTokenizer {
+export default class AdvancedTokenizer {
   static tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
     const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
     const appendToken = acc => {

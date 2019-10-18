@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import SimpleIntentResolver from './simpleIntentResolver';
-import IntentResolverManager from './intentResolverManager';
-import IntentResolver from './intentResolver';
+import SimpleIntentsResolver from './SimpleIntentsResolver';
+import IntentsResolverManager from './IntentsResolverManager';
+import IntentsResolver from './IntentsResolver';
 
-export { IntentResolverManager, IntentResolver, SimpleIntentResolver };
+export { IntentsResolverManager, IntentsResolver, SimpleIntentsResolver };

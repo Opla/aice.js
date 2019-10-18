@@ -6,10 +6,10 @@
  */
 
 /* eslint-disable no-param-reassign */
-import { IntentResolverManager } from '../intentsResolver';
+import { IntentsResolverManager } from '../intentsResolver';
 import { OutputRenderingManager } from '../outputRendering';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from '../streamTransformers/expression';
-import { NERTokenizer } from '../streamTransformers/tokenizer';
+import { NamedEntityTokenizer } from '../streamTransformers/tokenizer';
 import { NERManager, SystemEntities } from '../streamTransformers';
 
 const LANG = 'fr';
@@ -21,11 +21,11 @@ export default class AICE {
     this.outputs = [];
     // StreamsTransformers
     this.NERManager = new NERManager();
-    this.NERTokenizer = new NERTokenizer(this.NERManager);
+    this.NamedEntityTokenizer = new NamedEntityTokenizer(this.NERManager);
     this.InputExpressionTokenizer = new InputExpressionTokenizer();
     this.OutputExpressionTokenizer = new OutputExpressionTokenizer();
 
-    this.IntentResolverManager = new IntentResolverManager(this.settings);
+    this.IntentResolverManager = new IntentsResolverManager(this.settings);
     this.OutputRenderingManager = new OutputRenderingManager(this.settings);
 
     SystemEntities.getSystemEntities().forEach(e => {
@@ -155,7 +155,7 @@ export default class AICE {
   async process(utterance, context = {}, lang = LANG) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
-    const tokenizedUtterance = this.NERTokenizer.tokenize(lang, utterance);
+    const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);
 
     // Intents Resolvers
     const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance, context);
