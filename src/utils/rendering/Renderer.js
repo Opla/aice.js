@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import ValueEvaluator from '../evaluator/Value';
+import ValueEvaluator from '../evaluator/ValueEvaluator';
 
-import ContextMutator from '../TMPContextMutator';
+import ContextMutator from '../ContextMutator';
 
 export default class Renderer {
   static isRenderable(tokenizedOutput, context) {

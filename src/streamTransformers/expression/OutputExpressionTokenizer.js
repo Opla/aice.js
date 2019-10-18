@@ -8,7 +8,7 @@
  */
 
 import { DoubleLinkedList } from '../models';
-import ExpressionParser from './TMPExpressionParser';
+import ExpressionParser from './ExpressionParser';
 
 const parseValue = match => {
   const isText = match.includes("'") || match.includes('"');

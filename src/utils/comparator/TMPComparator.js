@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import ContextMutator from '../TMPContextMutator';
+import ContextMutator from '../ContextMutator';
 import { ExactStrategy } from './wordsComparator/strategies';
 
 const equalsText = (a, b) => a.length === b.length && a.every((t, i) => t.text === b[i].text);

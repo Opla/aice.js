@@ -14,10 +14,10 @@ import {
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
 } from './comparator';
-import Utils from './TMPUtils';
-import ContextMutator from './TMPContextMutator';
+import Utils from './Utils';
+import ContextMutator from './ContextMutator';
 import { ConditionEvaluator, ValueEvaluator } from './evaluator';
-import Renderer from './rendering/TMPRenderer';
+import Renderer from './rendering/Renderer';
 import openNLXSyntaxAdapter from './openNLXSyntaxAdapter';
 
 export default Utils;

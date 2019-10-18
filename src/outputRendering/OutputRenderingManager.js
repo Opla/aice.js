@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { SimpleOutputRenderer } from './TMPOutputRenderer';
+import { SimpleOutputRenderer } from './OutputRenderer';
 
 export default class OutputRenderingManager {
   constructor({ settings }) {
