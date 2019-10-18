@@ -55,7 +55,7 @@ describe('AICE NLP', () => {
     expect(res.intent).to.equal('agent.bye');
     expect(res.answer).to.equal('A la prochaine!');
   });
-/*
+
   it('AICE - No intents', async () => {
     const aice = new AICE();
     aice.train();
@@ -134,5 +134,5 @@ describe('AICE NLP', () => {
 
     const variables = aice.getAllVariables();
     expect(variables).to.eql(['anyornothing', 'name', 'email']);
-  }); */
+  });
 });
