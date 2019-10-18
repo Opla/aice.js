@@ -24,9 +24,9 @@ describe('OutputRenderingManager', () => {
     expect(outputRenderingManager.outputRenderers.length).to.equal(1);
   });
 
-  it('Should process outputRenderers - NEED TO BE TWICK WITH ALL NEW FUTURE RENDERERS', async () => {
+  it('Should execute outputRenderers - NEED TO BE TWICK WITH ALL NEW FUTURE RENDERERS', async () => {
     const outputRenderingManager = new OutputRenderingManager({});
-    const result = await outputRenderingManager.process('fr', [], {});
+    const result = await outputRenderingManager.execute('fr', [], {});
 
     expect(result).to.equal(undefined);
   });

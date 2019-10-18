@@ -6,7 +6,6 @@
  */
 
 /* eslint-disable no-console */
-
 import fs from 'fs';
 import OpenNLXSyntaxAdapter from '../../src/utils/openNLXSyntaxAdapter';
 

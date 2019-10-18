@@ -14,9 +14,9 @@ export default class SimpleIntentsResolver extends IntentsResolver {
     this.comparator = comparator;
   }
 
-  process(lang, sentence, context) {
+  execute(lang, sentence, context) {
     // Preprocess filter lang
-    const inputs = super.process(lang, context);
+    const inputs = super.execute(lang, context);
 
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
@@ -24,11 +24,12 @@ export default class SimpleIntentsResolver extends IntentsResolver {
       if (input.input === '{{*}}' || input.input === '{{^}}') {
         comparatorResult.confidence = this.settings.threshold + 0.01;
       }
+      const score = comparatorResult.match ? comparatorResult.confidence : 0;
       return {
         intentid: input.intentid,
         input: input.input,
         previous: input.previous ? input.previous : [],
-        score: comparatorResult.match ? comparatorResult.confidence : 0,
+        score,
         context: comparatorResult.context,
       };
     });

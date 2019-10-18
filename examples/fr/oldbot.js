@@ -7,9 +7,10 @@
 
 /* eslint-disable no-console */
 import readline from 'readline';
+import Loader from '../../src/Loader';
+import { EnumEntity } from '../../src/streamTransformers';
 
 const threshold = 0.5;
-import Loader from '../../src/aice/loader';
 
 const BOT_NAME = 'jarvich';
 const isSilent = process.argv[2] === '--silent';
@@ -298,8 +299,6 @@ const bot = {
   ],
 };
 
-import { EnumEntity } from '../../src/streamTransformers';
-
 const SizeEnumEntity = new EnumEntity({
   name: 'pizzasize',
   scope: 'global',
@@ -361,7 +360,7 @@ const TakeAwayEnumEntity = new EnumEntity({
       process.exit();
     } else {
       start = +Date.now();
-      const result = await nlp.process(line, ctxt);
+      const result = await nlp.evaluate(line, ctxt);
       end = +Date.now();
       const answer =
         result.score > threshold && result.answer ? result.answer : 'Désolé, je ne comprends pas votre question';

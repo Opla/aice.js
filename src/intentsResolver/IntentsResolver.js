@@ -23,21 +23,20 @@ export default class IntentResolver {
   }
 
   /**
-   * Base process function - Need to be redefine in sub-class
+   * Base evaluate function - Need to be redefine in sub-class
    * @returns {Inputs} Inputs filtered by lang
    */
-  process(lang, context) {
+  execute(lang, context) {
     const { topic = '*' } = context;
     return this.inputs.filter(i => i.lang === lang && i.topic === topic);
   }
 
   /**
-   * ProcessBest Intent
+   * evaluate Intent
    * @returns {Intent} Intent with the best score
    */
-  processBest(lang, sentence, context) {
-    const res = this.process(lang, sentence, context);
-
+  evaluate(lang, sentence, context) {
+    const res = this.execute(lang, sentence, context);
     // TODO Input intent conditions
 
     // Previous handling

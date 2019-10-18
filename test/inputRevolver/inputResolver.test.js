@@ -28,11 +28,11 @@ describe('IntentsResolver', () => {
     expect(resolver.inputs).to.eql([1]);
   });
 
-  it('Should process with filter using LANG', () => {
+  it('Should execute with filter using LANG', () => {
     const resolver = new IntentsResolver({ name: 'test-resolver' });
     resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
 
-    const result = resolver.process('fr', {});
+    const result = resolver.execute('fr', {});
     expect(result.length).to.equal(1);
     expect(result[0].id).to.equal(1);
   });

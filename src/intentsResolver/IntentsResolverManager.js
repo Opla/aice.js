@@ -28,34 +28,36 @@ export default class IntentResolverManager {
   }
 
   /**
-   * Process sentence througth all IntentsResolvers
+   * Execute sentence througth all IntentsResolvers
    * @returns {Intents}
    */
-  process(lang, sentence, context = {}) {
+  execute(lang, sentence, context = {}) {
     const { topic = '*' } = context;
-    const res = Utils.flatten(this.intentResolvers.map(ir => ir.process(lang, sentence, topic))).sort(
+    const res = Utils.flatten(this.intentResolvers.map(ir => ir.execute(lang, sentence, topic))).sort(
       (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
     );
     return res;
+  }
+
+  match(lang, utterance, context) {
+    return Utils.flatten(this.intentResolvers.map(ir => ir.evaluate(lang, utterance, context))).sort(
+      (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
+    );
   }
 
   /**
    * Process utterance througth all IntentsResolvers and return best scores
    * @returns {Intents}
    */
-  processBest(lang, utterance, context = {}) {
+  evaluate(lang, utterance, context = {}) {
     let res;
 
     const { topic = '*' } = context;
     // Try to match current topic (domain)
-    res = Utils.flatten(this.intentResolvers.map(ir => ir.processBest(lang, utterance, context))).sort(
-      (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
-    );
+    res = this.match(lang, utterance, context);
     // It wasn't the main one and has no result
     if (res[0] && res[0].score < this.settings.threshold && topic !== '*') {
-      res = Utils.flatten(
-        this.intentResolvers.map(ir => ir.processBest(lang, utterance, { ...context, topic: '*' })),
-      ).sort((d1, d2) => parseFloat(d2.score) - parseFloat(d1.score));
+      res = this.match(lang, utterance, { ...context, topic: '*' });
 
       // Assign new topic
       res.forEach(r => {

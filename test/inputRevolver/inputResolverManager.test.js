@@ -21,7 +21,7 @@ describe('IntentsResolverManager', () => {
     expect(resolverManager.intentResolvers[0].inputs.length).to.equal(1);
   });
 
-  it('Should processBests from all sub-intentResolver with filter using LANG', () => {
+  it('Should evaluate from all sub-intentResolver with filter using LANG', () => {
     const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
@@ -29,20 +29,20 @@ describe('IntentsResolverManager', () => {
       { lang: 'fr', topic: '*', intentid: 3, tokenizedInput: tokenizerInput.tokenize('{{*}}'), input: '{{*}}' },
     ]);
 
-    const result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Bye'));
+    const result = resolverManager.evaluate('fr', tokenizerUtterance.tokenize('Bye'));
     expect(result.length).to.equal(1);
     expect(result[0].intentid).to.equal(2);
     expect(result[0].score).to.equal(1);
   });
 
-  it('Should process all sub-intentResolver with filter using LANG', () => {
+  it('Should execute all sub-intentResolver with filter using LANG', () => {
     const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
       { lang: 'fr', topic: '*', intentid: 2, tokenizedInput: tokenizerInput.tokenize('Bye'), input: 'Bye' },
     ]);
 
-    const result = resolverManager.process('fr', tokenizerUtterance.tokenize('Bye'));
+    const result = resolverManager.execute('fr', tokenizerUtterance.tokenize('Bye'));
     expect(result.length).to.equal(2);
     // Intent 'Bye' -> match
     expect(result[0].intentid).to.equal(2);
@@ -52,7 +52,7 @@ describe('IntentsResolverManager', () => {
     expect(result[1].score).to.equal(0);
   });
 
-  it('Should process all sub-intentResolver with filter using LANG & TOPIC', () => {
+  it('Should execute all sub-intentResolver with filter using LANG & TOPIC', () => {
     const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
@@ -67,19 +67,19 @@ describe('IntentsResolverManager', () => {
     ]);
 
     // First test topic is *
-    let result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Hello'), { topic: '*' });
+    let result = resolverManager.evaluate('fr', tokenizerUtterance.tokenize('Hello'), { topic: '*' });
     // Intent 'Hello' (topic = *) -> match
     expect(result[0].intentid).to.equal(1);
     expect(result[0].score).to.equal(1);
 
     // Seconde test topic is 'anOtherDomain'
-    result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Hello'), { topic: 'anOtherDomain' });
+    result = resolverManager.evaluate('fr', tokenizerUtterance.tokenize('Hello'), { topic: 'anOtherDomain' });
     // Intent 'Hello' (topic = anOtherDomain) -> match
     expect(result[0].intentid).to.equal(2);
     expect(result[0].score).to.equal(1);
 
     // Third test topic is 'anOtherDomain' but match main domain (*)
-    result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Bye'), { topic: 'anOtherDomain' });
+    result = resolverManager.evaluate('fr', tokenizerUtterance.tokenize('Bye'), { topic: 'anOtherDomain' });
     // Intent 'Hello' (topic = *) -> match
     expect(result[0].intentid).to.equal(3);
     expect(result[0].score).to.equal(1);
@@ -87,7 +87,7 @@ describe('IntentsResolverManager', () => {
     expect(result[0].context.topic).to.equal('*');
   });
 
-  it('Should process with previous (input intent condition)', () => {
+  it('Should execute with previous (input intent condition)', () => {
     const resolverManager = new IntentsResolverManager({});
     resolverManager.train([
       { lang: 'fr', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('nogard'), input: 'nogard' },
@@ -101,12 +101,12 @@ describe('IntentsResolverManager', () => {
       },
     ]);
 
-    let result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('dragon'), {});
+    let result = resolverManager.evaluate('fr', tokenizerUtterance.tokenize('dragon'), {});
     expect(result.length).to.equal(1);
     expect(result[0].intentid).to.equal(2);
     expect(result[0].score).to.equal(0.1);
 
-    result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('dragon'), { previous: 1 });
+    result = resolverManager.evaluate('fr', tokenizerUtterance.tokenize('dragon'), { previous: 1 });
     expect(result.length).to.equal(1);
     expect(result[0].intentid).to.equal(2);
     expect(result[0].score).to.equal(1);

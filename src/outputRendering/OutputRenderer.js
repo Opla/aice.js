@@ -23,8 +23,8 @@ class OutputRenderer {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async process() {
-    throw new Error('Invalid OutputRenderer - process() should be implemented in child class');
+  async execute() {
+    throw new Error('Invalid OutputRenderer - execute() should be implemented in child class');
   }
 }
 
@@ -33,7 +33,7 @@ class SimpleOutputRenderer extends OutputRenderer {
     super({ settings, outputs, name: 'simple-output-rendering' });
   }
 
-  async process(lang, intents, context) {
+  async execute(lang, intents, context) {
     const { intentid, score } = intents[0] || {}; // Best match for now
 
     // Retrieve output object for this intentid

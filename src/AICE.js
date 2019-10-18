@@ -142,7 +142,7 @@ export default class AICE {
   }
 
   /**
-   * Process an utterance to fully andersand it.
+   * Evaluate an utterance to fully andersand it.
    * The process is:
    * - Streams Transformer: Tokenize the utterance and look for entities using NER
    * - Intents Resolvers: Look for the user intention
@@ -152,18 +152,17 @@ export default class AICE {
    * @param {String} lang Default lang is french.
    * @returns {reponse} An object containing: answer, score, intent, context
    */
-  async process(utterance, context = {}, lang = LANG) {
+  async evaluate(utterance, context = {}, lang = LANG) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
     const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);
 
     // Intents Resolvers
-    const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance, context);
+    const result = this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
     context = { ...context, ...((result && result[0]) || {}).context };
 
     // Output Rendering
-    const answer = await this.OutputRenderingManager.process(lang, result, context);
-
+    const answer = await this.OutputRenderingManager.execute(lang, result, context);
     return {
       answer: (answer || {}).renderResponse,
       score: answer ? answer.score : 0,

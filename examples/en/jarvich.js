@@ -63,7 +63,7 @@ const ctxt = {};
       process.exit();
     } else {
       start = +Date.now();
-      const result = await nlp.process(line, ctxt, 'en');
+      const result = await nlp.evaluate(line, ctxt, 'en');
       end = +Date.now();
       const answer = result.score > threshold && result.answer ? result.answer : 'Error intent not found';
       const extra = !isSilent ? `- spent: ${end - start}ms - extra: ${JSON.stringify(result)}` : '';

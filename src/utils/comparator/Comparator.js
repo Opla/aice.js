@@ -42,7 +42,7 @@ export default class Comparator {
       while (result.match && !result.iteratorI.done) {
         result = this.compareExpressions(result);
 
-        // Do we need to process next tokens
+        // Do we need to proceed next tokens
         if (!result.iteratorI.done) {
           result.iteratorI = result.iteratorGeneratorI.next();
           result.iteratorU = result.iteratorGeneratorU.next();
@@ -66,7 +66,7 @@ export default class Comparator {
 
   /**
    * Matchs Expressions
-   * @param {result} result result is a complexe object used to process Sentences comparison
+   * @param {result} result result is a complexe object used to proceed Sentences comparison
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
   compareExpressions(resultState, affectation = true) {
@@ -118,7 +118,7 @@ export default class Comparator {
 
   /**
    * Matchs Any Expression or AnyOrNothing Expression
-   * @param {result} result result is a complexe object used to process Sentences comparison
+   * @param {result} result result is a complexe object used to proceed Sentences comparison
    * @param {Boolean} caseAny AnyOrNothing
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */

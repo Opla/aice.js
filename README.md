@@ -67,8 +67,8 @@ aice.addOutput('en', 'hello', "Hello. What's up ?");
 
 aice.train();
 
-// now you can use process to get the answer
-const response = await aice.process('Hello', {}, 'en');
+// now you can use evaluate to get the answer
+const response = await aice.evaluate('Hello', {}, 'en');
 ```
 
 ```
@@ -100,8 +100,8 @@ nlp.addOutput(
 
 nlp.train();
 
-// now you can use process to get the answer
-const response = await aice.process('Test condition', { state: 'STATE_0'}, 'en');
+// now you can use evaluate to get the answer
+const response = await aice.evaluate('Test condition', { state: 'STATE_0'}, 'en');
 ```
 
 ```
