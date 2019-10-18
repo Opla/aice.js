@@ -93,9 +93,9 @@ nlp.addOutput(
   undefined,
   [{
       type: 'LeftRightExpression',
-      operande: 'eq',
-      Lvalue: { type: 'VARIABLE', value: 'state' },
-      Rvalue: 'STATE_0',
+      operator: 'eq',
+      leftOperand: { type: 'VARIABLE', value: 'state' },
+      rightOperand: 'STATE_0',
    }]);
 
 nlp.train();

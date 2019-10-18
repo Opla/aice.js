@@ -47,7 +47,7 @@ describe('SimpleOutputRenderer', () => {
             {
               lang: 'fr',
               tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse'),
-              conditions: [{ type: 'UnaryExpression', operande: 'not', LRvalue: true }],
+              conditions: [{ type: 'UnaryExpression', operator: 'not', LrightOperand: true }],
             },
             { lang: 'en', tokenizedOutput: tokenizerOutput.tokenize('This is not the good answer'), conditions: [] },
           ],
@@ -70,7 +70,7 @@ describe('SimpleOutputRenderer', () => {
           {
             lang: 'en',
             tokenizedOutput: tokenizerOutput.tokenize('This is not the good answer'),
-            conditions: [{ type: 'UnaryExpression', operande: 'not', LRvalue: true }],
+            conditions: [{ type: 'UnaryExpression', operator: 'not', LrightOperand: true }],
           },
           { lang: 'en', tokenizedOutput: tokenizerOutput.tokenize(goodAnwser), conditions: [] },
           {
@@ -150,9 +150,9 @@ describe('SimpleOutputRenderer', () => {
               conditions: [
                 {
                   type: 'LeftRightExpression',
-                  operande: 'eq',
-                  Lvalue: { type: 'VARIABLE', value: 'number' },
-                  Rvalue: 1,
+                  operator: 'eq',
+                  leftOperand: { type: 'VARIABLE', value: 'number' },
+                  rightOperand: 1,
                 },
               ],
             },

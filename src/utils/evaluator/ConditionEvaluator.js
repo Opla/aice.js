@@ -26,67 +26,67 @@ export default class ConditionEvaluator {
   }
 
   static leftRightExpressionEvaluator(condition, context) {
-    let Lvalue = null;
-    let Rvalue = null;
+    let leftOperand = null;
+    let rightOperand = null;
     let result;
-    if (condition.Lvalue.operande) {
-      Lvalue = ConditionEvaluator.evaluate(condition.Lvalue, context);
+    if (condition.leftOperand.operator) {
+      leftOperand = ConditionEvaluator.evaluate(condition.leftOperand, context);
     }
 
-    if (condition.Rvalue.operande) {
-      Rvalue = ConditionEvaluator.evaluate(condition.Rvalue, context);
+    if (condition.rightOperand.operator) {
+      rightOperand = ConditionEvaluator.evaluate(condition.rightOperand, context);
     }
 
-    if (!Lvalue) {
-      Lvalue = ValueEvaluator.evaluateValue(condition.Lvalue, context);
+    if (!leftOperand) {
+      leftOperand = ValueEvaluator.evaluateValue(condition.leftOperand, context);
     }
 
-    if (!Rvalue) {
-      Rvalue = ValueEvaluator.evaluateValue(condition.Rvalue, context);
+    if (!rightOperand) {
+      rightOperand = ValueEvaluator.evaluateValue(condition.rightOperand, context);
     }
 
-    switch (condition.operande) {
+    switch (condition.operator) {
       case 'eq':
-        result = Lvalue === Rvalue;
+        result = leftOperand === rightOperand;
         break;
 
       case 'ne':
-        result = Lvalue !== Rvalue;
+        result = leftOperand !== rightOperand;
         break;
 
       case 'or':
-        result = Lvalue || Rvalue;
+        result = leftOperand || rightOperand;
         break;
 
       case 'and':
-        result = Lvalue && Rvalue;
+        result = leftOperand && rightOperand;
         break;
 
       default:
-        throw new Error('ConditionEvaluator.leftRightExpressionEvaluator - Unknown condition operande');
+        throw new Error('ConditionEvaluator.leftRightExpressionEvaluator - Unknown condition operator');
     }
 
     return result;
   }
 
   static unaryExpressionEvaluator(condition, context) {
-    let LRvalue = null;
+    let LrightOperand = null;
     let result;
-    if (condition.LRvalue.operande) {
-      LRvalue = ConditionEvaluator.evaluate(condition.LRvalue, context);
+    if (condition.LrightOperand.operator) {
+      LrightOperand = ConditionEvaluator.evaluate(condition.LrightOperand, context);
     }
 
-    if (!LRvalue) {
-      LRvalue = ValueEvaluator.evaluateValue(condition.LRvalue, context);
+    if (!LrightOperand) {
+      LrightOperand = ValueEvaluator.evaluateValue(condition.LrightOperand, context);
     }
 
-    switch (condition.operande) {
+    switch (condition.operator) {
       case 'not':
-        result = !LRvalue;
+        result = !LrightOperand;
         break;
 
       default:
-        throw new Error('ConditionEvaluator.unaryExpressionEvaluator - Unknown condition operande');
+        throw new Error('ConditionEvaluator.unaryExpressionEvaluator - Unknown condition operator');
     }
 
     return result;

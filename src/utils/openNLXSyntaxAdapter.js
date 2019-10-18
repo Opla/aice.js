@@ -93,9 +93,9 @@ const parseAdaptOutputsSyntax = oldOutputs => {
         const output = { conditions: [], WSs: [] };
         const condition = {
           type: 'LeftRightExpression',
-          operande: 'eq',
-          Lvalue: parseValue(conditionOutput.name),
-          Rvalue: conditionOutput.value,
+          operator: 'eq',
+          leftOperand: parseValue(conditionOutput.name),
+          rightOperand: conditionOutput.value,
         };
 
         const parsed = parseAdaptInlineSyntax(conditionOutput.text);

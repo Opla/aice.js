@@ -176,9 +176,9 @@ const bot = {
           conditions: [
             {
               type: 'LeftRightExpression',
-              operande: 'eq',
-              Lvalue: { type: 'VARIABLE', value: 'action' },
-              Rvalue: 'pizzamail',
+              operator: 'eq',
+              leftOperand: { type: 'VARIABLE', value: 'action' },
+              rightOperand: 'pizzamail',
             },
           ],
           WSs: [],
@@ -188,9 +188,9 @@ const bot = {
           conditions: [
             {
               type: 'LeftRightExpression',
-              operande: 'eq',
-              Lvalue: { type: 'VARIABLE', value: 'action' },
-              Rvalue: 'nopizza',
+              operator: 'eq',
+              leftOperand: { type: 'VARIABLE', value: 'action' },
+              rightOperand: 'nopizza',
             },
           ],
           WSs: [],
