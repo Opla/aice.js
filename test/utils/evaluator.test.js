@@ -35,7 +35,7 @@ describe('ConditionEvaluator', () => {
     expect(result).to.equal(true);
   });
 
-  it('Complexe LeftRightExpression - condition equals', () => {
+  it('intricated LeftRightExpression - condition equals', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'LeftRightExpression',
@@ -53,14 +53,14 @@ describe('ConditionEvaluator', () => {
     expect(result).to.equal(true);
   });
 
-  it('Complexe UnaryExpression - condition not', () => {
+  it('Hard UnaryExpression - condition not', () => {
     const context = { var1: false };
     const condition = { type: 'UnaryExpression', operande: 'not', LRvalue: { type: 'VARIABLE', value: 'var1' } };
     const result = ConditionEvaluator.evaluate(condition, context);
     expect(result).to.equal(true);
   });
 
-  it('Very Complexe imbriqued LeftRightExpression - (var1===var2) && true', () => {
+  it('Very hard chained LeftRightExpression - (var1===var2) && true', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'LeftRightExpression',
@@ -77,7 +77,7 @@ describe('ConditionEvaluator', () => {
     expect(result).to.equal(true);
   });
 
-  it('Complexe imbriqued LeftRightExpression - true && (var1===var2)', () => {
+  it('Hard chained LeftRightExpression - true && (var1===var2)', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'LeftRightExpression',
@@ -94,7 +94,7 @@ describe('ConditionEvaluator', () => {
     expect(result).to.equal(true);
   });
 
-  it('Complexe imbriqued UnaryExpression - !(var1===var2)', () => {
+  it('Hard chained UnaryExpression - !(var1===var2)', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'UnaryExpression',

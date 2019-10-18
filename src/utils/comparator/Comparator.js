@@ -66,7 +66,7 @@ export default class Comparator {
 
   /**
    * Matchs Expressions
-   * @param {result} result result is a complexe object used to proceed Sentences comparison
+   * @param {result} result result is a compare object used to proceed Sentences comparison
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
   compareExpressions(resultState, affectation = true) {
@@ -118,7 +118,7 @@ export default class Comparator {
 
   /**
    * Matchs Any Expression or AnyOrNothing Expression
-   * @param {result} result result is a complexe object used to proceed Sentences comparison
+   * @param {result} result result is a compare object used to proceed Sentences comparison
    * @param {Boolean} caseAny AnyOrNothing
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */

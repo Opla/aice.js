@@ -30,7 +30,7 @@
  *
  * FEEDBACK:
  * You like my work? It helps you? You plan to use/reuse/transform it? You have
- * suggestions or questions about it? Just want to say "hi"? Let me know your
+ * sughandlings or questions about it? Just want to say "hi"? Let me know your
  * feedbacks by mail to the address fabvalaaah@laposte.net
  *
  * DISCLAIMER:

@@ -67,7 +67,7 @@ describe('Context Comparator', () => {
     expect(result.context.myVariable).to.equal('some text');
   });
 
-  it('Should automatically set multiple unnammed variables ({{*}})', () => {
+  it('Should automatically set multiple unnamed variables ({{*}})', () => {
     const input = '{{*}} is {{*}}';
     const utterance = 'This bot is awesome';
 
@@ -81,7 +81,7 @@ describe('Context Comparator', () => {
     expect(result.context.any_1).to.equal('awesome');
   });
 
-  it('Should automatically set multiple unnammed variables ({{^}})', () => {
+  it('Should automatically set multiple unnamed variables ({{^}})', () => {
     const input = '{{^}} is {{^}}';
     const utterance = 'This bot is awesome';
 
@@ -95,7 +95,7 @@ describe('Context Comparator', () => {
     expect(result.context.anyornothing_1).to.equal('awesome');
   });
 
-  it('Should automatically set multiple unnammed variables ({{^}} not catch case)', () => {
+  it('Should automatically set multiple unnamed variables ({{^}} not catch case)', () => {
     const input = '{{^}} your {{^}}';
     const utterance = 'your awesome';
 

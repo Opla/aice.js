@@ -33,7 +33,7 @@ describe('Simple Tokenizer', () => {
   });
 });
 
-describe('Complexe Tokenizer', () => {
+describe('Tricky Tokenizer', () => {
   it('Should tokenize "Hello"', () => {
     const textToTokenize = 'Hello';
     const tokenizedText = AdvancedTokenizer.tokenize(textToTokenize);

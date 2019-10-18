@@ -142,7 +142,7 @@ export default class AICE {
   }
 
   /**
-   * Evaluate an utterance to fully andersand it.
+   * Evaluate an utterance to fully understand it.
    * The process is:
    * - Streams Transformer: Tokenize the utterance and look for entities using NER
    * - Intents Resolvers: Look for the user intention

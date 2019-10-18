@@ -145,9 +145,6 @@ const bot = {
           tags: ['grande', 'large'],
         },
       ],
-      extra: {
-        type: 'complex',
-      },
     },
     {
       name: 'pizza_type',
@@ -170,9 +167,6 @@ const bot = {
           tags: ['livraison'],
         },
       ],
-      extra: {
-        type: 'complex',
-      },
     },
   ],
   variables: [],

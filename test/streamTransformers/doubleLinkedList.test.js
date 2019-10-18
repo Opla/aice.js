@@ -97,7 +97,7 @@ describe('DoubleLinkedList Iterator', () => {
     }
   });
 
-  it('Array convertion', () => {
+  it('Array transformation', () => {
     const list = new DoubleLinkedList();
     list.append('red');
     list.append('orange');
@@ -107,7 +107,7 @@ describe('DoubleLinkedList Iterator', () => {
     expect([...list.values()]).to.eql(['red', 'orange', 'green', 'yellow']);
   });
 
-  it('String convertion', () => {
+  it('String transformation', () => {
     const list = new DoubleLinkedList();
     list.append('red');
     list.append('orange');
@@ -115,7 +115,7 @@ describe('DoubleLinkedList Iterator', () => {
     list.append('yellow');
 
     expect(...list.values()).to.equal('red');
-    // TODO ... stream tests gestion
+    // TODO ... stream tests handling
   });
 });
 

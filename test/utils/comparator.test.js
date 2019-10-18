@@ -103,7 +103,7 @@ describe('Levenshtein Comparator', () => {
     // expect(result.confidence).to.equal(0.9);
   });
 
-  it('Should match Complexe Sentences with typing error', () => {
+  it('Should match intricated Sentences with typing error', () => {
     const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slime shady ! REPU';
 
@@ -115,7 +115,7 @@ describe('Levenshtein Comparator', () => {
     // expect(result.confidence).to.equal(0.9);
   });
 
-  it('Should match Complexe Sentences with typing error 2', () => {
+  it('Should match intricated Sentences with typing error 2', () => {
     const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slime shody ! REPU';
 
@@ -153,7 +153,7 @@ describe('Demerau-Levenshtein Comparator', () => {
     expect(result.match).to.equal(true);
   });
 
-  it('Should match Complexe Sentences with typing error', () => {
+  it('Should match intricated Sentences with typing error', () => {
     const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slime shady !!! Some text';
 
@@ -165,7 +165,7 @@ describe('Demerau-Levenshtein Comparator', () => {
     // expect(result.confidence).to.equal(0.9);
   });
 
-  it('Should match Complexe Sentences with typing error 2', () => {
+  it('Should match intricated Sentences with typing error 2', () => {
     const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slim shody !!!!!! REPU';
 
@@ -187,7 +187,7 @@ describe('Demerau-Levenshtein Comparator', () => {
     expect(result.match).to.equal(false);
   });
 
-  it('Should match Sentences with pertutations', () => {
+  it('Should match Sentences with typos', () => {
     const input = 'Hello my friend';
     const utterance = 'ehllo ym nriend';
 
@@ -199,7 +199,7 @@ describe('Demerau-Levenshtein Comparator', () => {
     // expect(result.confidence).to.equal(0.9);
   });
 
-  it('Should match Sentences with pertutations', () => {
+  it('Should match Sentences with typos', () => {
     const input = 'Hello my friend';
     const utterance = 'ehllo my rfiend';
 
