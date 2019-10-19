@@ -107,13 +107,21 @@ export default class AICE {
       throw new Error('AICE addOutput - Has some missing mandatory parameters');
     }
     const tokenizedOutput = this.OutputExpressionTokenizer.tokenize(output);
+    const preCallables = [];
+    if (preConditionsCallable) {
+      preCallables.push({ func: preConditionsCallable });
+    }
+    const callables = [];
+    if (preRenderCallable) {
+      callables.push({ func: preRenderCallable });
+    }
     const answer = {
       lang,
       output,
       tokenizedOutput,
-      preConditionsCallable,
+      preCallables,
       conditions,
-      preRenderCallable,
+      callables,
     };
 
     const intentOutput = this.outputs.find(o => o.intentid === intentid);

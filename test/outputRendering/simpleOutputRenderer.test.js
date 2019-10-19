@@ -120,7 +120,7 @@ describe('SimpleOutputRenderer', () => {
             {
               lang: 'fr',
               tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse {{name}}'),
-              preRenderCallable: getName,
+              callables: [{ func: getName }],
               conditions: [],
             },
             { lang: 'en', tokenizedOutput: tokenizerOutput.tokenize('This is not the good answer'), conditions: [] },
@@ -145,8 +145,8 @@ describe('SimpleOutputRenderer', () => {
             {
               lang: 'fr',
               tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse {{number}}'),
-              preConditionsCallable,
-              preRenderCallable: incrementNumberCallable,
+              preCallables: [{ func: preConditionsCallable }],
+              callables: [{ func: incrementNumberCallable }],
               conditions: [
                 {
                   type: 'LeftRightExpression',
@@ -182,7 +182,7 @@ describe('SimpleOutputRenderer', () => {
             {
               lang: 'fr',
               tokenizedOutput: tokenizerOutput.tokenize('{{body}}'),
-              preConditionsCallable,
+              preCallables: [{ func: preConditionsCallable }],
             },
           ],
         },
