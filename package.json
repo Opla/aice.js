@@ -1,11 +1,11 @@
 {
-  "name": "aice.js",
+  "name": "aice",
   "version": "0.3.6",
   "main": "src/index.js",
   "type": "module",
   "license": "MIT",
   "description": "Artificial Intelligence Conversational Engine",
-  "author": "Morgan Perre <morgan.perre@gmail.com>",
+  "author": "Opla <hello@opla.ai>",
   "private": false,
   "husky": {
     "hooks": {

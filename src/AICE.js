@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/* eslint-disable no-param-reassign */
 import { IntentsResolverManager } from './intentsResolver';
 import { OutputRenderingManager } from './outputRendering';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
@@ -159,15 +158,15 @@ export default class AICE {
 
     // Intents Resolvers
     const result = this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
-    context = { ...context, ...((result && result[0]) || {}).context };
+    const ctx = { ...context, ...((result && result[0]) || {}).context };
 
     // Output Rendering
-    const answer = await this.OutputRenderingManager.execute(lang, result, context);
+    const answer = await this.OutputRenderingManager.execute(lang, result, ctx);
     return {
       answer: (answer || {}).renderResponse,
       score: answer ? answer.score : 0,
       intent: (answer || {}).intentid,
-      context: (answer && answer.context) || context,
+      context: (answer && answer.context) || ctx,
     };
   }
 }
