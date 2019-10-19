@@ -46,7 +46,7 @@ export default class IntentResolverManager {
   }
 
   /**
-   * Process utterance througth all IntentsResolvers and return best scores
+   * Evaluate utterance througth all IntentsResolvers and return best scores
    * @returns {Intents}
    */
   evaluate(lang, utterance, context = {}) {

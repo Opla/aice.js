@@ -80,17 +80,17 @@ const parseAdaptOutputsSyntax = oldOutputs => {
   oldOutputs.forEach(oldOutput => {
     if (typeof oldOutput === 'string') {
       // Without Condition
-      const output = { conditions: [], WSs: [] };
+      const output = { conditions: [], callables: [] };
 
       const parsed = parseAdaptInlineSyntax(oldOutput);
       output.outputMessage = parsed.newInlineText;
-      output.WSs = parsed.callables;
+      output.callables = parsed.callables;
 
       outputs.push(output);
     } else {
       // Conditions
       oldOutput.children.forEach(conditionOutput => {
-        const output = { conditions: [], WSs: [] };
+        const output = { conditions: [], callables: [] };
         const condition = {
           type: 'LeftRightExpression',
           operator: 'eq',
@@ -100,7 +100,7 @@ const parseAdaptOutputsSyntax = oldOutputs => {
 
         const parsed = parseAdaptInlineSyntax(conditionOutput.text);
         output.outputMessage = parsed.newInlineText;
-        output.WSs = parsed.callables;
+        output.callables = parsed.callables;
         output.conditions.push(condition);
 
         outputs.push(output);
@@ -158,10 +158,10 @@ const parseAdaptOpenNLXSyntaxV3 = oldBotDocument => {
   return document;
 };
 
-class openNLXSyntaxAdapter {}
-openNLXSyntaxAdapter.parseAdaptOpenNLXSyntax = parseAdaptOpenNLXSyntax;
-openNLXSyntaxAdapter.parseAdaptOpenNLXSyntaxV3 = parseAdaptOpenNLXSyntaxV3;
+class OpenNLXSyntaxAdapter {}
+OpenNLXSyntaxAdapter.parseAdaptOpenNLXSyntax = parseAdaptOpenNLXSyntax;
+OpenNLXSyntaxAdapter.parseAdaptOpenNLXSyntaxV3 = parseAdaptOpenNLXSyntaxV3;
 
-export default openNLXSyntaxAdapter;
+export default OpenNLXSyntaxAdapter;
 
 export { parseAdaptOpenNLXSyntax, parseAdaptOpenNLXSyntaxV3 };

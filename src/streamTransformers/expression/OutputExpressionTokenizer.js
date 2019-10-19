@@ -42,10 +42,6 @@ export default class OutputExpressionTokenizer {
 
           const contextName = matchs[0];
           const value = parseValue(matchs[1]);
-          if (contextName[0] === '#') {
-            const referenceName = contextName.substring(1);
-            return { type: 'REFERENCE', referenceName };
-          }
           return { type: 'OUTPUT', contextName, value };
         },
       },

@@ -17,9 +17,9 @@ const addIntent = (aice, { name: intentid, inputs, outputs, outputType, topic = 
     const answer = {
       lang,
       tokenizedOutput,
-      preWSs: undefined,
+      preCallables: undefined,
       conditions: o.conditions,
-      WSs: o.WSs,
+      callables: o.callables,
     };
 
     return answer;

@@ -81,12 +81,12 @@ describe('parseAdaptOpenNLXSyntax', () => {
         outputs: [
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Hello 🤖 <<action=nopizza>>',
           },
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Et bienvenue chez OplaZap ! En quoi puis-je vous aider ?',
           },
         ],
@@ -163,12 +163,12 @@ describe('parseAdaptOpenNLXSyntax', () => {
         outputs: [
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Hello 🤖 <<action=nopizza>>',
           },
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Et bienvenue chez OplaZap ! En quoi puis-je vous aider ?',
           },
         ],
@@ -228,7 +228,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
         topic: '*',
         inputs: [{ inputMessage: '@email' }, { inputMessage: '*@email*' }, { inputMessage: '*@email' }],
         outputs: [
-          { conditions: [], WSs: [], outputMessage: 'Merci pour votre email.' },
+          { conditions: [], callables: [], outputMessage: 'Merci pour votre email.' },
           {
             conditions: [
               {
@@ -238,7 +238,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
                 rightOperand: 'pizzamail',
               },
             ],
-            WSs: [],
+            callables: [],
             outputMessage: 'Je vous envoi une confirmation.',
           },
           {
@@ -250,7 +250,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
                 rightOperand: 'nopizza',
               },
             ],
-            WSs: [],
+            callables: [],
             outputMessage: 'Que dois-je faire avec ?',
           },
         ],
@@ -273,7 +273,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
     };
     const newBot = parseAdaptOpenNLXSyntax(bot);
     expect(newBot.name).to.equal('OplaZap');
-    const webService = newBot.intents[0].outputs[0].WSs[0];
+    const webService = newBot.intents[0].outputs[0].callables[0];
     expect(webService.service).to.equal('system.sendMail');
     expect(webService.parameters[0]).to.equal('{{email}}');
     expect(webService.parameters[1]).to.equal('test');
@@ -297,7 +297,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
     expect(newBot.name).to.equal('OplaZap');
     const output = newBot.intents[0].outputs[0];
     expect(output.outputMessage).to.equal('{{doSomething}}');
-    const webService = output.WSs[0];
+    const webService = output.callables[0];
     expect(webService.service).to.equal('doSomething');
     expect(webService.parameters[0]).to.equal('{{highest}}');
     expect(webService.parameters[1]).to.equal('{{lowest}}');

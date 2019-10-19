@@ -49,12 +49,12 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Hello 🤖 <<action="nopizza">>',
         },
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Et bienvenue chez OplaZap ! En quoi puis-je vous aider ? <<action="nopizza">>',
         },
       ],
@@ -79,12 +79,12 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Tout comme hier et sans doute comme demain.\nJe ne peux me plaindre de ma situation.',
         },
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Comment puis-je vous aider ?',
         },
       ],
@@ -106,7 +106,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: "Et bien, je suis là pour vous accompagner dans l'achat de nos superbes pizzas !",
         },
       ],
@@ -125,7 +125,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Ok, ça sera donc une {{pizza}} {{size}} en livraison ou à emporter ?',
         },
       ],
@@ -153,7 +153,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Je suis à votre écoute. Quelle pizza vous faut-il ?',
         },
       ],
@@ -169,7 +169,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Merci pour votre email.',
         },
         {
@@ -181,7 +181,7 @@ const bot = {
               rightOperand: 'pizzamail',
             },
           ],
-          WSs: [],
+          callables: [],
           outputMessage: 'Je vous envoi une confirmation.',
         },
         {
@@ -193,7 +193,7 @@ const bot = {
               rightOperand: 'nopizza',
             },
           ],
-          WSs: [],
+          callables: [],
           outputMessage: 'Que dois-je faire avec ?',
         },
       ],
@@ -236,7 +236,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Je suis là pour vous aider. Pourriez-vous être plus précis ?',
         },
       ],
@@ -258,7 +258,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Je regarde dans notre système.\nVous avez commandé une {{pizza}}.',
         },
       ],
@@ -274,7 +274,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage: 'Ok, ça sera donc une {{pizza}} en livraison ou à emporter ?',
         },
       ],
@@ -290,7 +290,7 @@ const bot = {
       outputs: [
         {
           conditions: [],
-          WSs: [],
+          callables: [],
           outputMessage:
             'Votre commande est prise en compte. Veuillez me transmettre votre email afin finaliser la commande. <<action="pizzamail">>',
         },
