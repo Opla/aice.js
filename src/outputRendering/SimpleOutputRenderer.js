@@ -9,8 +9,8 @@ import { ConditionEvaluator, Renderer, Utils } from '../utils';
 import OutputRenderer from './OutputRenderer';
 
 export default class SimpleOutputRenderer extends OutputRenderer {
-  constructor({ settings, outputs }) {
-    super({ settings, outputs, name: 'simple-output-rendering' });
+  constructor(settings) {
+    super({ ...settings, name: 'simple-output-rendering' });
     this.callablesManager = this.settings.callablesManager;
   }
 

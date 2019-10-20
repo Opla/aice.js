@@ -8,5 +8,6 @@
 import SimpleIntentsResolver from './SimpleIntentsResolver';
 import IntentsResolverManager from './IntentsResolverManager';
 import IntentsResolver from './IntentsResolver';
+import RemoteIntentsResolver from './RemoteIntentsResolver';
 
-export { IntentsResolverManager, IntentsResolver, SimpleIntentsResolver };
+export { IntentsResolverManager, IntentsResolver, SimpleIntentsResolver, RemoteIntentsResolver };

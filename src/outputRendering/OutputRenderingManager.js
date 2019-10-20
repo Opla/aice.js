@@ -8,13 +8,13 @@
 import SimpleOutputRenderer from './SimpleOutputRenderer';
 
 export default class OutputRenderingManager {
-  constructor({ settings }) {
-    this.settings = settings || {};
+  constructor({ outputRenderers = [], ...settings } = {}) {
+    this.settings = settings;
     this.outputRenderers = [];
-    if (this.settings.outputRenderers && this.settings.outputRenderers.length > 0) {
-      this.outputRenderers = this.settings.outputRenderers;
+    if (outputRenderers && outputRenderers.length > 0) {
+      this.outputRenderers.push(...outputRenderers);
     } else {
-      this.outputRenderers = [new SimpleOutputRenderer({ settings: this.settings })];
+      this.outputRenderers.push(new SimpleOutputRenderer({ ...this.settings }));
     }
   }
 

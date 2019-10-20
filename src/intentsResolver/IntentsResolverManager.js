@@ -9,14 +9,18 @@ import SimpleIntentResolver from './SimpleIntentsResolver';
 import { Utils } from '../utils';
 
 export default class IntentResolverManager {
-  constructor({ settings }) {
-    this.settings = { threshold: 0.75, ...settings };
+  constructor({ intentResolvers, threshold, ...settings } = {}) {
+    this.settings = { ...settings, threshold: threshold || 0.75 };
     this.intentResolvers = [];
-    if (this.settings.intentResolvers && this.settings.intentResolvers.length > 0) {
-      this.intentResolvers = this.settings.intentResolvers;
+    if (Array.isArray(intentResolvers) && intentResolvers.length > 0) {
+      this.intentResolvers.push(...intentResolvers);
     } else {
-      this.intentResolvers = [new SimpleIntentResolver({ settings: this.settings })];
+      this.intentResolvers.push(new SimpleIntentResolver({ ...this.settings }));
     }
+  }
+
+  addIntentResolver(resolver) {
+    this.intentResolvers.push(resolver);
   }
 
   /**

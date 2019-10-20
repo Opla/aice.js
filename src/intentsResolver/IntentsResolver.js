@@ -6,27 +6,37 @@
  */
 
 export default class IntentResolver {
-  constructor({ name, settings }) {
+  constructor({ name, cbTrain, cbExecute, cbEvaluate, ...settings } = {}) {
     if (!name) {
       throw new Error('Invalid IntentsResolver constructor - Missing name');
     }
-    this.settings = settings || {};
+    this.settings = settings;
     this.name = name;
+    this.cbTrain = cbTrain;
+    this.cbExecute = cbExecute;
+    this.cbEvaluate = cbEvaluate;
     this.inputs = [];
   }
 
   /**
    * Base train function - Can be redefine to better fit needs (ML)
    */
-  train(inputs) {
-    this.inputs = inputs || [];
+  train(inputs = []) {
+    if (this.cbTrain) {
+      this.inputs = this.cbTrain(inputs);
+    } else {
+      this.inputs = inputs;
+    }
   }
 
   /**
    * Base evaluate function - Need to be redefine in sub-class
    * @returns {Inputs} Inputs filtered by lang
    */
-  execute(lang, context) {
+  execute(lang, sentence, context) {
+    if (this.cbExecute) {
+      return this.cbExecute(lang, sentence, context);
+    }
     const { topic = '*' } = context;
     return this.inputs.filter(i => i.lang === lang && i.topic === topic);
   }
@@ -36,6 +46,9 @@ export default class IntentResolver {
    * @returns {Intent} Intent with the best score
    */
   evaluate(lang, sentence, context) {
+    if (this.cbEvaluate) {
+      return this.cbEvaluate(lang, sentence, context);
+    }
     const res = this.execute(lang, sentence, context);
     // TODO Input intent conditions
 

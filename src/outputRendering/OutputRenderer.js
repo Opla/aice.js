@@ -6,13 +6,13 @@
  */
 
 export default class OutputRenderer {
-  constructor({ name, settings, outputs }) {
+  constructor({ name, outputs = [], ...settings } = {}) {
     if (!name) {
       throw new Error('Invalid OutputRenderer constructor - Missing name');
     }
-    this.settings = settings || {};
+    this.settings = settings;
     this.name = name;
-    this.outputs = outputs || [];
+    this.outputs = outputs;
   }
 
   train(outputs) {

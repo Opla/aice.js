@@ -10,6 +10,10 @@ import { OutputRenderer } from '../../src/outputRendering';
 const { expect } = chai;
 
 describe('OutputRenderer', () => {
+  it('Should throw error if no settings with name provided', () => {
+    expect(() => new OutputRenderer()).to.throw('Invalid OutputRenderer constructor - Missing name');
+  });
+
   it('Should throw error if no name provided', () => {
     expect(() => new OutputRenderer({})).to.throw('Invalid OutputRenderer constructor - Missing name');
   });

@@ -113,9 +113,23 @@ describe('IntentsResolverManager', () => {
   });
 
   it('Should custom intentResolvers using settings', () => {
-    const resolverManager = new IntentsResolverManager({
-      settings: { intentResolvers: [new SimpleIntentsResolver({})] },
-    });
+    const resolverManager = new IntentsResolverManager({ intentResolvers: [new SimpleIntentsResolver({})] });
     expect(resolverManager.intentResolvers.length).to.equal(1);
+  });
+
+  it('Should default threshold using settings', () => {
+    const resolverManager = new IntentsResolverManager();
+    expect(resolverManager.settings.threshold).to.equal(0.75);
+  });
+
+  it('Should set 0.89 threshold using settings', () => {
+    const resolverManager = new IntentsResolverManager({ threshold: 0.89 });
+    expect(resolverManager.settings.threshold).to.equal(0.89);
+  });
+
+  it('Should add a resolver', () => {
+    const resolverManager = new IntentsResolverManager();
+    resolverManager.addIntentResolver(new SimpleIntentsResolver());
+    expect(resolverManager.intentResolvers.length).to.equal(2);
   });
 });

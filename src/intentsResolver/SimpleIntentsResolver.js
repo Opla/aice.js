@@ -9,14 +9,14 @@ import IntentsResolver from './IntentsResolver';
 import { Comparator, DamerauLevenshteinStrategy } from '../utils';
 
 export default class SimpleIntentsResolver extends IntentsResolver {
-  constructor({ settings }, comparator = new Comparator(new DamerauLevenshteinStrategy())) {
-    super({ settings, name: 'simple-intents-resolver' });
+  constructor({ comparator = new Comparator(new DamerauLevenshteinStrategy()), ...settings } = {}) {
+    super({ ...settings, name: 'simple-intents-resolver' });
     this.comparator = comparator;
   }
 
   execute(lang, sentence, context) {
     // Preprocess filter lang
-    const inputs = super.execute(lang, context);
+    const inputs = super.execute(lang, sentence, context);
 
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);

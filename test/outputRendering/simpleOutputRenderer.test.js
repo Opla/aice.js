@@ -202,9 +202,7 @@ describe('SimpleOutputRenderer', () => {
       return { body };
     };
     const renderer = new SimpleOutputRenderer({
-      settings: {
-        callablesManager,
-      },
+      callablesManager,
       outputs: [
         {
           intentid: 1,
