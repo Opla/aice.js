@@ -6,6 +6,7 @@
  */
 
 import OutputRenderingManager from './OutputRenderingManager';
-import { OutputRenderer, SimpleOutputRenderer } from './OutputRenderer';
+import OutputRenderer from './OutputRenderer';
+import SimpleOutputRenderer from './SimpleOutputRenderer';
 
 export { OutputRenderingManager, OutputRenderer, SimpleOutputRenderer };

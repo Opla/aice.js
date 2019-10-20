@@ -145,7 +145,7 @@ describe('SimpleOutputRenderer', () => {
             {
               lang: 'fr',
               tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse {{number}}'),
-              preCallables: [{ func: preConditionsCallable }],
+              preCallables: [preConditionsCallable],
               callables: [{ func: incrementNumberCallable }],
               conditions: [
                 {
@@ -194,6 +194,55 @@ describe('SimpleOutputRenderer', () => {
     expect(result.renderResponse).to.equal(
       'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     );
+  });
+
+  it('Should execute answers - async/await callableManager', async () => {
+    const callablesManager = async callable => {
+      const body = callable.name;
+      return { body };
+    };
+    const renderer = new SimpleOutputRenderer({
+      settings: {
+        callablesManager,
+      },
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            {
+              lang: 'fr',
+              tokenizedOutput: tokenizerOutput.tokenize('{{body}}'),
+              preCallables: [{ name: 'function' }],
+            },
+          ],
+        },
+      ],
+    });
+
+    const result = await renderer.execute('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(result.score).to.equal(0.99);
+    expect(result.renderResponse).to.equal('function');
+  });
+
+  it('Should execute answers - faulty callableManager', async () => {
+    const renderer = new SimpleOutputRenderer({
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            {
+              lang: 'fr',
+              tokenizedOutput: tokenizerOutput.tokenize('{{body}}'),
+              preCallables: [{ name: 'function' }],
+            },
+          ],
+        },
+      ],
+    });
+
+    return renderer.execute('fr', [{ intentid: 1, score: 0.99 }], {}).catch(err => {
+      expect(err).to.have.property('message', 'AICE executeCallable - no callablesManager defined');
+    });
   });
 
   it('Should execute answers - return context', async () => {
