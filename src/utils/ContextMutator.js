@@ -23,7 +23,9 @@ export default class ContextMutator {
       if (context.hasOwnProperty(`${variable.name}_1`)) {
         const [, index] = Object.keys(context)
           .reduce((acc, k) => {
-            if (k.indexOf('_')) acc.push(k);
+            // Is this "if" usefull ?
+            // if (k.indexOf('_')) acc.push(k);
+            acc.push(k);
             return acc;
           }, [])
           .reverse()[0]
@@ -45,7 +47,9 @@ export default class ContextMutator {
       if (context[`${entity.name}_1`]) {
         const [, index] = Object.keys(context)
           .reduce((acc, k) => {
-            if (k.indexOf('_')) acc.push(k);
+            // Is this "if" usefull ?
+            // if (k.indexOf('_')) acc.push(k);
+            acc.push(k);
             return acc;
           }, [])
           .reverse()[0]

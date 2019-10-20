@@ -27,6 +27,10 @@ export default class IntentResolverManager {
     this.intentResolvers.forEach(ir => ir.train(inputs));
   }
 
+  static distance(d1, d2) {
+    return parseFloat(d2.score) - parseFloat(d1.score);
+  }
+
   /**
    * Execute sentence througth all IntentsResolvers
    * @returns {Intents}
@@ -34,14 +38,14 @@ export default class IntentResolverManager {
   execute(lang, sentence, context = {}) {
     const { topic = '*' } = context;
     const res = Utils.flatten(this.intentResolvers.map(ir => ir.execute(lang, sentence, topic))).sort(
-      (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
+      IntentResolverManager.distance,
     );
     return res;
   }
 
   match(lang, utterance, context) {
     return Utils.flatten(this.intentResolvers.map(ir => ir.evaluate(lang, utterance, context))).sort(
-      (d1, d2) => parseFloat(d2.score) - parseFloat(d1.score),
+      IntentResolverManager.distance,
     );
   }
 

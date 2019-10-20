@@ -29,9 +29,10 @@ export default class ExpressionParser {
 
       const firstElement = match.shift(); // Remove first element who is the global match for get only captured groups
       const type = match.findIndex(e => e); // Get the block type
-      if (type !== -1) {
+      /* TODO check this : if (type !== -1) {
         children.push({ text: firstElement, expression: this.expressionTypes[type].parser(match[type]) });
-      }
+      } */
+      children.push({ text: firstElement, expression: this.expressionTypes[type].parser(match[type]) });
 
       index = regex.lastIndex;
       match = regex.exec(textToParse);

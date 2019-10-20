@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -33,7 +32,8 @@ class SimpleOutputRenderer extends OutputRenderer {
     super({ settings, outputs, name: 'simple-output-rendering' });
   }
 
-  async execute(lang, intents, context) {
+  async execute(lang, intents, baseContext) {
+    let context = baseContext;
     const { intentid, score } = intents[0] || {}; // Best match for now
 
     // Retrieve output object for this intentid

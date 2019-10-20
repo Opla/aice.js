@@ -122,7 +122,7 @@ export default class Comparator {
    * @param {Boolean} caseAny AnyOrNothing
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
-  compareGenericAnyOrNothing(resultState, caseAny = true) {
+  compareGenericAnyOrNothing(resultState, caseAny) {
     const result = resultState;
     let text = '';
 

@@ -6,6 +6,7 @@
  */
 import chai from 'chai';
 import { NamedEntityTokenizer, NERManager, SystemEntities } from '../../src/streamTransformers';
+import { DoubleLinkedList } from '../../src/streamTransformers/models';
 
 const { expect } = chai;
 
@@ -49,7 +50,7 @@ describe('NER Tokenizer', () => {
   });
 
   it('Should tokenize (with NER pipe) - Multiple Token (text after entity)', () => {
-    const textToTokenize = 'My email adresse is opla@opla.ai and I love you';
+    const textToTokenize = 'My email adresse is opla@opla.ai and{I love you';
     const tokenized = nerTokenizer.tokenize(LANG, textToTokenize);
 
     const emailToken = tokenized.get(4);
@@ -62,5 +63,12 @@ describe('NER Tokenizer', () => {
     expect(() => new NamedEntityTokenizer()).to.throw(
       'Invalid NamedEntityTokenizer constructor - NamedEntityRecognizer is required',
     );
+  });
+
+  it('Should tokenize (with NER pipe) using normalize=false', () => {
+    const textToTokenize = 'jeff@opla.ai ok';
+    const tokenized = nerTokenizer.tokenize(LANG, textToTokenize, new DoubleLinkedList(), false);
+
+    expect(tokenized.get(0).value.ner.match).to.equal('jeff@opla.ai');
   });
 });

@@ -1,3 +1,4 @@
+//
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -6,7 +7,6 @@
  *
  * Authors: Morgan Perre
  */
-
 import { DoubleLinkedList } from '../models';
 import ExpressionParser from './ExpressionParser';
 

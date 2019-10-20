@@ -26,7 +26,7 @@ describe('OutputRenderingManager', () => {
 
   it('Should execute outputRenderers - NEED TO BE TWICK WITH ALL NEW FUTURE RENDERERS', async () => {
     const outputRenderingManager = new OutputRenderingManager({});
-    const result = await outputRenderingManager.execute('fr', [], {});
+    const result = await outputRenderingManager.execute('fr', undefined, {});
 
     expect(result).to.equal(undefined);
   });

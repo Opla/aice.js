@@ -206,7 +206,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
               type: 'condition',
               children: [
                 {
-                  name: 'action',
+                  name: `"action"`,
                   type: 'item',
                   value: 'nopizza',
                   text: 'Que dois-je faire avec ?',
@@ -246,7 +246,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
               {
                 type: 'LeftRightExpression',
                 operator: 'eq',
-                leftOperand: { type: 'VARIABLE', value: 'action' },
+                leftOperand: 'action',
                 rightOperand: 'nopizza',
               },
             ],
@@ -289,7 +289,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
           name: 'fillemail',
           state: 'enabled',
           input: ['@email'],
-          output: ['{{doSomething($highest, $lowest)}}'],
+          output: ['{{doSomething($highest, $lowest, `text`)}}'],
         },
       ],
     };
@@ -301,5 +301,15 @@ describe('parseAdaptOpenNLXSyntax', () => {
     expect(webService.service).to.equal('doSomething');
     expect(webService.parameters[0]).to.equal('{{highest}}');
     expect(webService.parameters[1]).to.equal('{{lowest}}');
+    expect(webService.parameters[2]).to.equal('text');
+  });
+
+  it('parseAdaptOpenNLXSyntax empty intents', () => {
+    const bot = {
+      name: 'OplaZap',
+      intents: [],
+    };
+    const newBot = parseAdaptOpenNLXSyntax(bot);
+    expect(newBot.name).to.equal('OplaZap');
   });
 });
