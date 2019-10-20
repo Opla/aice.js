@@ -28,6 +28,17 @@ describe('OutputRenderer', () => {
     expect(renderer.outputs).to.eql([1]);
   });
 
+  it('Should find output', () => {
+    const renderer = new OutputRenderer({ name: 'test-renderer' });
+    renderer.train([{ intentid: 1 }, { intentid: 2 }]);
+    let output = renderer.find(1);
+    expect(output.intentid).to.eql(1);
+    output = renderer.find(2);
+    expect(output.intentid).to.eql(2);
+    output = renderer.find(3);
+    expect(output).to.eql(undefined);
+  });
+
   it('Should throw error, execute need to be override in sub-class', async () => {
     const renderer = new OutputRenderer({ name: 'test-renderer' });
     await renderer

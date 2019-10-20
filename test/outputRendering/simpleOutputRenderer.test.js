@@ -258,4 +258,28 @@ describe('SimpleOutputRenderer', () => {
     expect(result.context.code).to.equal('state');
     expect(result.renderResponse).to.equal('Code');
   });
+  it('Should execute answers - intent reference', async () => {
+    const renderer = new SimpleOutputRenderer({
+      outputs: [
+        {
+          intentid: 1,
+          answers: [{ lang: 'fr', tokenizedOutput: tokenizerOutput.tokenize('{{code="state"}}') }],
+        },
+        {
+          intentid: 2,
+          answers: [
+            {
+              lang: 'fr',
+              callables: [{ name: 1, isReference: true, value: 'reference1' }],
+              tokenizedOutput: tokenizerOutput.tokenize('Code {{reference1}}'),
+            },
+          ],
+        },
+      ],
+    });
+    let result = await renderer.execute('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(result.context.code).to.equal('state');
+    result = await renderer.execute('fr', [{ intentid: 2, score: 0.99 }], {});
+    expect(result.renderResponse).to.equal('Code state');
+  });
 });

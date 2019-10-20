@@ -19,6 +19,10 @@ export default class OutputRenderer {
     this.outputs = outputs || [];
   }
 
+  find(intentid) {
+    return this.outputs.find(output => (output.intentid === intentid ? output : undefined));
+  }
+
   // eslint-disable-next-line class-methods-use-this
   async execute() {
     throw new Error('Invalid OutputRenderer - execute() should be implemented in child class');

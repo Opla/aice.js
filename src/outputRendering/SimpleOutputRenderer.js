@@ -14,8 +14,9 @@ export default class SimpleOutputRenderer extends OutputRenderer {
     this.callablesManager = this.settings.callablesManager;
   }
 
-  async executeCallable(callables, baseContext) {
+  async executeCallable(lang, callables, baseContext) {
     let context = baseContext;
+
     await Promise.all(
       callables.map(async callable => {
         let ctx = {};
@@ -23,8 +24,12 @@ export default class SimpleOutputRenderer extends OutputRenderer {
           ctx = await callable(context);
         } else if (callable.func && typeof callable.func === 'function') {
           ctx = await callable.func(context);
+        } else if (callable.isReference) {
+          const output = this.find(callable.name);
+          const resp = await this.execute(lang, [{ intentid: output.intentid, score: 0.99 }], context);
+          ctx[callable.value] = resp.renderResponse;
         } else if (this.callablesManager) {
-          ctx = await this.callablesManager(callable, context);
+          ctx = await this.callablesManager(callable, context, lang);
         } else {
           throw new Error('AICE executeCallable - no callablesManager defined');
         }
@@ -51,7 +56,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
 
       // Call pre-conditions callables
       if (preCallables && preCallables.length > 0) {
-        context = await this.executeCallable(preCallables, context);
+        context = await this.executeCallable(lang, preCallables, context);
       }
 
       // Check Conditions
@@ -65,7 +70,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
 
       // Call pre-render callables
       if (callables && callables.length > 0) {
-        context = await this.executeCallable(callables, context);
+        context = await this.executeCallable(lang, callables, context);
       }
 
       // Final Check Context Evaluation
