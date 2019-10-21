@@ -5,18 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Entity = require('./Entity');
-const EnumEntity = require('./EnumEntity');
-const NamedEntity = require('./NamedEntity');
-const NERManager = require('./NERManager');
-const RegExpEntity = require('./RegExpEntity');
-const SystemEntities = require('./SystemEntities');
+import Entity from './Entity';
+import EnumEntity from './EnumEntity';
+import NamedEntity from './NamedEntity';
+import NERManager from './NERManager';
+import RegExpEntity from './RegExpEntity';
+import SystemEntities from './SystemEntities';
 
-module.exports = {
-  Entity,
-  EnumEntity,
-  NamedEntity,
-  NERManager,
-  RegExpEntity,
-  SystemEntities,
-};
+export { Entity, EnumEntity, NamedEntity, NERManager, RegExpEntity, SystemEntities };

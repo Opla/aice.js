@@ -38,7 +38,7 @@ class DoubleLinkedListNode {
 const head = Symbol('head');
 const tail = Symbol('tail');
 
-class DoubleLinkedList {
+export default class DoubleLinkedList {
   constructor() {
     this[head] = null;
     this[tail] = null;
@@ -91,5 +91,3 @@ class DoubleLinkedList {
     return this.lists();
   }
 }
-
-module.exports = DoubleLinkedList;

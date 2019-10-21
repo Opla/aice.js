@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class Sentence {
+export default class Sentence {
   constructor(stream = '') {
     this.raw = '';
     this.write(stream);
@@ -13,11 +13,9 @@ class Sentence {
 
   write(stream) {
     this.raw += stream;
-    // this.linkedListNER += NERTokenizer.tokenize(stream, this.linkedListNER);
+    // this.linkedListNER += NamedEntityTokenizer.tokenize(stream, this.linkedListNER);
     // this.normalized += Normalizer.normalize(stream);
-    // this.linkedListWords = ComplexeTokenizer.tokenize(stream, this.linkedListWords);
-    // this.linkedListIDK = ComplexeTokenizer.tokenize(stream, this.linkedListIDK);
+    // this.linkedListWords = AdvancedTokenizer.tokenize(stream, this.linkedListWords);
+    // this.linkedListIDK = AdvancedTokenizer.tokenize(stream, this.linkedListIDK);
   }
 }
-
-module.exports = Sentence;

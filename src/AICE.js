@@ -5,28 +5,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/* eslint-disable no-param-reassign */
-const { IntentResolverManager } = require('../intentsResolver');
-const { OutputRenderingManager } = require('../outputRendering');
-const { InputExpressionTokenizer, OutputExpressionTokenizer } = require('../streamTransformers/expression');
-const { NERTokenizer } = require('../streamTransformers/tokenizer');
-
-const { NERManager, SystemEntities } = require('../streamTransformers');
+import { IntentsResolverManager } from './intentsResolver';
+import { OutputRenderingManager } from './outputRendering';
+import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
+import { NamedEntityTokenizer } from './streamTransformers/tokenizer';
+import { NERManager, SystemEntities } from './streamTransformers';
 
 const LANG = 'fr';
 
-class AICE {
+export default class AICE {
   constructor(settings = {}) {
     this.settings = settings;
     this.inputs = [];
     this.outputs = [];
     // StreamsTransformers
     this.NERManager = new NERManager();
-    this.NERTokenizer = new NERTokenizer(this.NERManager);
+    this.NamedEntityTokenizer = new NamedEntityTokenizer(this.NERManager);
     this.InputExpressionTokenizer = new InputExpressionTokenizer();
     this.OutputExpressionTokenizer = new OutputExpressionTokenizer();
 
-    this.IntentResolverManager = new IntentResolverManager(this.settings);
+    this.IntentResolverManager = new IntentsResolverManager(this.settings);
     this.OutputRenderingManager = new OutputRenderingManager(this.settings);
 
     SystemEntities.getSystemEntities().forEach(e => {
@@ -109,13 +107,21 @@ class AICE {
       throw new Error('AICE addOutput - Has some missing mandatory parameters');
     }
     const tokenizedOutput = this.OutputExpressionTokenizer.tokenize(output);
+    const preCallables = [];
+    if (preConditionsCallable) {
+      preCallables.push({ func: preConditionsCallable });
+    }
+    const callables = [];
+    if (preRenderCallable) {
+      callables.push({ func: preRenderCallable });
+    }
     const answer = {
       lang,
       output,
       tokenizedOutput,
-      preConditionsCallable,
+      preCallables,
       conditions,
-      preRenderCallable,
+      callables,
     };
 
     const intentOutput = this.outputs.find(o => o.intentid === intentid);
@@ -143,7 +149,7 @@ class AICE {
   }
 
   /**
-   * Process an utterance to fully andersand it.
+   * Evaluate an utterance to fully understand it.
    * The process is:
    * - Streams Transformer: Tokenize the utterance and look for entities using NER
    * - Intents Resolvers: Look for the user intention
@@ -153,25 +159,22 @@ class AICE {
    * @param {String} lang Default lang is french.
    * @returns {reponse} An object containing: answer, score, intent, context
    */
-  async process(utterance, context = {}, lang = LANG) {
+  async evaluate(utterance, context = {}, lang = LANG) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
-    const tokenizedUtterance = this.NERTokenizer.tokenize(lang, utterance);
+    const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);
 
     // Intents Resolvers
-    const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance, context);
-    context = { ...context, ...((result && result[0]) || {}).context };
+    const result = this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
+    const ctx = { ...context, ...((result && result[0]) || {}).context };
 
     // Output Rendering
-    const answer = await this.OutputRenderingManager.process(lang, result, context);
-
+    const answer = await this.OutputRenderingManager.execute(lang, result, ctx);
     return {
       answer: (answer || {}).renderResponse,
       score: answer ? answer.score : 0,
       intent: (answer || {}).intentid,
-      context: (answer && answer.context) || context,
+      context: (answer && answer.context) || ctx,
     };
   }
 }
-
-module.exports = AICE;

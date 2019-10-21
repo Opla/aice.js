@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const NamedEntity = require('./NamedEntity');
-const Entity = require('./Entity');
+import NamedEntity from './NamedEntity';
+import Entity from './Entity';
 
-class RegExpEntity extends NamedEntity {
+export default class RegExpEntity extends NamedEntity {
   constructor({ name, scope, regex, resolve }) {
     if (!regex) {
       throw new Error('Invalid Entity constructor - Missing regex');
@@ -53,5 +53,3 @@ class RegExpEntity extends NamedEntity {
     return extracted;
   }
 }
-
-module.exports = RegExpEntity;

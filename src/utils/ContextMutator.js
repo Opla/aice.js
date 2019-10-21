@@ -7,7 +7,7 @@
 
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-param-reassign */
-class ContextMutator {
+export default class ContextMutator {
   /**
    * Set variable to context - re-affect context !
    */
@@ -23,7 +23,9 @@ class ContextMutator {
       if (context.hasOwnProperty(`${variable.name}_1`)) {
         const [, index] = Object.keys(context)
           .reduce((acc, k) => {
-            if (k.indexOf('_')) acc.push(k);
+            // Is this "if" usefull ?
+            // if (k.indexOf('_')) acc.push(k);
+            acc.push(k);
             return acc;
           }, [])
           .reverse()[0]
@@ -45,7 +47,9 @@ class ContextMutator {
       if (context[`${entity.name}_1`]) {
         const [, index] = Object.keys(context)
           .reduce((acc, k) => {
-            if (k.indexOf('_')) acc.push(k);
+            // Is this "if" usefull ?
+            // if (k.indexOf('_')) acc.push(k);
+            acc.push(k);
             return acc;
           }, [])
           .reverse()[0]
@@ -59,5 +63,3 @@ class ContextMutator {
     }
   }
 }
-
-module.exports = ContextMutator;

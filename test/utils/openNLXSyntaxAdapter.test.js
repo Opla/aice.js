@@ -1,8 +1,13 @@
-const chai = require('chai');
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { openNLXSyntaxAdapter } from '../../src/utils';
 
 const { expect } = chai;
-
-const { openNLXSyntaxAdapter } = require('../../src/utils');
 
 const { parseAdaptOpenNLXSyntax, parseAdaptOpenNLXSyntaxV3 } = openNLXSyntaxAdapter;
 
@@ -76,12 +81,12 @@ describe('parseAdaptOpenNLXSyntax', () => {
         outputs: [
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Hello 🤖 <<action=nopizza>>',
           },
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Et bienvenue chez OplaZap ! En quoi puis-je vous aider ?',
           },
         ],
@@ -158,12 +163,12 @@ describe('parseAdaptOpenNLXSyntax', () => {
         outputs: [
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Hello 🤖 <<action=nopizza>>',
           },
           {
             conditions: [],
-            WSs: [],
+            callables: [],
             outputMessage: 'Et bienvenue chez OplaZap ! En quoi puis-je vous aider ?',
           },
         ],
@@ -201,7 +206,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
               type: 'condition',
               children: [
                 {
-                  name: 'action',
+                  name: `"action"`,
                   type: 'item',
                   value: 'nopizza',
                   text: 'Que dois-je faire avec ?',
@@ -223,29 +228,29 @@ describe('parseAdaptOpenNLXSyntax', () => {
         topic: '*',
         inputs: [{ inputMessage: '@email' }, { inputMessage: '*@email*' }, { inputMessage: '*@email' }],
         outputs: [
-          { conditions: [], WSs: [], outputMessage: 'Merci pour votre email.' },
+          { conditions: [], callables: [], outputMessage: 'Merci pour votre email.' },
           {
             conditions: [
               {
                 type: 'LeftRightExpression',
-                operande: 'eq',
-                Lvalue: { type: 'VARIABLE', value: 'action' },
-                Rvalue: 'pizzamail',
+                operator: 'eq',
+                leftOperand: { type: 'VARIABLE', value: 'action' },
+                rightOperand: 'pizzamail',
               },
             ],
-            WSs: [],
+            callables: [],
             outputMessage: 'Je vous envoi une confirmation.',
           },
           {
             conditions: [
               {
                 type: 'LeftRightExpression',
-                operande: 'eq',
-                Lvalue: { type: 'VARIABLE', value: 'action' },
-                Rvalue: 'nopizza',
+                operator: 'eq',
+                leftOperand: 'action',
+                rightOperand: 'nopizza',
               },
             ],
-            WSs: [],
+            callables: [],
             outputMessage: 'Que dois-je faire avec ?',
           },
         ],
@@ -268,7 +273,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
     };
     const newBot = parseAdaptOpenNLXSyntax(bot);
     expect(newBot.name).to.equal('OplaZap');
-    const webService = newBot.intents[0].outputs[0].WSs[0];
+    const webService = newBot.intents[0].outputs[0].callables[0];
     expect(webService.service).to.equal('system.sendMail');
     expect(webService.parameters[0]).to.equal('{{email}}');
     expect(webService.parameters[1]).to.equal('test');
@@ -284,7 +289,7 @@ describe('parseAdaptOpenNLXSyntax', () => {
           name: 'fillemail',
           state: 'enabled',
           input: ['@email'],
-          output: ['{{doSomething($highest, $lowest)}}'],
+          output: ['{{doSomething($highest, $lowest, `text`)}}'],
         },
       ],
     };
@@ -292,9 +297,19 @@ describe('parseAdaptOpenNLXSyntax', () => {
     expect(newBot.name).to.equal('OplaZap');
     const output = newBot.intents[0].outputs[0];
     expect(output.outputMessage).to.equal('{{doSomething}}');
-    const webService = output.WSs[0];
+    const webService = output.callables[0];
     expect(webService.service).to.equal('doSomething');
     expect(webService.parameters[0]).to.equal('{{highest}}');
     expect(webService.parameters[1]).to.equal('{{lowest}}');
+    expect(webService.parameters[2]).to.equal('text');
+  });
+
+  it('parseAdaptOpenNLXSyntax empty intents', () => {
+    const bot = {
+      name: 'OplaZap',
+      intents: [],
+    };
+    const newBot = parseAdaptOpenNLXSyntax(bot);
+    expect(newBot.name).to.equal('OplaZap');
   });
 });

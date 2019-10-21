@@ -12,7 +12,6 @@
   },
   "plugins": ["prettier"],
   "rules": {
-    "no-restrited-syntax": 0,
     "no-multi-assign": 0,
     "arrow-body-style": ["error", "as-needed"],
     "prettier/prettier": ["error", {

@@ -57,10 +57,6 @@ npm install aice.js
 import { AICE } from 'aice.js';
 ```
 
-```js
-const { AICE } = require('aice.js');
-```
-
 **Simple use case**
 ```js
 const aice = new AICE();
@@ -71,8 +67,8 @@ aice.addOutput('en', 'hello', "Hello. What's up ?");
 
 aice.train();
 
-// now you can use process to get the answer
-const response = await aice.process('Hello', {}, 'en');
+// now you can use evaluate to get the answer
+const response = await aice.evaluate('Hello', {}, 'en');
 ```
 
 ```
@@ -97,15 +93,15 @@ nlp.addOutput(
   undefined,
   [{
       type: 'LeftRightExpression',
-      operande: 'eq',
-      Lvalue: { type: 'VARIABLE', value: 'state' },
-      Rvalue: 'STATE_0',
+      operator: 'eq',
+      leftOperand: { type: 'VARIABLE', value: 'state' },
+      rightOperand: 'STATE_0',
    }]);
 
 nlp.train();
 
-// now you can use process to get the answer
-const response = await aice.process('Test condition', { state: 'STATE_0'}, 'en');
+// now you can use evaluate to get the answer
+const response = await aice.evaluate('Test condition', { state: 'STATE_0'}, 'en');
 ```
 
 ```

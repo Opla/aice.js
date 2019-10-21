@@ -5,12 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ComplexeTokenizer = require('./complexeTokenizer');
-const SimpleTokenizer = require('./simpleTokenizer');
-const NERTokenizer = require('./nerTokenizer');
+import AdvancedTokenizer from './AdvancedTokenizer';
+import BasicTokenizer from './BasicTokenizer';
+import NamedEntityTokenizer from './NamedEntityTokenizer';
 
-module.exports = {
-  ComplexeTokenizer,
-  SimpleTokenizer,
-  NERTokenizer,
-};
+export { AdvancedTokenizer, BasicTokenizer, NamedEntityTokenizer };

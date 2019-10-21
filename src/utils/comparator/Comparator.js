@@ -5,15 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ContextMutator = require('../contextMutator');
-const { ExactStrategy } = require('./wordsComparator/strategies');
+import ContextMutator from '../ContextMutator';
+import { ExactStrategy } from './wordsComparator/strategies';
 
 const equalsText = (a, b) => a.length === b.length && a.every((t, i) => t.text === b[i].text);
 
 /**
  * @class Comparator
  */
-class Comparator {
+export default class Comparator {
   constructor(wordComparator = new ExactStrategy()) {
     this.wordComparator = wordComparator;
   }
@@ -42,7 +42,7 @@ class Comparator {
       while (result.match && !result.iteratorI.done) {
         result = this.compareExpressions(result);
 
-        // Do we need to process next tokens
+        // Do we need to proceed next tokens
         if (!result.iteratorI.done) {
           result.iteratorI = result.iteratorGeneratorI.next();
           result.iteratorU = result.iteratorGeneratorU.next();
@@ -66,7 +66,7 @@ class Comparator {
 
   /**
    * Matchs Expressions
-   * @param {result} result result is a complexe object used to process Sentences comparison
+   * @param {result} result result is a compare object used to proceed Sentences comparison
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
   compareExpressions(resultState, affectation = true) {
@@ -118,11 +118,11 @@ class Comparator {
 
   /**
    * Matchs Any Expression or AnyOrNothing Expression
-   * @param {result} result result is a complexe object used to process Sentences comparison
+   * @param {result} result result is a compare object used to proceed Sentences comparison
    * @param {Boolean} caseAny AnyOrNothing
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
-  compareGenericAnyOrNothing(resultState, caseAny = true) {
+  compareGenericAnyOrNothing(resultState, caseAny) {
     const result = resultState;
     let text = '';
 
@@ -170,4 +170,4 @@ class Comparator {
   }
 }
 
-module.exports = { Comparator };
+export { Comparator };

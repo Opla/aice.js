@@ -6,6 +6,8 @@
  */
 
 /* eslint-disable no-console */
+import fs from 'fs';
+import OpenNLXSyntaxAdapter from '../../src/utils/openNLXSyntaxAdapter';
 
 const bot = {
   name: 'OplaZap',
@@ -143,9 +145,6 @@ const bot = {
           tags: ['grande', 'large'],
         },
       ],
-      extra: {
-        type: 'complex',
-      },
     },
     {
       name: 'pizza_type',
@@ -168,16 +167,10 @@ const bot = {
           tags: ['livraison'],
         },
       ],
-      extra: {
-        type: 'complex',
-      },
     },
   ],
   variables: [],
 };
-
-const fs = require('fs');
-const OpenNLXSyntaxAdapter = require('../../src/utils/openNLXSyntaxAdapter');
 
 const json = JSON.stringify(OpenNLXSyntaxAdapter(bot));
 

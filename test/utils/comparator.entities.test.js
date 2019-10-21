@@ -1,16 +1,20 @@
-const chai = require('chai');
-
-const { expect } = chai;
-
-const { Comparator } = require('../../src/utils');
-
-const {
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { Comparator } from '../../src/utils';
+import {
   EnumEntity,
-  NERTokenizer,
+  NamedEntityTokenizer,
   NERManager,
   SystemEntities,
   InputExpressionTokenizer,
-} = require('../../src/streamTransformers');
+} from '../../src/streamTransformers';
+
+const { expect } = chai;
 
 const LANG = 'fr';
 
@@ -23,7 +27,7 @@ describe('Entities Comparator', () => {
       enumeration: [{ key: 'S', values: ['small'] }, { key: 'M', values: ['medium'] }, { key: 'L', values: ['large'] }],
     }),
   );
-  const tokenizerUtterance = new NERTokenizer(ner);
+  const tokenizerUtterance = new NamedEntityTokenizer(ner);
   const tokenizerInput = new InputExpressionTokenizer();
   const simpleComparator = new Comparator();
 

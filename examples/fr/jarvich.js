@@ -6,10 +6,10 @@
  */
 
 /* eslint-disable no-console */
-const readline = require('readline');
+import readline from 'readline';
+import { AICE } from '../../src';
 
 const threshold = 0.5;
-const { AICE } = require('../../src');
 
 const BOT_NAME = 'jarvich';
 const isSilent = process.argv[2] === '--silent';
@@ -63,7 +63,7 @@ const ctxt = {};
       process.exit();
     } else {
       start = +Date.now();
-      const result = await nlp.process(line, ctxt);
+      const result = await nlp.evaluate(line, ctxt);
       end = +Date.now();
       const answer =
         result.score > threshold && result.answer ? result.answer : 'Désolé, je ne comprends pas votre question';

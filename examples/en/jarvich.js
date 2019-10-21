@@ -6,10 +6,10 @@
  */
 
 /* eslint-disable no-console */
-const readline = require('readline');
+import readline from 'readline';
+import { AICE } from '../../src';
 
 const threshold = 0.5;
-const { AICE } = require('../../src');
 
 const BOT_NAME = 'jarvich';
 const isSilent = process.argv[2] === '--silent';
@@ -63,7 +63,7 @@ const ctxt = {};
       process.exit();
     } else {
       start = +Date.now();
-      const result = await nlp.process(line, ctxt, 'en');
+      const result = await nlp.evaluate(line, ctxt, 'en');
       end = +Date.now();
       const answer = result.score > threshold && result.answer ? result.answer : 'Error intent not found';
       const extra = !isSilent ? `- spent: ${end - start}ms - extra: ${JSON.stringify(result)}` : '';

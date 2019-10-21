@@ -1,8 +1,13 @@
-const chai = require('chai');
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { NamedEntity, EnumEntity, RegExpEntity } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { NamedEntity, EnumEntity, RegExpEntity } = require('../../src/streamTransformers');
 
 describe('Named/EnumEntity', () => {
   it('EnumEntity should throw err if no enumeration is passed', () => {

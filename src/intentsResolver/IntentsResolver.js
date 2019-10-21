@@ -5,39 +5,51 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class IntentResolver {
-  constructor({ name, settings }) {
+export default class IntentResolver {
+  constructor({ name, cbTrain, cbExecute, cbEvaluate, ...settings } = {}) {
     if (!name) {
       throw new Error('Invalid IntentsResolver constructor - Missing name');
     }
-    this.settings = settings || {};
+    this.settings = settings;
     this.name = name;
+    this.cbTrain = cbTrain;
+    this.cbExecute = cbExecute;
+    this.cbEvaluate = cbEvaluate;
     this.inputs = [];
   }
 
   /**
    * Base train function - Can be redefine to better fit needs (ML)
    */
-  train(inputs) {
-    this.inputs = inputs || [];
+  train(inputs = []) {
+    if (this.cbTrain) {
+      this.inputs = this.cbTrain(inputs);
+    } else {
+      this.inputs = inputs;
+    }
   }
 
   /**
-   * Base process function - Need to be redefine in sub-class
+   * Base evaluate function - Need to be redefine in sub-class
    * @returns {Inputs} Inputs filtered by lang
    */
-  process(lang, context) {
+  execute(lang, sentence, context) {
+    if (this.cbExecute) {
+      return this.cbExecute(lang, sentence, context);
+    }
     const { topic = '*' } = context;
     return this.inputs.filter(i => i.lang === lang && i.topic === topic);
   }
 
   /**
-   * ProcessBest Intent
+   * evaluate Intent
    * @returns {Intent} Intent with the best score
    */
-  processBest(lang, sentence, context) {
-    const res = this.process(lang, sentence, context);
-
+  evaluate(lang, sentence, context) {
+    if (this.cbEvaluate) {
+      return this.cbEvaluate(lang, sentence, context);
+    }
+    const res = this.execute(lang, sentence, context);
     // TODO Input intent conditions
 
     // Previous handling
@@ -51,5 +63,3 @@ class IntentResolver {
     return r.sort((d1, d2) => parseFloat(d2.score) - parseFloat(d1.score))[0];
   }
 }
-
-module.exports = IntentResolver;

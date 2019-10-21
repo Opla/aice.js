@@ -7,8 +7,8 @@
  * Authors: Morgan Perre
  */
 
-const { DoubleLinkedList } = require('../models/');
-const { ExpressionParser } = require('./expressionParser');
+import { DoubleLinkedList } from '../models';
+import ExpressionParser from './ExpressionParser';
 
 const parseValue = match => {
   const isText = match.includes("'") || match.includes('"');
@@ -20,7 +20,7 @@ const parseValue = match => {
 /**
  * OutputExpressionTokenizer
  */
-class OutputExpressionTokenizer {
+export default class OutputExpressionTokenizer {
   constructor() {
     /**
      * regex: the regex used to capture an expession
@@ -42,7 +42,6 @@ class OutputExpressionTokenizer {
 
           const contextName = matchs[0];
           const value = parseValue(matchs[1]);
-
           return { type: 'OUTPUT', contextName, value };
         },
       },
@@ -77,5 +76,3 @@ class OutputExpressionTokenizer {
     return list;
   }
 }
-
-module.exports = { OutputExpressionTokenizer };

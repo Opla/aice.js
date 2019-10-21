@@ -5,16 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {
-  StrategyWordComparator,
-  ExactStrategy,
-  LevenshteinStrategy,
-  DamerauLevenshteinStrategy,
-} = require('./strategies');
+import { StrategyWordComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy } from './strategies';
 
-module.exports = {
-  StrategyWordComparator,
-  ExactStrategy,
-  LevenshteinStrategy,
-  DamerauLevenshteinStrategy,
-};
+export { StrategyWordComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy };

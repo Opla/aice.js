@@ -1,3 +1,4 @@
+//
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -6,9 +7,8 @@
  *
  * Authors: Morgan Perre
  */
-
-const { DoubleLinkedList } = require('../models/');
-const { ExpressionParser } = require('./expressionParser');
+import { DoubleLinkedList } from '../models';
+import ExpressionParser from './ExpressionParser';
 
 const isSeparator = charToken =>
   charToken < '0' ||
@@ -20,7 +20,7 @@ const isSeparator = charToken =>
 /**
  * InputExpressionTokenizer
  */
-class InputExpressionTokenizer {
+export default class InputExpressionTokenizer {
   constructor() {
     /**
      * regex: the regex used to capture an expession
@@ -107,5 +107,3 @@ class InputExpressionTokenizer {
     return list;
   }
 }
-
-module.exports = { InputExpressionTokenizer };

@@ -1,10 +1,14 @@
-const chai = require('chai');
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { AICE } from '../src';
+import { SystemEntities, RegExpEntity } from '../src/streamTransformers';
 
 const { expect } = chai;
-
-const { AICE } = require('../src/');
-
-const { SystemEntities, RegExpEntity } = require('../src/streamTransformers');
 
 describe('AICE NLP', () => {
   it('Basic Use Case - All API', async () => {
@@ -36,17 +40,17 @@ describe('AICE NLP', () => {
 
     // Tests
     const context = {};
-    let res = await aice.process('bonjour', context);
+    let res = await aice.evaluate('bonjour', context);
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.presentation');
     expect(res.answer).to.equal('Coucou :)');
 
-    res = await aice.process("Superbe, je m'appelle Morgan", context);
+    res = await aice.evaluate("Superbe, je m'appelle Morgan", context);
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.askname');
     expect(res.answer).to.equal('Hello Morgan');
 
-    res = await aice.process('Squeezie ft Joyca - Bye Bye', context);
+    res = await aice.evaluate('Squeezie ft Joyca - Bye Bye', context);
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.bye');
     expect(res.answer).to.equal('A la prochaine!');
@@ -55,7 +59,7 @@ describe('AICE NLP', () => {
   it('AICE - No intents', async () => {
     const aice = new AICE();
     aice.train();
-    const res = await aice.process('Hello', context, 'en');
+    const res = await aice.evaluate('Hello', context, 'en');
 
     expect(res.score).to.equal(0);
     expect(res.intent).to.equal(undefined);
@@ -130,5 +134,23 @@ describe('AICE NLP', () => {
 
     const variables = aice.getAllVariables();
     expect(variables).to.eql(['anyornothing', 'name', 'email']);
+  });
+
+  it('AICE - Intent reference WIP', async () => {
+    const aice = new AICE();
+    // Initialization
+    aice.addInput('fr', 'agent.presentation', 'Hello {{name=*}}');
+    aice.addOutput('fr', 'agent.presentation', 'Hello {{name}} :)');
+
+    aice.addInput('fr', 'agent.yeah', 'Yeah');
+    aice.addOutput('fr', 'agent.yeah', 'Your Welcome !');
+    aice.train();
+
+    // Tests
+    const context = {};
+    const res = await aice.evaluate('Yeah', context);
+    expect(res.score).to.equal(1.0);
+    expect(res.intent).to.equal('agent.yeah');
+    expect(res.answer).to.equal('Your Welcome !');
   });
 });

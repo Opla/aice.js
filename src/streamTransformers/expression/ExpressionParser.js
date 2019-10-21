@@ -7,7 +7,7 @@
  * Authors: Morgan Perre, Jeff Ladiray, Arnaud Moncel
  */
 
-class ExpressionParser {
+export default class ExpressionParser {
   constructor(expressionTypes) {
     this.expressionTypes = expressionTypes;
     this.regexString = this.expressionTypes.map(b => b.regex.source).join('|');
@@ -29,9 +29,10 @@ class ExpressionParser {
 
       const firstElement = match.shift(); // Remove first element who is the global match for get only captured groups
       const type = match.findIndex(e => e); // Get the block type
-      if (type !== -1) {
+      /* TODO check this : if (type !== -1) {
         children.push({ text: firstElement, expression: this.expressionTypes[type].parser(match[type]) });
-      }
+      } */
+      children.push({ text: firstElement, expression: this.expressionTypes[type].parser(match[type]) });
 
       index = regex.lastIndex;
       match = regex.exec(textToParse);
@@ -46,5 +47,3 @@ class ExpressionParser {
     return children;
   }
 }
-
-module.exports = { ExpressionParser };

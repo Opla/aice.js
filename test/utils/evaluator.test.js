@@ -1,104 +1,109 @@
-const chai = require('chai');
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { ConditionEvaluator, ValueEvaluator } from '../../src/utils';
 
 const { expect } = chai;
-
-const { ConditionEvaluator, ValueEvaluator } = require('../../src/utils');
 
 // TEST ConditionEvaluator
 describe('ConditionEvaluator', () => {
   it('LeftRightExpression - condition equals', () => {
-    const condition = { type: 'LeftRightExpression', operande: 'eq', Lvalue: 'text', Rvalue: 'text' };
+    const condition = { type: 'LeftRightExpression', operator: 'eq', leftOperand: 'text', rightOperand: 'text' };
     const result = ConditionEvaluator.evaluate(condition, {});
     expect(result).to.equal(true);
   });
 
   it('LeftRightExpression - condition not equals', () => {
-    const condition = { type: 'LeftRightExpression', operande: 'ne', Lvalue: 'text', Rvalue: 'text' };
+    const condition = { type: 'LeftRightExpression', operator: 'ne', leftOperand: 'text', rightOperand: 'text' };
     const result = ConditionEvaluator.evaluate(condition, {});
     expect(result).to.equal(false);
   });
 
   it('LeftRightExpression - condition or', () => {
-    const condition = { type: 'LeftRightExpression', operande: 'or', Lvalue: false, Rvalue: true };
+    const condition = { type: 'LeftRightExpression', operator: 'or', leftOperand: false, rightOperand: true };
     const result = ConditionEvaluator.evaluate(condition, {});
     expect(result).to.equal(true);
   });
 
   it('LeftRightExpression - condition and', () => {
-    const condition = { type: 'LeftRightExpression', operande: 'and', Lvalue: true, Rvalue: true };
+    const condition = { type: 'LeftRightExpression', operator: 'and', leftOperand: true, rightOperand: true };
     const result = ConditionEvaluator.evaluate(condition, {});
     expect(result).to.equal(true);
   });
 
-  it('Complexe LeftRightExpression - condition equals', () => {
+  it('intricated LeftRightExpression - condition equals', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'LeftRightExpression',
-      operande: 'eq',
-      Lvalue: { type: 'VARIABLE', value: 'var1' },
-      Rvalue: { type: 'VARIABLE', value: 'var2' },
+      operator: 'eq',
+      leftOperand: { type: 'VARIABLE', value: 'var1' },
+      rightOperand: { type: 'VARIABLE', value: 'var2' },
     };
     const result = ConditionEvaluator.evaluate(condition, context);
     expect(result).to.equal(true);
   });
 
   it('UnaryExpression - condition not', () => {
-    const condition = { type: 'UnaryExpression', operande: 'not', LRvalue: false };
+    const condition = { type: 'UnaryExpression', operator: 'not', LrightOperand: false };
     const result = ConditionEvaluator.evaluate(condition, {});
     expect(result).to.equal(true);
   });
 
-  it('Complexe UnaryExpression - condition not', () => {
+  it('Hard UnaryExpression - condition not', () => {
     const context = { var1: false };
-    const condition = { type: 'UnaryExpression', operande: 'not', LRvalue: { type: 'VARIABLE', value: 'var1' } };
+    const condition = { type: 'UnaryExpression', operator: 'not', LrightOperand: { type: 'VARIABLE', value: 'var1' } };
     const result = ConditionEvaluator.evaluate(condition, context);
     expect(result).to.equal(true);
   });
 
-  it('Very Complexe imbriqued LeftRightExpression - (var1===var2) && true', () => {
+  it('Very hard chained LeftRightExpression - (var1===var2) && true', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'LeftRightExpression',
-      operande: 'and',
-      Lvalue: {
+      operator: 'and',
+      leftOperand: {
         type: 'LeftRightExpression',
-        operande: 'eq',
-        Lvalue: { type: 'VARIABLE', value: 'var1' },
-        Rvalue: { type: 'VARIABLE', value: 'var2' },
+        operator: 'eq',
+        leftOperand: { type: 'VARIABLE', value: 'var1' },
+        rightOperand: { type: 'VARIABLE', value: 'var2' },
       },
-      Rvalue: true,
+      rightOperand: true,
     };
     const result = ConditionEvaluator.evaluate(condition, context);
     expect(result).to.equal(true);
   });
 
-  it('Complexe imbriqued LeftRightExpression - true && (var1===var2)', () => {
+  it('Hard chained LeftRightExpression - true && (var1===var2)', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'LeftRightExpression',
-      operande: 'and',
-      Lvalue: true,
-      Rvalue: {
+      operator: 'and',
+      leftOperand: true,
+      rightOperand: {
         type: 'LeftRightExpression',
-        operande: 'eq',
-        Lvalue: { type: 'VARIABLE', value: 'var1' },
-        Rvalue: { type: 'VARIABLE', value: 'var2' },
+        operator: 'eq',
+        leftOperand: { type: 'VARIABLE', value: 'var1' },
+        rightOperand: { type: 'VARIABLE', value: 'var2' },
       },
     };
     const result = ConditionEvaluator.evaluate(condition, context);
     expect(result).to.equal(true);
   });
 
-  it('Complexe imbriqued UnaryExpression - !(var1===var2)', () => {
+  it('Hard chained UnaryExpression - !(var1===var2)', () => {
     const context = { var1: 'something', var2: 'something' };
     const condition = {
       type: 'UnaryExpression',
-      operande: 'not',
-      LRvalue: {
+      operator: 'not',
+      LrightOperand: {
         type: 'LeftRightExpression',
-        operande: 'eq',
-        Lvalue: { type: 'VARIABLE', value: 'var1' },
-        Rvalue: { type: 'VARIABLE', value: 'var2' },
+        operator: 'eq',
+        leftOperand: { type: 'VARIABLE', value: 'var1' },
+        rightOperand: { type: 'VARIABLE', value: 'var2' },
       },
     };
     const result = ConditionEvaluator.evaluate(condition, context);
@@ -106,26 +111,26 @@ describe('ConditionEvaluator', () => {
   });
 
   it("Shouldn't evaluate condition no type error", () => {
-    const condition = { Lvalue: 'text', Rvalue: 'text' };
+    const condition = { leftOperand: 'text', rightOperand: 'text' };
 
     expect(() => ConditionEvaluator.evaluate(condition, {})).to.throw(
       'ConditionEvaluator.evaluate - Unknown condition type',
     );
   });
 
-  it("Shouldn't evaluate LeftRightExpression condition no operande error", () => {
-    const condition = { type: 'LeftRightExpression', Lvalue: 'text', Rvalue: 'text' };
+  it("Shouldn't evaluate LeftRightExpression condition no operator error", () => {
+    const condition = { type: 'LeftRightExpression', leftOperand: 'text', rightOperand: 'text' };
 
     expect(() => ConditionEvaluator.evaluate(condition, {})).to.throw(
-      'ConditionEvaluator.leftRightExpressionEvaluator - Unknown condition operande',
+      'ConditionEvaluator.leftRightExpressionEvaluator - Unknown condition operator',
     );
   });
 
-  it("Shouldn't evaluate UnaryExpression condition no operande error", () => {
-    const condition = { type: 'UnaryExpression', LRvalue: 'text' };
+  it("Shouldn't evaluate UnaryExpression condition no operator error", () => {
+    const condition = { type: 'UnaryExpression', LrightOperand: 'text' };
 
     expect(() => ConditionEvaluator.evaluate(condition, {})).to.throw(
-      'ConditionEvaluator.unaryExpressionEvaluator - Unknown condition operande',
+      'ConditionEvaluator.unaryExpressionEvaluator - Unknown condition operator',
     );
   });
 });

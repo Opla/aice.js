@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class NamedEntity {
+export default class NamedEntity {
   constructor({ name, type, scope, resolve = v => v }) {
     if (!name) {
       throw new Error('Invalid Entity constructor - name are required');
@@ -38,5 +38,3 @@ class NamedEntity {
     throw new Error('Invalid NamedEntity extraction - Should be implemented in child class');
   }
 }
-
-module.exports = NamedEntity;

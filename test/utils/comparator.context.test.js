@@ -1,15 +1,17 @@
-const chai = require('chai');
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { Comparator } from '../../src/utils';
+import { InputExpressionTokenizer, AdvancedTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
 
-const { Comparator } = require('../../src/utils');
-
-const { InputExpressionTokenizer } = require('../../src/streamTransformers');
-
-const { ComplexeTokenizer } = require('../../src/streamTransformers');
-
 const tokenizerInput = new InputExpressionTokenizer();
-const tokenizerUtterance = ComplexeTokenizer;
+const tokenizerUtterance = AdvancedTokenizer;
 
 describe('Context Comparator', () => {
   const simpleComparator = new Comparator();
@@ -65,7 +67,7 @@ describe('Context Comparator', () => {
     expect(result.context.myVariable).to.equal('some text');
   });
 
-  it('Should automatically set multiple unnammed variables ({{*}})', () => {
+  it('Should automatically set multiple unnamed variables ({{*}})', () => {
     const input = '{{*}} is {{*}}';
     const utterance = 'This bot is awesome';
 
@@ -79,7 +81,7 @@ describe('Context Comparator', () => {
     expect(result.context.any_1).to.equal('awesome');
   });
 
-  it('Should automatically set multiple unnammed variables ({{^}})', () => {
+  it('Should automatically set multiple unnamed variables ({{^}})', () => {
     const input = '{{^}} is {{^}}';
     const utterance = 'This bot is awesome';
 
@@ -93,7 +95,7 @@ describe('Context Comparator', () => {
     expect(result.context.anyornothing_1).to.equal('awesome');
   });
 
-  it('Should automatically set multiple unnammed variables ({{^}} not catch case)', () => {
+  it('Should automatically set multiple unnamed variables ({{^}} not catch case)', () => {
     const input = '{{^}} your {{^}}';
     const utterance = 'your awesome';
 

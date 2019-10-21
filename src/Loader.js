@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const AICE = require('.');
+import AICE from './AICE';
 
 const addIntent = (aice, { name: intentid, inputs, outputs, outputType, topic = '*', previous }, lang = 'fr') => {
   // IntentsInputs
@@ -17,9 +17,9 @@ const addIntent = (aice, { name: intentid, inputs, outputs, outputType, topic = 
     const answer = {
       lang,
       tokenizedOutput,
-      preWSs: undefined,
+      preCallables: undefined,
       conditions: o.conditions,
-      WSs: o.WSs,
+      callables: o.callables,
     };
 
     return answer;
@@ -28,7 +28,7 @@ const addIntent = (aice, { name: intentid, inputs, outputs, outputType, topic = 
   aice.outputs.push({ intentid, outputType, answers });
 };
 
-class Loader {
+export default class Loader {
   static fromJSON(json) {
     if (!json) throw new Error('Loader fromJSON - Missing json');
 
@@ -45,5 +45,3 @@ class Loader {
     return new AICE();
   }
 }
-
-module.exports = Loader;

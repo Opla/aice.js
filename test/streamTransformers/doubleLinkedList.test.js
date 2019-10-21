@@ -1,8 +1,13 @@
-const chai = require('chai');
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { DoubleLinkedList } from '../../src/streamTransformers';
 
 const { expect } = chai;
-
-const { DoubleLinkedList } = require('../../src/streamTransformers');
 
 describe('DoubleLinkedList', () => {
   it('Get(-1) from empty DoubleLinkedList', () => {
@@ -92,7 +97,7 @@ describe('DoubleLinkedList Iterator', () => {
     }
   });
 
-  it('Array convertion', () => {
+  it('Array transformation', () => {
     const list = new DoubleLinkedList();
     list.append('red');
     list.append('orange');
@@ -102,7 +107,7 @@ describe('DoubleLinkedList Iterator', () => {
     expect([...list.values()]).to.eql(['red', 'orange', 'green', 'yellow']);
   });
 
-  it('String convertion', () => {
+  it('String transformation', () => {
     const list = new DoubleLinkedList();
     list.append('red');
     list.append('orange');
@@ -110,7 +115,7 @@ describe('DoubleLinkedList Iterator', () => {
     list.append('yellow');
 
     expect(...list.values()).to.equal('red');
-    // TODO ... stream tests gestion
+    // TODO ... stream tests handling
   });
 });
 

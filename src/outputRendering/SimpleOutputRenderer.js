@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -6,34 +5,42 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ConditionEvaluator, Renderer, Utils } = require('../utils');
+import { ConditionEvaluator, Renderer, Utils } from '../utils';
+import OutputRenderer from './OutputRenderer';
 
-class OutputRenderer {
-  constructor({ name, settings, outputs }) {
-    if (!name) {
-      throw new Error('Invalid OutputRenderer constructor - Missing name');
-    }
-    this.settings = settings || {};
-    this.name = name;
-    this.outputs = outputs || [];
+export default class SimpleOutputRenderer extends OutputRenderer {
+  constructor(settings) {
+    super({ ...settings, name: 'simple-output-rendering' });
+    this.callablesManager = this.settings.callablesManager;
   }
 
-  train(outputs) {
-    this.outputs = outputs || [];
+  async executeCallable(lang, callables, baseContext) {
+    let context = baseContext;
+
+    await Promise.all(
+      callables.map(async callable => {
+        let ctx = {};
+        if (typeof callable === 'function') {
+          ctx = await callable(context);
+        } else if (callable.func && typeof callable.func === 'function') {
+          ctx = await callable.func(context);
+        } else if (callable.isReference) {
+          const output = this.find(callable.name);
+          const resp = await this.execute(lang, [{ intentid: output.intentid, score: 0.99 }], context);
+          ctx[callable.value] = resp.renderResponse;
+        } else if (this.callablesManager) {
+          ctx = await this.callablesManager(callable, context, lang);
+        } else {
+          throw new Error('AICE executeCallable - no callablesManager defined');
+        }
+        context = { ...context, ...ctx };
+      }),
+    );
+    return context;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  async process() {
-    throw new Error('Invalid OutputRenderer - process() should be implemented in child class');
-  }
-}
-
-class SimpleOutputRenderer extends OutputRenderer {
-  constructor({ settings, outputs }) {
-    super({ settings, outputs, name: 'simple-output-rendering' });
-  }
-
-  async process(lang, intents, context) {
+  async execute(lang, intents, baseContext) {
+    let context = baseContext;
     const { intentid, score } = intents[0] || {}; // Best match for now
 
     // Retrieve output object for this intentid
@@ -45,12 +52,12 @@ class SimpleOutputRenderer extends OutputRenderer {
     // Retrieve all answers for this lang
     const filtredAnswers = output.answers.filter(a => a.lang === lang);
     const res = await Utils.filterAsync(filtredAnswers, async ans => {
-      const { preConditionsCallable, conditions, preRenderCallable } = ans;
+      const { preCallables, conditions, callables } = ans;
 
       // Call pre-conditions callables
-      const preCondCallableContext =
-        typeof preConditionsCallable === 'function' ? await preConditionsCallable(context) : {};
-      context = { ...context, ...preCondCallableContext };
+      if (preCallables && preCallables.length > 0) {
+        context = await this.executeCallable(lang, preCallables, context);
+      }
 
       // Check Conditions
       const conditionChecked = conditions
@@ -62,8 +69,9 @@ class SimpleOutputRenderer extends OutputRenderer {
       if (!conditionChecked) return false;
 
       // Call pre-render callables
-      const preRenderContext = typeof preRenderCallable === 'function' ? await preRenderCallable(context) : {};
-      context = { ...context, ...preRenderContext };
+      if (callables && callables.length > 0) {
+        context = await this.executeCallable(lang, callables, context);
+      }
 
       // Final Check Context Evaluation
       return Renderer.isRenderable(ans.tokenizedOutput, context);
@@ -93,5 +101,3 @@ class SimpleOutputRenderer extends OutputRenderer {
     return undefined;
   }
 }
-
-module.exports = { SimpleOutputRenderer, OutputRenderer };

@@ -5,16 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { SimpleOutputRenderer } = require('./outputRenderer');
+import SimpleOutputRenderer from './SimpleOutputRenderer';
 
-class OutputRenderingManager {
-  constructor({ settings }) {
-    this.settings = settings || {};
+export default class OutputRenderingManager {
+  constructor({ outputRenderers = [], ...settings } = {}) {
+    this.settings = settings;
     this.outputRenderers = [];
-    if (this.settings.outputRenderers && this.settings.outputRenderers.length > 0) {
-      this.outputRenderers = this.settings.outputRenderers;
+    if (outputRenderers && outputRenderers.length > 0) {
+      this.outputRenderers.push(...outputRenderers);
     } else {
-      this.outputRenderers = [new SimpleOutputRenderer({ settings: this.settings })];
+      this.outputRenderers.push(new SimpleOutputRenderer({ ...this.settings }));
     }
   }
 
@@ -27,13 +27,11 @@ class OutputRenderingManager {
     // this.outputRenderers.forEach(or => or.train(outputs));
   }
 
-  async process(lang, intents = [], context) {
+  async execute(lang, intents = [], context) {
     // Will need some more mechanics before using multiple OutputRenderer techniques
     // If context.internal_slotfilling use SlotFillingRenderer
     // else use SimpleRenderer
     // Last If previous renderers returns undefined use MLBasedRenderer
-    return this.outputRenderers[0].process(lang, intents, context);
+    return this.outputRenderers[0].execute(lang, intents, context);
   }
 }
-
-module.exports = OutputRenderingManager;

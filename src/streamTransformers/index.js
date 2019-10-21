@@ -5,23 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { Sentence, DoubleLinkedList } = require('./models/');
-const { InputExpressionTokenizer, OutputExpressionTokenizer } = require('./expression/');
-const { EnumEntity, NamedEntity, NERManager, PhoneNumberEntity, RegExpEntity, SystemEntities } = require('./ner/');
-const { ComplexeTokenizer, SimpleTokenizer, NERTokenizer } = require('./tokenizer/');
+import { Sentence, DoubleLinkedList } from './models';
+import { InputExpressionTokenizer, OutputExpressionTokenizer } from './expression';
+import { EnumEntity, NamedEntity, NERManager, RegExpEntity, SystemEntities } from './ner';
+import { AdvancedTokenizer, BasicTokenizer, NamedEntityTokenizer } from './tokenizer';
 
-module.exports = {
-  ComplexeTokenizer,
+export {
+  AdvancedTokenizer,
   DoubleLinkedList,
   EnumEntity,
   InputExpressionTokenizer,
   OutputExpressionTokenizer,
   NamedEntity,
   NERManager,
-  NERTokenizer,
+  NamedEntityTokenizer,
   RegExpEntity,
   Sentence,
-  SimpleTokenizer,
+  BasicTokenizer,
   SystemEntities,
-  PhoneNumberEntity,
 };

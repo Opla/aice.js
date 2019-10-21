@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { OutputExpressionTokenizer } = require('../streamTransformers/expression');
-const { Renderer } = require('../utils/');
+import { OutputExpressionTokenizer } from './streamTransformers/expression';
+import { Renderer } from './utils';
 
 const outputExpressionTokenizer = new OutputExpressionTokenizer();
 
-class Tools {
+export default class Tools {
   /**
    * Evaluate nlxSyntax using the context
    * Replace the NLXSyntax by its value in the context
@@ -26,5 +26,3 @@ class Tools {
     return Renderer.render(tokenizedNlxSyntax, context);
   }
 }
-
-module.exports = Tools;

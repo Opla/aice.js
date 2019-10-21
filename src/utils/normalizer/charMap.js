@@ -407,4 +407,4 @@ const charMap = {
   z̧: 'z',
 };
 
-module.exports = charMap;
+export default charMap;

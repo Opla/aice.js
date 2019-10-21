@@ -1,8 +1,14 @@
-const chai = require('chai');
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import chai from 'chai';
+import { InputExpressionTokenizer } from '../../src/streamTransformers';
+import { DoubleLinkedList } from '../../src/streamTransformers/models';
 
 const { expect } = chai;
-
-const { InputExpressionTokenizer } = require('../../src/streamTransformers');
 
 describe('InputExpressionTokenizer', () => {
   const inputExpressionTokenizer = new InputExpressionTokenizer();
@@ -74,9 +80,9 @@ describe('InputExpressionTokenizer', () => {
   });
 
   it('Full InputExpressionTokenization - wrong NLX syntax', () => {
-    const input = '@email';
+    const input = '@email~';
 
-    const sentenceI = inputExpressionTokenizer.tokenize(input);
+    const sentenceI = inputExpressionTokenizer.tokenize(input, new DoubleLinkedList(), false);
     const it = sentenceI.values();
 
     const firstNode = it.next().value.expression;

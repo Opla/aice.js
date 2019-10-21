@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ValueEvaluator = require('../evaluator/valueEvaluator');
+import ValueEvaluator from '../evaluator/ValueEvaluator';
 
-const ContextMutator = require('../contextMutator');
+import ContextMutator from '../ContextMutator';
 
-class Renderer {
+export default class Renderer {
   static isRenderable(tokenizedOutput, context) {
     let renderable = true;
     for (const {
@@ -47,20 +47,16 @@ class Renderer {
               name: expression.contextName,
               value: variableEvaluated,
             });
-
             outputMesssage += variableEvaluated;
           } else {
             outputMesssage += ValueEvaluator.evaluateContext(expression.contextName, context);
           }
-
           // TYPE CODE
         } else if (expression.type === 'CODE') {
           ContextMutator.setToContext(context, {
             name: expression.contextName,
             value: ValueEvaluator.evaluateValue(expression.value, context),
           });
-
-          // ERROR
         } else {
           throw new Error('Invalid OutputRendering Render - Unknown expression');
         }
@@ -71,5 +67,3 @@ class Renderer {
     return outputMesssage;
   }
 }
-
-module.exports = Renderer;

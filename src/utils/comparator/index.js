@@ -4,20 +4,21 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { Comparator } from './Comparator';
 
-const { Comparator } = require('./comparator');
-const { UnorderComparator, LazzyUnorderComparator } = require('./unorderComparator');
-const {
+import LazzyUnorderedComparator from './LazzyUnorderedComparator';
+import UnorderedComparator from './UnorderedComparator';
+import {
   StrategyWordComparator,
   ExactStrategy,
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
-} = require('./wordsComparator');
+} from './wordsComparator';
 
-module.exports = {
+export {
   Comparator,
-  UnorderComparator,
-  LazzyUnorderComparator,
+  UnorderedComparator,
+  LazzyUnorderedComparator,
   StrategyWordComparator,
   ExactStrategy,
   LevenshteinStrategy,

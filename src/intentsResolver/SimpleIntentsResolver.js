@@ -5,19 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const IntentResolver = require('./intentResolver');
+import IntentsResolver from './IntentsResolver';
+import { Comparator, DamerauLevenshteinStrategy } from '../utils';
 
-const { Comparator, DamerauLevenshteinStrategy } = require('../utils');
-
-class SimpleIntentResolver extends IntentResolver {
-  constructor({ settings }, comparator = new Comparator(new DamerauLevenshteinStrategy())) {
-    super({ settings, name: 'simple-intents-resolver' });
+export default class SimpleIntentsResolver extends IntentsResolver {
+  constructor({ comparator = new Comparator(new DamerauLevenshteinStrategy()), ...settings } = {}) {
+    super({ ...settings, name: 'simple-intents-resolver' });
     this.comparator = comparator;
   }
 
-  process(lang, sentence, context) {
+  execute(lang, sentence, context) {
     // Preprocess filter lang
-    const inputs = super.process(lang, context);
+    const inputs = super.execute(lang, sentence, context);
 
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
@@ -25,16 +24,15 @@ class SimpleIntentResolver extends IntentResolver {
       if (input.input === '{{*}}' || input.input === '{{^}}') {
         comparatorResult.confidence = this.settings.threshold + 0.01;
       }
+      const score = comparatorResult.match ? comparatorResult.confidence : 0;
       return {
         intentid: input.intentid,
         input: input.input,
         previous: input.previous ? input.previous : [],
-        score: comparatorResult.match ? comparatorResult.confidence : 0,
+        score,
         context: comparatorResult.context,
       };
     });
     return result;
   }
 }
-
-module.exports = SimpleIntentResolver;

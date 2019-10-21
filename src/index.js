@@ -5,10 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const AICE = require('./aice/');
-const Tools = require('./aice/tools');
+import AICE from './AICE';
+import Tools from './Tools';
 
-module.exports = {
-  AICE,
-  Tools,
-};
+export { AICE, Tools };
