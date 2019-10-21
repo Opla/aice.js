@@ -1,7 +1,7 @@
 {
   "name": "aice",
   "version": "0.3.6",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "license": "MIT",
   "description": "Artificial Intelligence Conversational Engine",
@@ -13,6 +13,8 @@
     }
   },
   "scripts": {
+    "clean-dist": "rm -r -f dist && mkdir dist",
+    "compile": "yarn clean-dist && babel src -s -D -d dist && cp -f ./package.json ./dist/package.json && cp -f ./LICENSE ./dist/LICENSE && cp -f ./README.md ./dist/README.md && rm -r -f ./dist/config.j*",
     "test": "$(yarn bin)/mocha --require babel-core/register --recursive",
     "lint": "$(yarn bin)/eslint src",
     "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test -- --exclude=test/nlpaice.test.js",
