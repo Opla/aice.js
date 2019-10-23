@@ -25,4 +25,8 @@ describe('AICE CLI default', () => {
     const result = await execCommand();
     expect(result[0]).to.equal('AICE default');
   });
+  it('test command', async () => {
+    const result = await execCommand('test');
+    expect(result[0]).to.equal('AICE test');
+  });
 });

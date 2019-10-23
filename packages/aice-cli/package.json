@@ -7,7 +7,7 @@
     "compile": "yarn clean-lib && babel src -s -D -d lib",
     "test": "yarn compile && $(yarn bin)/mocha --require babel-core/register --recursive",
     "lint": "$(yarn bin)/eslint src",
-    "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test -- --exclude=test/nlpaice.test.js",
+    "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test",
     "report-coverage": "$(yarn bin)/nyc report --reporter=text-lcov > coverage.lcov && $(yarn bin)/codecov",
     "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov"
   },

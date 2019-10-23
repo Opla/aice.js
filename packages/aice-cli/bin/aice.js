@@ -13,6 +13,7 @@ const cli = require('../lib/cli').default;
 const version = process.versions.node;
 const major = parseInt(version.split('.')[0], 10);
 
+/* istanbul ignore next */
 if (major < 8) {
   // eslint-disable-next-line no-console
   console.error(`Node version ${version} is not supported, please use Node.js 8.0 or higher.`);
@@ -21,6 +22,7 @@ if (major < 8) {
 
 // Grab arguments
 const [, , ...args] = process.argv;
+/* istanbul ignore next */
 const parameters = args ? args.toString().split(' ') : [];
 cli(parameters, result => {
   // eslint-disable-next-line no-console
