@@ -1,45 +1,11 @@
 {
-  "name": "aice",
-  "version": "0.4.0",
-  "main": "index.js",
-  "type": "module",
-  "license": "MIT",
-  "description": "Artificial Intelligence Conversational Engine",
-  "author": "Opla <hello@opla.ai>",
-  "private": false,
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn test"
-    }
-  },
+  "private": true,
+  "name": "aice-monorepo",
+  "workspaces": ["packages/*"],
   "scripts": {
-    "clean-dist": "rm -r -f dist && mkdir dist",
-    "compile": "yarn clean-dist && babel src -s -D -d dist && cp -f ./package.json ./dist/package.json && cp -f ./LICENSE ./dist/LICENSE && cp -f ./README.md ./dist/README.md && rm -r -f ./dist/config.j*",
-    "test": "$(yarn bin)/mocha --require babel-core/register --recursive",
-    "lint": "$(yarn bin)/eslint src",
-    "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test -- --exclude=test/nlpaice.test.js",
-    "report-coverage": "$(yarn bin)/nyc report --reporter=text-lcov > coverage.lcov && $(yarn bin)/codecov",
-    "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "chai": "^4.2.0",
-    "codecov": "^3.6.1",
-    "cors": "^2.8.5",
-    "eslint": "^6.5.1",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.4.0",
-    "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "husky": "^3.0.9",
-    "mocha": "^6.2.1",
-    "node-fetch": "^2.6.0",
-    "nodemon": "^1.19.4",
-    "nyc": "^14.1.1",
-    "prettier": "^1.18.2"
-  },
-  "dependencies": {}
+    "compile": "yarn workspaces run compile",
+    "lint": "yarn workspaces run lint",
+    "coverage": "yarn workspaces run coverage",
+    "report-coverage": "yarn workspaces run report-coverage"
+  }
 }
