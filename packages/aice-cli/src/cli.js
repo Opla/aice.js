@@ -4,21 +4,23 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { DefaultCommand, TestCommand } from './commands';
 
 class AIceCLI {
   constructor(command) {
     switch (command[0]) {
       case 'test':
-        this.command = 'test';
+        this.command = new TestCommand(this);
         break;
       default:
-        this.command = 'default';
+        this.command = new DefaultCommand(this);
     }
   }
 
   // eslint-disable-next-line class-methods-use-this
   async execute() {
-    return `AICE ${this.command}`;
+    const out = this.command.execute();
+    return `AICE ${out}`;
   }
 }
 

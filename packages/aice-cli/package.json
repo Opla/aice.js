@@ -4,7 +4,7 @@
   "description": "AIce CommandLine Interface",
   "scripts": {
     "clean-lib": "rm -r -f lib && mkdir lib",
-    "compile": "yarn clean-lib && babel src -s -D -d lib",
+    "compile": "yarn clean-lib && babel src -s -D -d lib && cp -f ./package.json ./lib/package.json && cp -f ../../LICENSE ./lib/LICENSE",
     "test": "yarn compile && $(yarn bin)/mocha --require babel-core/register --recursive",
     "lint": "$(yarn bin)/eslint src",
     "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test",
@@ -33,5 +33,7 @@
     "nyc": "^14.1.1",
     "prettier": "^1.18.2"
   },
-  "dependencies": {}  
+  "dependencies": {
+    "aice": "^0.4.0"
+  }
 }

@@ -5,9 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { exec } from 'child_process';
-import chai from 'chai';
+import { expect } from 'chai';
 
-const { expect } = chai;
 const execCommand = async (command, args = []) =>
   new Promise((resolve, reject) => {
     exec(`node "./bin/aice.js" ${command} ${args.join(' ')}`, (error, stdout, stderr) => {
@@ -23,7 +22,9 @@ const execCommand = async (command, args = []) =>
 describe('AICE CLI default', () => {
   it('No command', async () => {
     const result = await execCommand();
-    expect(result[0]).to.equal('AICE default');
+    expect(result[0])
+      .to.be.a('string')
+      .and.match(/^AICE v\d.\d.\d/);
   });
   it('test command', async () => {
     const result = await execCommand('test');
