@@ -24,10 +24,12 @@ describe('AICE CLI default', () => {
     const result = await execCommand();
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE v\d.\d.\d/);
+      .and.match(/^AICE 🤖 v\d.\d.\d/);
   });
   it('test command', async () => {
     const result = await execCommand('test');
-    expect(result[0]).to.equal('AICE test');
+    expect(result[0])
+      .to.be.a('string')
+      .and.match(/^AICE test v\d.\d.\d/);
   });
 });

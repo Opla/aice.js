@@ -8,11 +8,12 @@
 export default class TestCommand {
   constructor(cli) {
     this.cli = cli;
+    this.name = 'test';
   }
 
   // TODO
   execute(parameters) {
     this.parameters = parameters;
-    return 'test';
+    return '';
   }
 }
