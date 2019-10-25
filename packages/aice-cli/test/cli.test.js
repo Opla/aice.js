@@ -42,10 +42,11 @@ const execCommand = async (command, args = [], inputs = []) =>
         .filter(s => s.length !== 0);
       lines.push(...str);
       if (!isInput) {
+        console.log("new out", str);
         childProcess.stdin.end();
         resolve(lines.map(s => s.trim()));
       } else {
-        console.log("new out", str);
+        console.log("i out", str);
       }
     });
     childProcess.on('error', error => {
