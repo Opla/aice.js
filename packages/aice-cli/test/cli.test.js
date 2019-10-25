@@ -4,38 +4,25 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { /* exec, */ spawn } from 'child_process';
+import { spawn } from 'child_process';
 import { expect } from 'chai';
 
 const { PATH } = process.env;
 
-const inputExec = (childProcess, inputs, timeout, lines, callback) => {
-  const input = inputs.shift();
-  if (input) {
-    setTimeout(() => {
-      console.log("stdin", input);
-      childProcess.stdin.write(`${input}\n`);
-      // childProcess.stdin.end();
-      const l = lines;
-      l[l.length - 1] += input;
-      inputExec(childProcess, inputs, timeout, lines, callback);
-    }, timeout);
-  } else {
-    console.log("stdin close");
-    callback();
-  }
-};
-
 const execCommand = async (command, args = [], inputs = []) =>
   new Promise((resolve, reject) => {
-    const childProcess = spawn('node', ['./bin/aice.js', command].concat(args), {
-      env: {
-        NODE_ENV: 'test',
-        PATH,
+    const childProcess = spawn(
+      './bin/aice',
+      [command].concat(args),
+      {
+        env: {
+          NODE_ENV: 'test',
+          PATH,
+          ...process.env,
+        },
       },
-      shell: true,
-    });
-    let isInput = inputs.length > 0;
+      { encoding: 'utf-8', detached: true, stdio: 'inherit' },
+    );
     const lines = [];
     childProcess.stdout.on('data', data => {
       const str = data
@@ -43,24 +30,23 @@ const execCommand = async (command, args = [], inputs = []) =>
         .split('\n')
         .filter(s => s.length !== 0);
       lines.push(...str);
+      const isInput = inputs.length > 0;
       if (!isInput) {
-        console.log("new out", str);
         childProcess.stdin.end();
         resolve(lines.map(s => s.trim()));
       } else {
-        console.log("i out", str);
+        for (const s of str) {
+          if (s === '> ') {
+            const input = inputs.shift();
+            lines[lines.length - 1] += input;
+            childProcess.stdin.write(`${input}\n`);
+          }
+        }
       }
     });
     childProcess.on('error', error => {
       reject(Object.assign(new Error(error.message)));
     });
-    if (isInput) {
-      childProcess.stdin.setEncoding('utf-8');
-      inputExec(childProcess, inputs, 50, lines, () => {
-        childProcess.stdin.end();
-        isInput = false;
-      });
-    }
   });
 
 describe('AICE CLI default', () => {
@@ -81,7 +67,6 @@ describe('AICE CLI default', () => {
 describe('AICE CLI interact', () => {
   it('command #exit', async () => {
     const result = await execCommand('inreact', null, ['#exit']);
-    console.log("result", result);
     expect(result[0])
       .to.be.a('string')
       .and.match(/^AICE 🤖 v\d.\d.\d/);
