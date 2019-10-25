@@ -12,8 +12,23 @@ export default class DefaultCommand {
   }
 
   // TODO
-  execute(parameters) {
+  async execute(parameters) {
     this.parameters = parameters;
-    return ``;
+    this.cli.interact(line => {
+      let ret = false;
+      switch (line) {
+        case 'hello':
+          this.cli.log('world!');
+          break;
+        case '#exit':
+          this.cli.log('bye!');
+          ret = true;
+          break;
+        default:
+          this.cli.log(`Say what? I might have heard '${line.trim()}'`);
+          break;
+      }
+      return ret;
+    });
   }
 }

@@ -4,19 +4,56 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { exec } from 'child_process';
+import { /* exec, */ spawn } from 'child_process';
 import { expect } from 'chai';
 
-const execCommand = async (command, args = []) =>
+const { PATH } = process.env;
+
+const inputExec = (childProcess, inputs, timeout, lines, callback) => {
+  const input = inputs.shift();
+  if (input) {
+    setTimeout(() => {
+      childProcess.stdin.write(`${input}\n`);
+      const l = lines;
+      l[l.length - 1] += input;
+      inputExec(childProcess, inputs, timeout, lines, callback);
+    }, timeout);
+  } else {
+    callback();
+  }
+};
+
+const execCommand = async (command, args = [], inputs = []) =>
   new Promise((resolve, reject) => {
-    exec(`node "./bin/aice.js" ${command} ${args.join(' ')}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(Object.assign(new Error(error.message), { stdout, stderr }));
-      } else {
-        const lines = stdout.toString().split('\n');
-        resolve(lines);
+    const childProcess = spawn('node', ['./bin/aice.js', command].concat(args), {
+      env: {
+        NODE_ENV: 'test',
+        PATH,
+      },
+    });
+    let isInput = inputs.length > 0;
+    const lines = [];
+    childProcess.stdout.on('data', data => {
+      const str = data
+        .toString()
+        .split('\n')
+        .filter(s => s.length !== 0);
+      lines.push(...str);
+      if (!isInput) {
+        childProcess.stdin.end();
+        resolve(lines.map(s => s.trim()));
       }
     });
+    childProcess.on('error', error => {
+      reject(Object.assign(new Error(error.message)));
+    });
+    if (isInput) {
+      childProcess.stdin.setEncoding('utf-8');
+      inputExec(childProcess, inputs, 100, lines, () => {
+        childProcess.stdin.end();
+        isInput = false;
+      });
+    }
   });
 
 describe('AICE CLI default', () => {
@@ -31,5 +68,44 @@ describe('AICE CLI default', () => {
     expect(result[0])
       .to.be.a('string')
       .and.match(/^AICE test v\d.\d.\d/);
+  });
+});
+
+describe('AICE CLI interact', () => {
+  it('command #exit', async () => {
+    const result = await execCommand('inreact', null, ['#exit']);
+    expect(result[0])
+      .to.be.a('string')
+      .and.match(/^AICE 🤖 v\d.\d.\d/);
+    expect(result[1])
+      .to.be.a('string')
+      .and.eq('> #exit');
+    expect(result[2])
+      .to.be.a('string')
+      .and.eq('bye!');
+  });
+  it('say hello', async () => {
+    const result = await execCommand('inreact', null, ['hello', '#exit']);
+    expect(result[0])
+      .to.be.a('string')
+      .and.match(/^AICE 🤖 v\d.\d.\d/);
+    expect(result[1])
+      .to.be.a('string')
+      .and.eq('> hello');
+    expect(result[2])
+      .to.be.a('string')
+      .and.eq('world!');
+  });
+  it('say gfgf', async () => {
+    const result = await execCommand('inreact', null, ['gfgf', '#exit']);
+    expect(result[0])
+      .to.be.a('string')
+      .and.match(/^AICE 🤖 v\d.\d.\d/);
+    expect(result[1])
+      .to.be.a('string')
+      .and.eq('> gfgf');
+    expect(result[2])
+      .to.be.a('string')
+      .and.eq("Say what? I might have heard 'gfgf'");
   });
 });

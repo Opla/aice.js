@@ -24,7 +24,4 @@ if (major < 8) {
 const [, , ...args] = process.argv;
 /* istanbul ignore next */
 const parameters = args ? args.toString().split(' ') : [];
-cli(parameters, result => {
-  // eslint-disable-next-line no-console
-  console.log(result);
-});
+cli(parameters, console, process.exit);

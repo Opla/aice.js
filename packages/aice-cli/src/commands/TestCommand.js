@@ -12,8 +12,7 @@ export default class TestCommand {
   }
 
   // TODO
-  execute(parameters) {
+  async execute(parameters) {
     this.parameters = parameters;
-    return '';
   }
 }
