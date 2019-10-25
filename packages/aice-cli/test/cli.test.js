@@ -49,7 +49,7 @@ const execCommand = async (command, args = [], inputs = []) =>
     });
     if (isInput) {
       childProcess.stdin.setEncoding('utf-8');
-      inputExec(childProcess, inputs, 100, lines, () => {
+      inputExec(childProcess, inputs, 50, lines, () => {
         childProcess.stdin.end();
         isInput = false;
       });
@@ -74,6 +74,7 @@ describe('AICE CLI default', () => {
 describe('AICE CLI interact', () => {
   it('command #exit', async () => {
     const result = await execCommand('inreact', null, ['#exit']);
+    console.log("result", result);
     expect(result[0])
       .to.be.a('string')
       .and.match(/^AICE 🤖 v\d.\d.\d/);
