@@ -13,12 +13,14 @@ const inputExec = (childProcess, inputs, timeout, lines, callback) => {
   const input = inputs.shift();
   if (input) {
     setTimeout(() => {
+      console.log("stdin", input);
       childProcess.stdin.write(`${input}\n`);
       const l = lines;
       l[l.length - 1] += input;
       inputExec(childProcess, inputs, timeout, lines, callback);
     }, timeout);
   } else {
+    console.log("stdin close");
     callback();
   }
 };
@@ -42,6 +44,8 @@ const execCommand = async (command, args = [], inputs = []) =>
       if (!isInput) {
         childProcess.stdin.end();
         resolve(lines.map(s => s.trim()));
+      } else {
+        console.log("new out", str);
       }
     });
     childProcess.on('error', error => {
