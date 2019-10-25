@@ -15,6 +15,7 @@ const inputExec = (childProcess, inputs, timeout, lines, callback) => {
     setTimeout(() => {
       console.log("stdin", input);
       childProcess.stdin.write(`${input}\n`);
+      // childProcess.stdin.end();
       const l = lines;
       l[l.length - 1] += input;
       inputExec(childProcess, inputs, timeout, lines, callback);
@@ -32,6 +33,7 @@ const execCommand = async (command, args = [], inputs = []) =>
         NODE_ENV: 'test',
         PATH,
       },
+      shell: true,
     });
     let isInput = inputs.length > 0;
     const lines = [];
