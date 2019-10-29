@@ -62,6 +62,12 @@ describe('AICE CLI default', () => {
       .to.be.a('string')
       .and.match(/^AICE test v\d.\d.\d/);
   });
+  it('version command', async () => {
+    const result = await execCommand('version');
+    expect(result[0])
+      .to.be.a('string')
+      .and.match(/^AICE version v\d.\d.\d/);
+  });
 });
 
 describe('AICE CLI interact', () => {

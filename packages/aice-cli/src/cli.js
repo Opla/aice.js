@@ -6,19 +6,21 @@
  */
 import readline from 'readline';
 import emoji from 'node-emoji';
-import { DefaultCommand, TestCommand } from './commands';
+import yargs from 'yargs';
 import { getPackageDependencyVersion } from './utils/packageUtils';
+import commands from './commands';
 
 class AIceCLI {
-  constructor(command, output, exit) {
+  constructor(args, output, exit) {
     this.output = output;
-    switch (command[0]) {
-      case 'test':
-        this.command = new TestCommand(this);
-        break;
-      default:
-        this.command = new DefaultCommand(this);
-    }
+    const version = getPackageDependencyVersion('aice');
+    yargs
+      .version(version, '-v, --version')
+      .usage('Usage: $0 [command] [options]')
+      .help('h')
+      .alias('h', 'help');
+    this.args = args;
+    this.command = commands('', this, yargs);
     this.exit = exit;
   }
 
@@ -44,17 +46,20 @@ class AIceCLI {
     });
   }
 
-  async execute(parameters) {
+  header(command) {
     const version = getPackageDependencyVersion('aice');
-    this.log(emoji.emojify(`AICE ${this.command.name} v${version}`));
-    return this.command.execute(parameters);
+    this.log(emoji.emojify(`AICE ${command.name} v${version}`));
+  }
+
+  execute() {
+    // return this.command.execute();
+    this.exec = yargs.parse();
   }
 }
 
-const start = (command, output, exit) => {
-  const cli = new AIceCLI(command, output, exit);
-  const parameters = [];
-  cli.execute(parameters).then();
+const start = (args, output, exit) => {
+  const cli = new AIceCLI(args, output, exit);
+  cli.execute();
 };
 
 export default start;

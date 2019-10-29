@@ -5,14 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default class TestCommand {
+class Test {
   constructor(cli) {
     this.cli = cli;
     this.name = 'test';
+    this.commandName = 'test';
+    this.description = 'Test a chatbot.';
   }
 
-  // TODO
-  async execute(parameters) {
-    this.parameters = parameters;
+  async execute() {
+    this.cli.header(this);
   }
 }
+
+export default cli => new Test(cli);

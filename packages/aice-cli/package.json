@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "aice": "^0.4.0",
-    "node-emoji": "^1.10.0"
+    "node-emoji": "^1.10.0",
+    "yargs": "^14.2.0"
   }
 }

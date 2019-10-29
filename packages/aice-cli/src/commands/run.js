@@ -5,14 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default class DefaultCommand {
+class Run {
   constructor(cli) {
     this.cli = cli;
     this.name = '🤖';
+    this.commandName = 'run';
+    this.description = 'Run a chatbot.';
+    this.isDefault = true;
   }
 
-  // TODO
   async execute(parameters) {
+    this.cli.header(this);
     this.parameters = parameters;
     this.cli.interact(line => {
       let ret = false;
@@ -32,3 +35,5 @@ export default class DefaultCommand {
     });
   }
 }
+
+export default cli => new Run(cli);

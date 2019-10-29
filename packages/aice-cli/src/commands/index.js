@@ -4,7 +4,28 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import DefaultCommand from './DefaultCommand';
-import TestCommand from './TestCommand';
+import run from './run';
+import test from './test';
+import version from './version';
 
-export { DefaultCommand, TestCommand };
+const commands = [run, test, version];
+
+export default (commandName, cli, yargs) => {
+  let y = yargs;
+  commands.forEach(init => {
+    // const init = commands[name];
+    const command = init(cli);
+    const { isDefault } = command;
+    let cmd = command.commandName;
+    if (isDefault) {
+      if (Array.isArray(cmd)) {
+        cmd.push('$0');
+      } else {
+        cmd = [cmd, '$0'];
+      }
+    }
+    y = y.command(cmd, command.description, command.builder || {}, () => {
+      command.execute().then();
+    });
+  });
+};

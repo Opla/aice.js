@@ -22,6 +22,4 @@ if (major < 8) {
 
 // Grab arguments
 const [, , ...args] = process.argv;
-/* istanbul ignore next */
-const parameters = args ? args.toString().split(' ') : [];
-cli(parameters, console, process.exit);
+cli(args, console, process.exit);
