@@ -55,6 +55,7 @@ jobs:
       - run: 
           name: Compile AIce code
           command: yarn compile
+
       - run: 
           name: Write NPM Token to ~/.npmrc
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
