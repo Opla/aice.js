@@ -7,7 +7,7 @@ executors:
     working_directory: ~/aicejs
 
 jobs:
-  test-and-lint:
+  test-lint-build:
     executor: aice-executor
     steps:
       - checkout
@@ -60,16 +60,16 @@ workflows:
   version: 2
   build:
     jobs:
-      - test-and-lint
+      - test-lint-build
 #      - publish-aice:
 #          requires:
-#            - test-and-lint
+#            - test-lint-build
 #          filters:
 #            tags:
 #              only: /^aice@.*/
 #      - publish-aice-cli:
 #          requires:
-#            - test-and-lint
+#            - test-lint-build
 #          filters:
 #            tags:
 #              only: /^aice-cli@.*/
