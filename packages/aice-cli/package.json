@@ -1,6 +1,6 @@
 {
   "name": "aice-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AIce CommandLine Interface",
   "scripts": {
     "clean-lib": "rm -r -f lib && mkdir lib",
@@ -34,7 +34,7 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
-    "aice": "^0.4.0",
+    "aice": "^0.4.1",
     "node-emoji": "^1.10.0",
     "yargs": "^14.2.0"
   }

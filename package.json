@@ -1,11 +1,16 @@
 {
   "private": true,
   "name": "aice-monorepo",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "compile": "yarn workspaces run compile",
     "lint": "yarn workspaces run lint",
     "coverage": "yarn workspaces run coverage",
     "report-coverage": "yarn workspaces run report-coverage"
+  },
+  "devDependencies": {
+    "lerna": "^3.16.4"
   }
 }
