@@ -18,11 +18,7 @@ export default (commandName, cli, yargs) => {
     const { isDefault } = command;
     let cmd = command.commandName;
     if (isDefault) {
-      if (Array.isArray(cmd)) {
-        cmd.push('$0');
-      } else {
-        cmd = [cmd, '$0'];
-      }
+      cmd = [cmd, '$0'];
     }
     y = y.command(cmd, command.description, command.builder || {}, () => {
       command.execute().then();
