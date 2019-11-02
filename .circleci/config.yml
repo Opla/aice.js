@@ -53,14 +53,14 @@ jobs:
       - attach_workspace:
           at: ~/aicejs
       - run: 
-          name: Compile code
-          command: yarn compile
+          name: Compile AIce code
+          command: yarn --cwd packages/aice compile
       - run: 
           name: Write NPM Token to ~/.npmrc
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run:
           name: Publish
-          command: npm publish -d ./dist
+          command: npm publish -d ./packages/aice/dist
 workflows:
   version: 2
   build:

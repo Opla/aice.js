@@ -1,0 +1,41 @@
+{
+  "name": "aice-cli",
+  "version": "0.1.0",
+  "description": "AIce CommandLine Interface",
+  "scripts": {
+    "clean-lib": "rm -r -f lib && mkdir lib",
+    "compile": "yarn clean-lib && babel src -s -D -d lib && cp -f ./package.json ./lib/package.json && cp -f ../../LICENSE ./lib/LICENSE",
+    "test": "yarn compile && $(yarn bin)/mocha --require babel-core/register --recursive",
+    "lint": "$(yarn bin)/eslint src",
+    "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test",
+    "report-coverage": "$(yarn bin)/nyc report --reporter=text-lcov > coverage.lcov && $(yarn bin)/codecov",
+    "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov"
+  },
+  "bin": {
+    "aice": "./bin/aice.js"
+  },
+  "author": "Opla hello@opla.ai",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "codecov": "^3.6.1",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.0.9",
+    "mocha": "^6.2.1",
+    "nyc": "^14.1.1",
+    "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "aice": "^0.4.0",
+    "node-emoji": "^1.10.0",
+    "yargs": "^14.2.0"
+  }
+}
