@@ -61,15 +61,15 @@ workflows:
   build:
     jobs:
       - test-and-lint
-      - publish-aice:
-          requires:
-            - test-and-lint
-          filters:
-            tags:
-              only: /^aice@.*/
-      - publish-aice-cli:
-          requires:
-            - test-and-lint
-          filters:
-            tags:
-              only: /^aice-cli@.*/
+#      - publish-aice:
+#          requires:
+#            - test-and-lint
+#          filters:
+#            tags:
+#              only: /^aice@.*/
+#      - publish-aice-cli:
+#          requires:
+#            - test-and-lint
+#          filters:
+#            tags:
+#              only: /^aice-cli@.*/
