@@ -52,7 +52,10 @@ workflows:
   version: 2
   build:
     jobs:
-      - test-and-lint
+      - test-and-lint:
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           requires:
             - test-and-lint
@@ -60,5 +63,4 @@ workflows:
             tags:
               only: /^v.*/
             branches:
-              only:
-                - master
+              only: master
