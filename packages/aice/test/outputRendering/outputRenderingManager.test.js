@@ -10,21 +10,21 @@ import { OutputRenderingManager, OutputRenderer } from '../../src/outputRenderin
 const { expect } = chai;
 
 describe('OutputRenderingManager', () => {
-  it('Should train nothing ', () => {
+  it('Should train nothing ', async () => {
     const outputRenderingManager = new OutputRenderingManager();
-    outputRenderingManager.train();
+    await outputRenderingManager.train();
 
     expect(outputRenderingManager.outputRenderers[0].outputs.length).to.equal(0);
   });
 
-  it('Should train all sub-outputRenderer ', () => {
+  it('Should train all sub-outputRenderer ', async () => {
     const outputRenderingManager = new OutputRenderingManager({});
-    outputRenderingManager.train([1]);
+    await outputRenderingManager.train([1]);
 
     expect(outputRenderingManager.outputRenderers[0].outputs.length).to.equal(1);
   });
 
-  it('Should custom intentResolvers using settings', () => {
+  it('Should custom intentResolvers using settings', async () => {
     const outputRenderingManager = new OutputRenderingManager({
       outputRenderers: [new OutputRenderer({ name: 'test-renderer' })],
     });

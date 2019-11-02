@@ -27,8 +27,9 @@ export default class IntentResolverManager {
    * Train all IntentsResolvers
    * @returns {Intents}
    */
-  train(inputs) {
-    this.intentResolvers.forEach(ir => ir.train(inputs));
+  async train(inputs) {
+    const tr = this.intentResolvers.map(async ir => ir.train(inputs));
+    return Promise.all(tr);
   }
 
   static distance(d1, d2) {
@@ -39,33 +40,31 @@ export default class IntentResolverManager {
    * Execute sentence througth all IntentsResolvers
    * @returns {Intents}
    */
-  execute(lang, sentence, context = {}) {
+  async execute(lang, sentence, context = {}) {
     const { topic = '*' } = context;
-    const res = Utils.flatten(this.intentResolvers.map(ir => ir.execute(lang, sentence, topic))).sort(
-      IntentResolverManager.distance,
-    );
+    const ex = await Promise.all(this.intentResolvers.map(ir => ir.execute(lang, sentence, topic)));
+    const res = Utils.flatten(ex).sort(IntentResolverManager.distance);
     return res;
   }
 
-  match(lang, utterance, context) {
-    return Utils.flatten(this.intentResolvers.map(ir => ir.evaluate(lang, utterance, context))).sort(
-      IntentResolverManager.distance,
-    );
+  async match(lang, utterance, context) {
+    const ev = await Promise.all(this.intentResolvers.map(async ir => ir.evaluate(lang, utterance, context)));
+    return Utils.flatten(ev).sort(IntentResolverManager.distance);
   }
 
   /**
    * Evaluate utterance througth all IntentsResolvers and return best scores
    * @returns {Intents}
    */
-  evaluate(lang, utterance, context = {}) {
+  async evaluate(lang, utterance, context = {}) {
     let res;
 
     const { topic = '*' } = context;
     // Try to match current topic (domain)
-    res = this.match(lang, utterance, context);
+    res = await this.match(lang, utterance, context);
     // It wasn't the main one and has no result
     if (res[0] && res[0].score < this.settings.threshold && topic !== '*') {
-      res = this.match(lang, utterance, { ...context, topic: '*' });
+      res = await this.match(lang, utterance, { ...context, topic: '*' });
 
       // Assign new topic
       res.forEach(r => {

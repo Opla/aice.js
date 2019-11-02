@@ -47,7 +47,7 @@ const ctxt = {};
 
   nlp.addOutput('fr', 'agent.bye', 'A la prochaine!', 'fr');
 
-  nlp.train();
+  await nlp.train();
   let end = +Date.now();
   say('[training] done');
   say(`[training] spent:  ${end - start}ms`);

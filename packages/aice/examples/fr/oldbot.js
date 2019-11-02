@@ -344,7 +344,7 @@ const TakeAwayEnumEntity = new EnumEntity({
   nlp.addEntity(TypeEnumEntity);
   nlp.addEntity(TakeAwayEnumEntity);
 
-  nlp.train();
+  await nlp.train();
   let end = +Date.now();
   say('[training] done');
   say(`[training] spent:  ${end - start}ms`);

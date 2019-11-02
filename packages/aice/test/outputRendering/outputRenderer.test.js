@@ -18,23 +18,22 @@ describe('OutputRenderer', () => {
     expect(() => new OutputRenderer({})).to.throw('Invalid OutputRenderer constructor - Missing name');
   });
 
-  it('Should train model - Empty case', () => {
+  it('Should train model - Empty case', async () => {
     const renderer = new OutputRenderer({ name: 'test-renderer' });
-    renderer.train();
-
+    await renderer.train();
     expect(renderer.outputs).to.eql([]);
   });
 
-  it('Should train model', () => {
+  it('Should train model', async () => {
     const renderer = new OutputRenderer({ name: 'test-renderer' });
-    renderer.train([1]);
+    await renderer.train([1]);
 
     expect(renderer.outputs).to.eql([1]);
   });
 
-  it('Should find output', () => {
+  it('Should find output', async () => {
     const renderer = new OutputRenderer({ name: 'test-renderer' });
-    renderer.train([{ intentid: 1 }, { intentid: 2 }]);
+    await renderer.train([{ intentid: 1 }, { intentid: 2 }]);
     let output = renderer.find(1);
     expect(output.intentid).to.eql(1);
     output = renderer.find(2);

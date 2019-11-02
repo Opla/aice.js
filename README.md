@@ -65,10 +65,10 @@ nlp.addInput('en', 'hello', 'Hello');
 
 nlp.addOutput('en', 'hello', "Hello. What's up ?");
 
-nlp.train();
+await nlp.train();
 
 // now you can use evaluate to get the answer
-const response = await aice.evaluate('Hello', {}, 'en');
+const response = await nlp.evaluate('Hello', {}, 'en');
 ```
 
 ```
@@ -98,7 +98,7 @@ nlp.addOutput(
       rightOperand: 'STATE_0',
    }]);
 
-nlp.train();
+await nlp.train();
 
 // now you can use evaluate to get the answer
 const response = await nlp.evaluate('Test condition', { state: 'STATE_0'}, 'en');
@@ -135,7 +135,7 @@ nlp.addOutput('en', 'match.email', "Thanks for your email. I'll send you some th
     return {};
   });
 
-  nlp.train();
+  await nlp.train();
 ```
 
 This will send a mail to userEmail catched by the entity @email. In this example the service emailSender as been created using node-mailer.

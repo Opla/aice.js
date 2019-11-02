@@ -22,8 +22,8 @@ export default class OutputRenderingManager {
    * Train all IntentsResolvers
    * @returns {Intents}
    */
-  train(outputs) {
-    this.outputRenderers[0].train(outputs);
+  async train(outputs) {
+    return this.outputRenderers[0].train(outputs);
     // this.outputRenderers.forEach(or => or.train(outputs));
   }
 

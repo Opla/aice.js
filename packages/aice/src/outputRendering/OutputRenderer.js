@@ -15,7 +15,7 @@ export default class OutputRenderer {
     this.outputs = outputs;
   }
 
-  train(outputs) {
+  async train(outputs) {
     this.outputs = outputs || [];
   }
 

@@ -14,9 +14,9 @@ export default class SimpleIntentsResolver extends IntentsResolver {
     this.comparator = comparator;
   }
 
-  execute(lang, sentence, context) {
+  async execute(lang, sentence, context) {
     // Preprocess filter lang
-    const inputs = super.execute(lang, sentence, context);
+    const inputs = await super.execute(lang, sentence, context);
 
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);

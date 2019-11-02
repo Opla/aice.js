@@ -143,9 +143,9 @@ export default class AICE {
   /**
    * Train all resolvers and renderers
    */
-  train() {
-    this.IntentResolverManager.train(this.inputs);
-    this.OutputRenderingManager.train(this.outputs);
+  async train() {
+    await this.IntentResolverManager.train(this.inputs);
+    await this.OutputRenderingManager.train(this.outputs);
   }
 
   /**
@@ -165,7 +165,7 @@ export default class AICE {
     const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);
 
     // Intents Resolvers
-    const result = this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
+    const result = await this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
     const ctx = { ...context, ...((result && result[0]) || {}).context };
 
     // Output Rendering

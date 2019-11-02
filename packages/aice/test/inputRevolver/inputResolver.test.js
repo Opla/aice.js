@@ -18,31 +18,31 @@ describe('IntentsResolver', () => {
     expect(() => new IntentsResolver({})).to.throw('Invalid IntentsResolver constructor - Missing name');
   });
 
-  it('Should train model - Empty case', () => {
+  it('Should train model - Empty case', async () => {
     const resolver = new IntentsResolver({ name: 'test-resolver' });
-    resolver.train();
+    await resolver.train();
 
     expect(resolver.inputs).to.eql([]);
   });
 
-  it('Should train model', () => {
+  it('Should train model', async () => {
     const resolver = new IntentsResolver({ name: 'test-resolver' });
-    resolver.train([1]);
+    await resolver.train([1]);
 
     expect(resolver.inputs).to.eql([1]);
   });
 
-  it('Should execute with filter using LANG', () => {
+  it('Should execute with filter using LANG', async () => {
     const resolver = new IntentsResolver({ name: 'test-resolver' });
-    resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
+    await resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
 
-    const result = resolver.execute('fr', '', {});
+    const result = await resolver.execute('fr', '', {});
     expect(result.length).to.equal(1);
     expect(result[0].id).to.equal(1);
     expect(result[0].lang).to.equal('fr');
   });
 
-  it('Should train and execute using callbacks', () => {
+  it('Should train and execute using callbacks', async () => {
     let train;
     const cbTrain = inputs => {
       train = 'ok';
@@ -50,15 +50,15 @@ describe('IntentsResolver', () => {
     };
     const cbExecute = () => [{ id: 1, lang: 'us' }];
     const resolver = new IntentsResolver({ name: 'test-resolver', cbTrain, cbExecute });
-    resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
+    await resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
     expect(resolver.inputs.length).to.equal(1);
-    const result = resolver.execute('en', '', {});
+    const result = await resolver.execute('en', '', {});
     expect(result.length).to.equal(1);
     expect(result[0].id).to.equal(1);
     expect(result[0].lang).to.equal('us');
     expect(train).to.equal('ok');
   });
-  it('Should train and evaluate using callbacks', () => {
+  it('Should train and evaluate using callbacks', async () => {
     let train;
     const cbTrain = inputs => {
       train = 'ok';
@@ -66,9 +66,9 @@ describe('IntentsResolver', () => {
     };
     const cbEvaluate = () => [{ id: 1, lang: 'us' }];
     const resolver = new IntentsResolver({ name: 'test-resolver', cbTrain, cbEvaluate });
-    resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
+    await resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
     expect(resolver.inputs.length).to.equal(1);
-    const result = resolver.evaluate('en', '', {});
+    const result = await resolver.evaluate('en', '', {});
     expect(result.length).to.equal(1);
     expect(result[0].id).to.equal(1);
     expect(result[0].lang).to.equal('us');

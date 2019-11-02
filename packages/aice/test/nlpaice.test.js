@@ -36,7 +36,7 @@ describe('AICE NLP', () => {
 
     aice.addOutput('fr', 'agent.fallback', "Je n'ai pas compris");
 
-    aice.train();
+    await aice.train();
 
     // Tests
     const context = {};
@@ -58,7 +58,7 @@ describe('AICE NLP', () => {
 
   it('AICE - No intents', async () => {
     const aice = new AICE();
-    aice.train();
+    await aice.train();
     const res = await aice.evaluate('Hello', context, 'en');
 
     expect(res.score).to.equal(0);
@@ -144,7 +144,7 @@ describe('AICE NLP', () => {
 
     aice.addInput('fr', 'agent.yeah', 'Yeah');
     aice.addOutput('fr', 'agent.yeah', 'Your Welcome !');
-    aice.train();
+    await aice.train();
 
     // Tests
     const context = {};

@@ -21,7 +21,7 @@ export default class IntentResolver {
   /**
    * Base train function - Can be redefine to better fit needs (ML)
    */
-  train(inputs = []) {
+  async train(inputs = []) {
     if (this.cbTrain) {
       this.inputs = this.cbTrain(inputs);
     } else {
@@ -33,7 +33,7 @@ export default class IntentResolver {
    * Base evaluate function - Need to be redefine in sub-class
    * @returns {Inputs} Inputs filtered by lang
    */
-  execute(lang, sentence, context) {
+  async execute(lang, sentence, context) {
     if (this.cbExecute) {
       return this.cbExecute(lang, sentence, context);
     }
@@ -45,11 +45,11 @@ export default class IntentResolver {
    * evaluate Intent
    * @returns {Intent} Intent with the best score
    */
-  evaluate(lang, sentence, context) {
+  async evaluate(lang, sentence, context) {
     if (this.cbEvaluate) {
       return this.cbEvaluate(lang, sentence, context);
     }
-    const res = this.execute(lang, sentence, context);
+    const res = await this.execute(lang, sentence, context);
     // TODO Input intent conditions
 
     // Previous handling
