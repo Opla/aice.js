@@ -54,7 +54,7 @@ jobs:
           at: ~/aicejs
       - run: 
           name: Compile AIce code
-          command: yarn --cwd packages/aice compile
+          command: yarn --cwd aice compile
       - run: 
           name: Write NPM Token to ~/.npmrc
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
