@@ -6,6 +6,21 @@ executors:
       - image: circleci/node:lts
     working_directory: ~/aicejs
 
+whitelist: &whitelist
+  paths:
+    - .npmignore
+    - dist/*
+    - node_modules/*
+    - src/*
+    - test/*
+    - CODE_OF_CONDUCT.md
+    - LICENSE
+    - package.json
+    - README.md
+    - .babelrc
+    - .eslintrc.json
+    - yarn.lock
+
 jobs:
   test-and-lint:
     executor: aice-executor
@@ -30,9 +45,7 @@ jobs:
           path: ~/aicejs/cov
       - persist_to_workspace:
           root: ~/aicejs
-          paths: 
-            - packages
-            - node_modules
+          <<: *whitelist
 
   deploy:
     executor: aice-executor
@@ -42,15 +55,13 @@ jobs:
       - run: 
           name: Compile AIce code
           command: yarn compile
+
       - run: 
           name: Write NPM Token to ~/.npmrc
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run:
-          name: Publish AIce
+          name: Publish
           command: npm publish -d ./packages/aice/dist
-      - run:
-          name: Publish AIce-cli
-          command: npm publish -d ./packages/aice-cli/dist
 workflows:
   version: 2
   build:
