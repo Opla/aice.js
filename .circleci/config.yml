@@ -33,6 +33,7 @@ jobs:
           paths: 
             - packages
             - node_modules
+            - ./package.json
 
   deploy:
     executor: aice-executor
