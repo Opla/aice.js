@@ -14,7 +14,7 @@
 [![CircleCI](https://img.shields.io/circleci/build/github/Opla/aice.js?logo=circleci)](https://circleci.com/gh/Opla/aice.js/tree/master)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Opla/aice.js/issues)
 [![Commits](https://img.shields.io/github/last-commit/opla/aice.js.svg)](https://img.shields.io/github/last-commit/opla/aice.js.svg)
-[![npm](https://img.shields.io/npm/v/aice.js?color=9cf)](https://www.npmjs.com/package/aice.js)
+[![npm](https://img.shields.io/npm/v/aice?color=9cf)](https://www.npmjs.com/package/aice)
 
 </div>
 
@@ -47,25 +47,25 @@ We want to build a sustainable solution able to guess several languages, to unde
 ## How to install
 It can be installed directly from NPM to be integrated in node.js application.
 ```bash
-npm install aice.js
+npm install aice
 ```
 
 ## Usages example
 
 **How to import**
 ```js
-import { AICE } from 'aice.js';
+import { AICE } from 'aice';
 ```
 
 **Simple use case**
 ```js
-const aice = new AICE();
+const nlp = new AICE();
 
-aice.addInput('en', 'hello', 'Hello');
+nlp.addInput('en', 'hello', 'Hello');
 
-aice.addOutput('en', 'hello', "Hello. What's up ?");
+nlp.addOutput('en', 'hello', "Hello. What's up ?");
 
-aice.train();
+nlp.train();
 
 // now you can use evaluate to get the answer
 const response = await aice.evaluate('Hello', {}, 'en');
@@ -101,7 +101,7 @@ nlp.addOutput(
 nlp.train();
 
 // now you can use evaluate to get the answer
-const response = await aice.evaluate('Test condition', { state: 'STATE_0'}, 'en');
+const response = await nlp.evaluate('Test condition', { state: 'STATE_0'}, 'en');
 ```
 
 ```
