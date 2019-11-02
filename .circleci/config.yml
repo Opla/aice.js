@@ -26,6 +26,7 @@ jobs:
       - run: yarn lint
       - run: yarn coverage
       - run: yarn report-coverage
+      - run: yarn compile
       - store_artifacts:
           path: ~/aicejs/cov
       - persist_to_workspace:
@@ -38,9 +39,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/aicejs
-      - run: 
-          name: Compile AIce code
-          command: yarn -cwd packages/aice compile
       - run: 
           name: Write NPM Token to ~/.npmrc
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
