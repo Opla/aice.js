@@ -9,18 +9,21 @@
         "parameters": {
           "type": "object"
         }
-      }
+      },
+      "required": ["name"],
+      "additionalProperties": false
     }
   },
 
   "$id": "aice.configuration",
   "type": "object",
   "properties": {
-    "threshold": { "type": "number" },
+    "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
     "resolvers": {
       "type": "array",
       "items": { "$ref": "aice.configuration#/definitions/resolver"},
-      "default": []
+      "minItems": 1,
+      "uniqueItems": true
     }
   },
   "additionalProperties": false
