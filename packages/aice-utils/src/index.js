@@ -15,7 +15,7 @@ class AIceUtils {
   }
 
   getConfiguration() {
-      return this.parameters.config;
+    return this.parameters.config;
   }
 }
 const singletonInstance = new AIceUtils();
