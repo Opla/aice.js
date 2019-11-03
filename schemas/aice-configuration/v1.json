@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+
+  "definitions": {
+    "resolver": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "parameters": {
+          "type": "object"
+        }
+      }
+    }
+  },
+
+  "$id": "aice.configuration",
+  "type": "object",
+  "properties": {
+    "threshold": { "type": "number" },
+    "resolvers": {
+      "type": "array",
+      "items": { "$ref": "aice.configuration#/definitions/resolver"},
+      "default": []
+    }
+  },
+  "additionalProperties": false
+}

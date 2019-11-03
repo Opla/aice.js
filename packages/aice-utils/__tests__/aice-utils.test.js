@@ -15,4 +15,26 @@ describe('aice-utils', () => {
     aiceUtils.setConfiguration({});
     expect(aiceUtils.getConfiguration()).to.eql({});
   });
+  it('aiceUtils validate error without data', async () => {
+    const result = aiceUtils.validateData();
+    expect(result).to.eql({ error: 'empty data' });
+  });
+  it('aiceUtils validate error without schema', async () => {
+    const result = aiceUtils.validateData({});
+    expect(result).to.eql({ error: 'Unknown schema' });
+  });
+  it('aiceUtils validate error without schema', async () => {
+    const result = aiceUtils.validateData({});
+    expect(result).to.eql({ error: 'Unknown schema' });
+  });
+  it('aiceUtils validate error with dummy schemas', async () => {
+    let result = aiceUtils.validateData({}, '');
+    expect(result).to.eql({ error: 'Unknown schema' });
+    result = aiceUtils.validateData({}, 'dummy');
+    expect(result).to.eql({ error: 'Unknown schema: dummy with version=1' });
+  });
+  it('aiceUtils validate empty configuration', async () => {
+    const result = aiceUtils.validateData({}, 'aice-configuration');
+    expect(result).to.eql({ isValid: true });
+  });
 });
