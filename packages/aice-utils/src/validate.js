@@ -11,7 +11,7 @@ import opennlxV2 from '../../../schemas/opennlx/v2.json';
 
 export default class {
   constructor() {
-    this.ajv = new Ajv({ allErrors: true });
+    this.ajv = new Ajv({ allErrors: true, useDefaults: true });
     this.validators = {};
   }
 

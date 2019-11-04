@@ -8,7 +8,7 @@ import { expect } from 'chai';
 import aiceUtils from '../../src';
 
 describe('validate configurations', () => {
-  it('valid threshold=0.75', async () => {
+  /* it('valid threshold=0.75', async () => {
     const result = aiceUtils.validateData({ threshold: 0.75 }, 'aice-configuration');
     expect(result).to.eql({ isValid: true });
   });
@@ -36,12 +36,47 @@ describe('validate configurations', () => {
     const result = aiceUtils.validateData({ resolvers: [] }, 'aice-configuration');
     expect(result.isValid).to.equal(false);
   });
-  it('Resolvers with one simple', async () => {
-    const result = aiceUtils.validateData({ resolvers: [{ name: 'simple' }] }, 'aice-configuration');
-    expect(result.isValid).to.equal(true);
-  });
   it('Resolvers with one empty object', async () => {
     const result = aiceUtils.validateData({ resolvers: [{}] }, 'aice-configuration');
+    expect(result.isValid).to.equal(false);
+  }); */
+  it('Resolvers with one default', async () => {
+    let result = aiceUtils.validateData({ resolvers: [{ name: 'default' }] }, 'aice-configuration');
+    expect(result.isValid).to.equal(true);
+    result = aiceUtils.validateData({ resolvers: [{ name: 'default', type: 'resolver' }] }, 'aice-configuration');
+    expect(result.isValid).to.equal(true);
+    result = aiceUtils.validateData({ resolvers: [{ name: 'notvalid', type: 'notvalid' }] }, 'aice-configuration');
+    expect(result.isValid).to.equal(false);
+    result = aiceUtils.validateData({ resolvers: [{ name: 'notvalid', novalid: 'notvalid' }] }, 'aice-configuration');
+    expect(result.isValid).to.equal(false);
+    result = aiceUtils.validateData(
+      { resolvers: [{ name: 'notvalid', type: 'resolver', novalid: 'notvalid' }] },
+      'aice-configuration',
+    );
+    expect(result.isValid).to.equal(false);
+  });
+  it('Resolvers with one simple', async () => {
+    const result = aiceUtils.validateData(
+      { resolvers: [{ name: 'simple', type: 'simple-resolver' }] },
+      'aice-configuration',
+    );
+    expect(result.isValid).to.equal(true);
+  });
+  it('Resolvers with one remote', async () => {
+    let result = aiceUtils.validateData(
+      { resolvers: [{ name: 'simple', type: 'remote-resolver', url: 'http://example.com' }] },
+      'aice-configuration',
+    );
+    expect(result.isValid).to.equal(true);
+    result = aiceUtils.validateData(
+      { resolvers: [{ name: 'simple', type: 'remote-resolver', url: 'notvalid' }] },
+      'aice-configuration',
+    );
+    expect(result.isValid).to.equal(false);
+    result = aiceUtils.validateData(
+      { resolvers: [{ name: 'simple', type: 'remote-resolver', url: 'http://example.com', notvalid: 'notvalid' }] },
+      'aice-configuration',
+    );
     expect(result.isValid).to.equal(false);
   });
 });

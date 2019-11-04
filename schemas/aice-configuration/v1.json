@@ -3,14 +3,40 @@
 
   "definitions": {
     "resolver": {
-      "type": "object",
       "properties": {
-        "name": { "type": "string" },
-        "parameters": {
-          "type": "object"
-        }
+        "name": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+         },
+        "type": { "type": "string", "default": "resolver", "enum": ["resolver"] }
       },
       "required": ["name"],
+      "additionalProperties": false
+    },
+    "simple-resolver": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+         },
+        "type": { "type": "string", "enum": ["simple-resolver"] }
+      },
+      "required": ["name", "type"],
+      "additionalProperties": false
+    },
+    "remote-resolver": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+         },
+         "type": { "type": "string", "enum": ["remote-resolver"] },
+         "url": {
+           "type": "string",
+           "pattern": "^(https?):\/\/(-\\.)?([^\\s/?\\.#-]+\\.?)+(\/[^\\s]*)?$"
+          }
+       },
+       "required": ["name", "type", "url"],
       "additionalProperties": false
     }
   },
@@ -21,7 +47,19 @@
     "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
     "resolvers": {
       "type": "array",
-      "items": { "$ref": "aice.configuration#/definitions/resolver"},
+      "items": {
+        "anyOf": [
+          {
+           "$ref": "#/definitions/remote-resolver"
+          },
+          {
+           "$ref": "#/definitions/simple-resolver"
+          },
+          {
+            "$ref": "#/definitions/resolver"
+          }
+        ]
+      },
       "minItems": 1,
       "uniqueItems": true
     }
