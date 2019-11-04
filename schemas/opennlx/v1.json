@@ -14,6 +14,17 @@
         "name": {
           "type": "string"
         },
+        "previousId": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "state": {
+          "type": "string", "enum": ["deactivated", "activated"]
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
         "order": {
           "type": "integer"
         },
@@ -67,6 +78,17 @@
   "type": "object",
   "properties": {
     "name": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+    },
+    "publishedVersionId": {
+      "type": "string",
+      "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+    },
+    "icon": {
       "type": "string"
     },
     "description": {
