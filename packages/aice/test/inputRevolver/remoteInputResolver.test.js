@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import chai from 'chai';
-import { RemoteIntentsResolver } from '../../src/intentsResolver';
+import { RemoteIntentResolver } from '../../src/intentResolvers';
 
 const { expect } = chai;
 
@@ -21,14 +21,14 @@ class DummyFetchBody {
 
 describe('RemoteIntentsResolver', () => {
   it('Should throw error if no fetch function provided', () => {
-    expect(() => new RemoteIntentsResolver({ name: 'test-resolver' })).to.throw(
-      'Invalid RemoteIntentsResolver constructor - Missing fetch function',
+    expect(() => new RemoteIntentResolver({ name: 'test-resolver' })).to.throw(
+      'Invalid RemoteIntentResolverconstructor - Missing fetch function',
     );
   });
   it('Should throw error if no url provided', () => {
     const fetch = () => [];
-    expect(() => new RemoteIntentsResolver({ name: 'test-resolver', fetch })).to.throw(
-      'Invalid RemoteIntentsResolver constructor - Missing url',
+    expect(() => new RemoteIntentResolver({ name: 'test-resolver', fetch })).to.throw(
+      'Invalid RemoteIntentResolverconstructor - Missing url',
     );
   });
 
@@ -40,7 +40,7 @@ describe('RemoteIntentsResolver', () => {
       expect(res.intents).to.eql([]);
       return new DummyFetchBody({ intents: [{ id: 1, inputs: ['hello', 'hi', 'Yo'] }] });
     };
-    const resolver = new RemoteIntentsResolver({ name: 'test-resolver', fetch, url: 'stub' });
+    const resolver = new RemoteIntentResolver({ name: 'test-resolver', fetch, url: 'stub' });
     await resolver.train();
     expect(resolver.inputs).to.eql([{ id: 1, inputs: ['hello', 'hi', 'Yo'] }]);
   });
@@ -53,7 +53,7 @@ describe('RemoteIntentsResolver', () => {
       expect(res.intents).to.eql([{ id: 1, inputs: ['hello', 'hi'] }]);
       return new DummyFetchBody({ intents: [{ id: 1, inputs: ['hello', 'hi', 'Yo'] }] });
     };
-    const resolver = new RemoteIntentsResolver({ name: 'test-resolver', fetch, url: 'stub' });
+    const resolver = new RemoteIntentResolver({ name: 'test-resolver', fetch, url: 'stub' });
     await resolver.train([{ id: 1, inputs: ['hello', 'hi'] }]);
     expect(resolver.inputs).to.eql([{ id: 1, inputs: ['hello', 'hi', 'Yo'] }]);
   });
@@ -66,7 +66,7 @@ describe('RemoteIntentsResolver', () => {
       expect(res.lang).to.eql('fr');
       return new DummyFetchBody([{ id: 1, lang: 'fr' }]);
     };
-    const resolver = new RemoteIntentsResolver({ name: 'test-resolver', fetch, url: 'stub' });
+    const resolver = new RemoteIntentResolver({ name: 'test-resolver', fetch, url: 'stub' });
 
     const result = await resolver.execute('fr', '', {});
     expect(result.length).to.equal(1);
@@ -82,7 +82,7 @@ describe('RemoteIntentsResolver', () => {
       expect(res.lang).to.eql('fr');
       return new DummyFetchBody([{ id: 1, lang: 'fr' }]);
     };
-    const resolver = new RemoteIntentsResolver({ name: 'test-resolver', fetch, url: 'stub' });
+    const resolver = new RemoteIntentResolver({ name: 'test-resolver', fetch, url: 'stub' });
 
     const result = await resolver.evaluate('fr', '', {});
     expect(result.length).to.equal(1);

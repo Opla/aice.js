@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { IntentsResolverManager } from './intentsResolver';
+import { IntentsResolverManager } from './intentResolvers';
 import { OutputRenderingManager } from './outputRendering';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
 import { NamedEntityTokenizer } from './streamTransformers/tokenizer';

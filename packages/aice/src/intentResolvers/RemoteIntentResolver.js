@@ -5,16 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import IntentsResolver from './IntentsResolver';
+import IntentResolver from './IntentResolver';
 
-export default class RemoteIntentsResolver extends IntentsResolver {
+export default class RemoteIntentResolver extends IntentResolver {
   constructor({ fetch, url, ...settings }) {
     super(settings);
     if (!fetch) {
-      throw new Error('Invalid RemoteIntentsResolver constructor - Missing fetch function');
+      throw new Error('Invalid RemoteIntentResolverconstructor - Missing fetch function');
     }
     if (!url) {
-      throw new Error('Invalid RemoteIntentsResolver constructor - Missing url');
+      throw new Error('Invalid RemoteIntentResolverconstructor - Missing url');
     }
     this.fetch = fetch;
     this.url = url;
