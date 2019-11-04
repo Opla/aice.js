@@ -1,16 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-
   "definitions": {
     "resolver": {
       "properties": {
         "name": {
           "type": "string",
           "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
-         },
-        "type": { "type": "string", "default": "resolver", "enum": ["resolver"] }
+        },
+        "type": {
+          "type": "string",
+          "default": "resolver",
+          "enum": [
+            "resolver"
+          ]
+        }
       },
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false
     },
     "simple-resolver": {
@@ -18,10 +25,18 @@
         "name": {
           "type": "string",
           "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
-         },
-        "type": { "type": "string", "enum": ["simple-resolver"] }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "simple-resolver"
+          ]
+        }
       },
-      "required": ["name", "type"],
+      "required": [
+        "name",
+        "type"
+      ],
       "additionalProperties": false
     },
     "remote-resolver": {
@@ -29,31 +44,43 @@
         "name": {
           "type": "string",
           "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
-         },
-         "type": { "type": "string", "enum": ["remote-resolver"] },
-         "url": {
-           "type": "string",
-           "pattern": "^(https?):\/\/(-\\.)?([^\\s/?\\.#-]+\\.?)+(\/[^\\s]*)?$"
-          }
-       },
-       "required": ["name", "type", "url"],
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "remote-resolver"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^(https?):\/\/(-\\.)?([^\\s/?\\.#-]+\\.?)+(\/[^\\s]*)?$"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "url"
+      ],
       "additionalProperties": false
     }
   },
-
   "$id": "aice.configuration",
   "type": "object",
   "properties": {
-    "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+    "threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
     "resolvers": {
       "type": "array",
       "items": {
         "anyOf": [
           {
-           "$ref": "#/definitions/remote-resolver"
+            "$ref": "#/definitions/remote-resolver"
           },
           {
-           "$ref": "#/definitions/simple-resolver"
+            "$ref": "#/definitions/simple-resolver"
           },
           {
             "$ref": "#/definitions/resolver"

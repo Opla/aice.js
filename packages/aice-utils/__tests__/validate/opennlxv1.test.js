@@ -8,8 +8,15 @@ import { expect } from 'chai';
 import aiceUtils from '../../src';
 
 describe('validate opennlxv1', () => {
-  it('minimal file', async () => {
+  it('no empty file', async () => {
     const result = aiceUtils.validateData({}, 'opennlx');
-    expect(result).to.eql({ isValid: true });
+    expect(result.isValid).to.equal(false);
+  });
+  it('minimal file', async () => {
+    const result = aiceUtils.validateData(
+      { name: 'demo', intents: [{ id: '1', input: '*', output: 'hello' }] },
+      'opennlx',
+    );
+    expect(result.isValid).to.equal(true);
   });
 });
