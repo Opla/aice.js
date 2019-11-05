@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Ajv from 'ajv';
-import config from '../../../schemas/aice-configuration/v1.json';
-import opennlxV1 from '../../../schemas/opennlx/v1.json';
-import opennlxV2 from '../../../schemas/opennlx/v2.json';
+import Configuration from './Configuration';
+import OpennlxV1 from './OpennlxV1';
+import OpennlxV2 from './OpennlxV2';
 
 export default class {
   constructor() {
@@ -16,15 +16,15 @@ export default class {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getSchema(schemaName, version = '1') {
+  getSchemaValidator(schemaName, version = '1') {
     if (schemaName === 'aice-configuration') {
-      return config;
+      return new Configuration(this.ajv);
     }
     if (schemaName === 'opennlx') {
       if (version === '2') {
-        return opennlxV2;
+        return new OpennlxV2(this.ajv);
       }
-      return opennlxV1;
+      return new OpennlxV1(this.ajv);
     }
     const msg =
       schemaName && schemaName.length ? `Unknown schema: ${schemaName} with version=${version}` : 'Unknown schema';
@@ -34,8 +34,7 @@ export default class {
   getValidator(schemaName, version) {
     let validator = this.validators[`${schemaName}_${version}`];
     if (!validator) {
-      const schema = this.getSchema(schemaName, version);
-      validator = this.ajv.compile(schema);
+      validator = this.getSchemaValidator(schemaName, version);
       this.validators[`${schemaName}_${version}`] = validator;
     }
     return validator;
@@ -45,7 +44,7 @@ export default class {
     const result = {};
     if (data) {
       const validator = this.getValidator(schemaName, data.version);
-      result.isValid = validator(data);
+      result.isValid = validator.execute(data);
       if (!result.isValid) {
         // TODO handle errors format
         // for not valid properties
