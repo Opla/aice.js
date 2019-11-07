@@ -67,29 +67,37 @@
   "$id": "aice.configuration",
   "type": "object",
   "properties": {
-    "threshold": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1
-    },
-    "resolvers": {
-      "type": "array",
-      "items": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/remote-resolver"
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string", "const": "v1" },
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "resolvers": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/remote-resolver"
+              },
+              {
+                "$ref": "#/definitions/simple-resolver"
+              },
+              {
+                "$ref": "#/definitions/resolver"
+              }
+            ]
           },
-          {
-            "$ref": "#/definitions/simple-resolver"
-          },
-          {
-            "$ref": "#/definitions/resolver"
-          }
-        ]
+          "minItems": 1,
+          "uniqueItems": true
+        }
       },
-      "minItems": 1,
-      "uniqueItems": true
+      "additionalProperties": false
     }
   },
+  "required": ["configuration"],
   "additionalProperties": false
 }
