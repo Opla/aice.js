@@ -53,9 +53,6 @@ export default class {
           data = null;
         }
         const fileManager = this.utils.getFileManager();
-        if (input === 'dummy') {
-          console.log('filemanager', fileManager);
-        }
         if (!data && fileManager) {
           // TODO Check if it is a filename or a path
           const file = fileManager.getFile(input);
