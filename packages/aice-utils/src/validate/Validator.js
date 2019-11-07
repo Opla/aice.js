@@ -13,6 +13,7 @@ export default class Validator {
   execute(data) {
     const exe = this.ajv.compile(this.schema);
     const result = exe(data);
+    this.errors = exe.errors;
     return result;
   }
 }

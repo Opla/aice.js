@@ -9,7 +9,19 @@ import Validate from './validate';
 class AIceUtils {
   constructor() {
     this.parameters = {};
-    this.validate = new Validate();
+    this.validate = new Validate(this);
+  }
+
+  setFileManager(fileManager) {
+    if (fileManager && typeof fileManager.getFile === 'function' && typeof fileManager.loadAsJson === 'function') {
+      this.parameters.fileManager = fileManager;
+    } else {
+      throw new Error('Invalid fileManager');
+    }
+  }
+
+  getFileManager() {
+    return this.parameters.fileManager;
   }
 
   setConfiguration(config) {

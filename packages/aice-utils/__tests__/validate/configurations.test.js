@@ -8,7 +8,7 @@ import { expect } from 'chai';
 import aiceUtils from '../../src';
 
 describe('validate configurations', () => {
-  /* it('valid threshold=0.75', async () => {
+  it('valid threshold=0.75', async () => {
     const result = aiceUtils.validateData({ threshold: 0.75 }, 'aice-configuration');
     expect(result).to.eql({ isValid: true });
   });
@@ -39,7 +39,7 @@ describe('validate configurations', () => {
   it('Resolvers with one empty object', async () => {
     const result = aiceUtils.validateData({ resolvers: [{}] }, 'aice-configuration');
     expect(result.isValid).to.equal(false);
-  }); */
+  });
   it('Resolvers with one default', async () => {
     let result = aiceUtils.validateData({ resolvers: [{ name: 'default' }] }, 'aice-configuration');
     expect(result.isValid).to.equal(true);
@@ -78,5 +78,31 @@ describe('validate configurations', () => {
       'aice-configuration',
     );
     expect(result.isValid).to.equal(false);
+  });
+
+  it('valid json string', async () => {
+    const result = aiceUtils.validateData('{ "threshold": 0.75 }', 'aice-configuration');
+    expect(result).to.eql({ isValid: true });
+  });
+
+  it('valid json file', async () => {
+    const fileManager = {
+      getFile: () => ({ type: 'file' }),
+      loadAsJson: () => ({ threshold: 0.75 }),
+    };
+    aiceUtils.setFileManager(fileManager);
+    const result = aiceUtils.validateData('filename', 'aice-configuration');
+    expect(result).to.eql({ isValid: true });
+    aiceUtils.parameters.fileManager = null;
+  });
+  it('non valid json file', async () => {
+    const fileManager = {
+      getFile: () => ({ notFound: true }),
+      loadAsJson: () => ({ threshold: 0.75 }),
+    };
+    aiceUtils.setFileManager(fileManager);
+    const result = aiceUtils.validateData('filename', 'aice-configuration');
+    expect(result).to.eql({ isValid: false, error: 'file not found : filename' });
+    aiceUtils.parameters.fileManager = null;
   });
 });

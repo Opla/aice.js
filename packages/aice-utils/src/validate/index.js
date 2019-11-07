@@ -10,9 +10,10 @@ import OpennlxV1 from './OpennlxV1';
 import OpennlxV2 from './OpennlxV2';
 
 export default class {
-  constructor() {
+  constructor(utils) {
     this.ajv = new Ajv({ allErrors: true, useDefaults: true });
     this.validators = {};
+    this.utils = utils;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -40,15 +41,47 @@ export default class {
     return validator;
   }
 
-  execute(data, schemaName) {
-    const result = {};
+  execute(input, schemaName) {
+    const result = { isValid: false };
+    let data = input;
     if (data) {
-      const validator = this.getValidator(schemaName, data.version);
-      result.isValid = validator.execute(data);
-      if (!result.isValid) {
-        // TODO handle errors format
-        // for not valid properties
-        result.error = validator.errors;
+      if (typeof data === 'string' && data.trim().length > 0) {
+        // Check if it is JSON
+        try {
+          data = JSON.parse(data);
+        } catch (e) {
+          data = null;
+        }
+        const fileManager = this.utils.getFileManager();
+        if (input === 'dummy') {
+          console.log('filemanager', fileManager);
+        }
+        if (!data && fileManager) {
+          // TODO Check if it is a filename or a path
+          const file = fileManager.getFile(input);
+          if (file && file.type === 'file') {
+            // TODO load file
+            data = fileManager.loadAsJson(file);
+          } else {
+            data = null;
+            result.error = `file not found : ${input}`;
+          }
+        }
+      }
+      if (data && !Array.isArray(data) && typeof data === 'object') {
+        try {
+          const validator = this.getValidator(schemaName, data.version);
+          result.isValid = validator.execute(data);
+          if (!result.isValid) {
+            // TODO handle errors format
+            // for not valid properties
+            result.error = validator.errors;
+          }
+        } catch (e) {
+          result.error = e.message;
+        }
+      } else if (!result.error) {
+        result.error = 'wrong data format';
       }
     } else {
       result.error = 'empty data';
