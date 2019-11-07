@@ -11,4 +11,8 @@ export default class Configuration extends Validator {
   constructor(ajv) {
     super(ajv, schema);
   }
+
+  static seemsOk(data) {
+    return !data.version && data.configuration;
+  }
 }

@@ -19,6 +19,10 @@ describe('validate opennlxv1', () => {
     );
     expect(result.isValid).to.equal(true);
   });
+  it('minimal model without schemaName', async () => {
+    const result = aiceUtils.validateData({ name: 'demo', intents: [{ id: '1', input: '*', output: 'hello' }] });
+    expect(result.isValid).to.equal(true);
+  });
   it('complete model', async () => {
     const result = aiceUtils.validateData(
       {

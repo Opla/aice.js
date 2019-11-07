@@ -12,6 +12,10 @@ describe('validate configurations', () => {
     const result = aiceUtils.validateData({ configuration: { threshold: 0.75 } }, 'aice-configuration');
     expect(result).to.eql({ isValid: true });
   });
+  it('valid threshold=0.75 without schemaName', async () => {
+    const result = aiceUtils.validateData({ configuration: { threshold: 0.75 } });
+    expect(result).to.eql({ isValid: true });
+  });
   it('not valid threshold=-0.75', async () => {
     const result = aiceUtils.validateData({ configuration: { threshold: -0.75 } }, 'aice-configuration');
     expect(result.isValid).to.equal(false);

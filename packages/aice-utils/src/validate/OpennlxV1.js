@@ -19,4 +19,8 @@ export default class OpennlxV1 extends Validator {
   constructor(ajv) {
     super(ajv, schema);
   }
+
+  static seemsOk(data) {
+    return !data.version && data.intents && data.name;
+  }
 }

@@ -32,6 +32,19 @@ export default class {
     throw new Error(msg);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  findSchemaNameAndVersion(data) {
+    let schemaNameAndVersion;
+    if (Configuration.seemsOk(data)) {
+      schemaNameAndVersion = { schemaName: 'aice-configuration' };
+    } else if (OpennlxV2.seemsOk(data)) {
+      schemaNameAndVersion = { schemaName: 'opennlx', version: '2' };
+    } else if (OpennlxV1.seemsOk(data)) {
+      schemaNameAndVersion = { schemaName: 'opennlx' };
+    }
+    return schemaNameAndVersion;
+  }
+
   getValidator(schemaName, version) {
     let validator = this.validators[`${schemaName}_${version}`];
     if (!validator) {
@@ -39,6 +52,17 @@ export default class {
       this.validators[`${schemaName}_${version}`] = validator;
     }
     return validator;
+  }
+
+  findValidator(data, schemaName) {
+    if (schemaName) {
+      return this.getValidator(schemaName, data.version);
+    }
+    const res = this.findSchemaNameAndVersion(data);
+    if (res) {
+      return this.getValidator(res.schemaName, res.version);
+    }
+    throw new Error('Unknown schema');
   }
 
   execute(input, schemaName) {
@@ -67,7 +91,7 @@ export default class {
       }
       if (data && !Array.isArray(data) && typeof data === 'object') {
         try {
-          const validator = this.getValidator(schemaName, data.version);
+          const validator = this.findValidator(data, schemaName);
           result.isValid = validator.execute(data);
           if (!result.isValid) {
             // TODO handle errors format
