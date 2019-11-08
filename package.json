@@ -5,8 +5,10 @@
     "packages/*"
   ],
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "compile": "yarn workspaces run compile",
     "lint": "yarn workspaces run lint",
+    "test": "yarn workspaces run test",
     "coverage": "yarn workspaces run coverage",
     "report-coverage": "yarn workspaces run report-coverage"
   },
