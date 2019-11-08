@@ -17,7 +17,16 @@ export default class {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getSchemaValidator(schemaName, version = '1') {
+  getErrorMessage(schemaName, version) {
+    let msg = schemaName && schemaName.length ? `Unknown schema: ${schemaName}` : 'Unknown schema';
+    if (version) {
+      msg += ` with version=${version}`;
+    }
+    return msg;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getSchemaValidator(schemaName, version) {
     if (schemaName === 'aice-configuration') {
       return new Configuration(this.ajv);
     }
@@ -27,9 +36,7 @@ export default class {
       }
       return new OpennlxV1(this.ajv);
     }
-    const msg =
-      schemaName && schemaName.length ? `Unknown schema: ${schemaName} with version=${version}` : 'Unknown schema';
-    throw new Error(msg);
+    throw new Error(this.getErrorMessage(schemaName, version));
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -55,17 +62,17 @@ export default class {
   }
 
   findValidator(data, schemaName) {
-    if (schemaName) {
-      return this.getValidator(schemaName, data.version);
+    if (schemaName && data[schemaName] && data[schemaName].version) {
+      return this.getValidator(schemaName, data[schemaName].version);
     }
     const res = this.findSchemaNameAndVersion(data);
     if (res) {
       return this.getValidator(res.schemaName, res.version);
     }
-    throw new Error('Unknown schema');
+    throw new Error(this.getErrorMessage(schemaName));
   }
 
-  execute(input, schemaName) {
+  async execute(input, schemaName) {
     const result = { isValid: false };
     let data = input;
     if (data) {
@@ -78,11 +85,11 @@ export default class {
         }
         const fileManager = this.utils.getFileManager();
         if (!data && fileManager) {
-          // TODO Check if it is a filename or a path
-          const file = fileManager.getFile(input);
+          //  Check if it is a filename or a path
+          const file = await fileManager.getFile(input);
           if (file && file.type === 'file') {
-            // TODO load file
-            data = fileManager.loadAsJson(file);
+            //  load file
+            data = await fileManager.loadAsJson(file);
           } else {
             data = null;
             result.error = `file not found : ${input}`;
@@ -92,7 +99,7 @@ export default class {
       if (data && !Array.isArray(data) && typeof data === 'object') {
         try {
           const validator = this.findValidator(data, schemaName);
-          result.isValid = validator.execute(data);
+          result.isValid = await validator.execute(data);
           if (!result.isValid) {
             // TODO handle errors format
             // for not valid properties

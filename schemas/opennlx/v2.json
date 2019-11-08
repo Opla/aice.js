@@ -1,1 +1,225 @@
-{ }
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "input-sentence": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "output-sentence": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "intent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "name": {
+          "type": "string"
+        },
+        "previousId": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "disable",
+            "enable"
+          ]
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer"
+        },
+        "input": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/input-sentence"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/input-sentence"
+              }
+            }
+          ]
+        },
+        "output": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "input",
+        "output"
+      ],
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "properties": {}
+    },
+    "variable": {
+      "type": "object",
+      "properties": {}
+    },
+    "callable": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "$id": "opennlx.v2",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[\\w\\d-]+$"
+    },
+    "opennlx": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "2"
+        }
+      }
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+    },
+    "publishedVersionId": {
+      "type": "string",
+      "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+    },
+    "avatar": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 180
+    },
+    "email": {
+      "type": "string"
+    },
+    "welcome": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "locale": {
+      "type": "string",
+      "pattern": "^[\\w]{2}-[\\w]{2}$"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "publisher": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "webchat",
+            "slack"
+          ]
+        },
+        "params": {
+          "type": "object"
+        }
+      }
+    },
+    "needTrain": { 
+      "type": "boolean"
+    },
+    "intents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/intent"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/entity"
+      }
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/variable"
+      }
+    },
+    "callables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/callable"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "avatar",
+    "intents"
+  ],
+  "additionalProperties": false
+}

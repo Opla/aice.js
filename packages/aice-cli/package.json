@@ -1,6 +1,6 @@
 {
   "name": "aice-cli",
-  "version": "0.1.2",
+  "version": "0.4.2",
   "description": "AIce CommandLine Interface",
   "scripts": {
     "clean-lib": "rm -r -f lib && mkdir lib",
@@ -9,7 +9,8 @@
     "lint": "$(yarn bin)/eslint src",
     "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test",
     "report-coverage": "$(yarn bin)/nyc report --reporter=text-lcov > coverage.lcov && $(yarn bin)/codecov",
-    "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov"
+    "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov",
+    "dev": "yarn compile && ./bin/aice"
   },
   "bin": {
     "aice": "./bin/aice.js"
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "aice": "^0.4.2",
+    "aice-utils": "^0.4.2",
     "node-emoji": "^1.10.0",
     "yargs": "^14.2.0"
   }

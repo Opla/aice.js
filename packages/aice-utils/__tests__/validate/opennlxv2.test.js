@@ -9,7 +9,26 @@ import aiceUtils from '../../src';
 
 describe('validate opennlxv2', () => {
   it('minimal file', async () => {
-    const result = aiceUtils.validateData({ version: '2' }, 'opennlx');
+    const result = await aiceUtils.validateData(
+      { name: 'bot', avatar: 'bot', intents: [{ name: '1', input: { text: '*' }, output: 'hello' }] },
+      'opennlx',
+    );
+    expect(result).to.eql({ isValid: true });
+  });
+  it('minimal file using schemaName=opennlx', async () => {
+    const result = await aiceUtils.validateData(
+      { name: 'bot', avatar: 'bot', intents: [{ name: '1', input: { text: '*' }, output: 'hello' }] },
+      'opennlx',
+    );
+    expect(result).to.eql({ isValid: true });
+  });
+  it('minimal file using opennlx descriptor', async () => {
+    const result = await aiceUtils.validateData({
+      opennlx: { version: '2' },
+      name: 'bot',
+      avatar: 'bot',
+      intents: [{ name: '1', input: { text: '*' }, output: 'hello' }],
+    });
     expect(result).to.eql({ isValid: true });
   });
 });

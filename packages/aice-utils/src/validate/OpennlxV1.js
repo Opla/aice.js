@@ -21,6 +21,6 @@ export default class OpennlxV1 extends Validator {
   }
 
   static seemsOk(data) {
-    return !data.version && data.intents && data.name;
+    return !!(!data.version && data.intents && data.name);
   }
 }

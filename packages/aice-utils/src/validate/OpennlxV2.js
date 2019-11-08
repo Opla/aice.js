@@ -13,6 +13,6 @@ export default class OpennlxV2 extends Validator {
   }
 
   static seemsOk(data) {
-    return data.version === 2 && data.name;
+    return !!(data.avatar && data.name);
   }
 }

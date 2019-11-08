@@ -20,12 +20,12 @@ class AIceCLI {
       .help('h')
       .alias('h', 'help');
     this.args = args;
-    this.command = commands('', this, yargs);
+    this.command = commands(this, yargs);
     this.exit = exit;
   }
 
-  log(text) {
-    this.output.log(text);
+  log(text, ...opts) {
+    this.output.log(text, ...opts);
   }
 
   interact(callback) {
@@ -52,7 +52,6 @@ class AIceCLI {
   }
 
   execute() {
-    // return this.command.execute();
     this.exec = yargs.parse();
   }
 }

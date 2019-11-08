@@ -13,6 +13,6 @@ export default class Configuration extends Validator {
   }
 
   static seemsOk(data) {
-    return !data.version && data.configuration;
+    return !!(!data.version && data.configuration);
   }
 }

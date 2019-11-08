@@ -34,11 +34,13 @@ class AIceUtils {
 
   /* istanbul ignore next */
   validateData(data, schemaName) {
+    let result;
     try {
-      return this.validate.execute(data, schemaName);
+      result = this.validate.execute(data, schemaName);
     } catch (e) {
-      return { error: e.message };
+      result = { error: e.message };
     }
+    return result;
   }
 }
 

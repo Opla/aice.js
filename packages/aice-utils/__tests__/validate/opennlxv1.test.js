@@ -9,22 +9,22 @@ import aiceUtils from '../../src';
 
 describe('validate opennlxv1', () => {
   it('no empty data', async () => {
-    const result = aiceUtils.validateData({}, 'opennlx');
+    const result = await aiceUtils.validateData({}, 'opennlx');
     expect(result.isValid).to.equal(false);
   });
   it('minimal model', async () => {
-    const result = aiceUtils.validateData(
+    const result = await aiceUtils.validateData(
       { name: 'demo', intents: [{ id: '1', input: '*', output: 'hello' }] },
       'opennlx',
     );
     expect(result.isValid).to.equal(true);
   });
   it('minimal model without schemaName', async () => {
-    const result = aiceUtils.validateData({ name: 'demo', intents: [{ id: '1', input: '*', output: 'hello' }] });
+    const result = await aiceUtils.validateData({ name: 'demo', intents: [{ id: '1', input: '*', output: 'hello' }] });
     expect(result.isValid).to.equal(true);
   });
   it('complete model', async () => {
-    const result = aiceUtils.validateData(
+    const result = await aiceUtils.validateData(
       {
         name: 'demo',
         intents: [
