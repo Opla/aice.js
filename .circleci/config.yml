@@ -22,10 +22,10 @@ jobs:
           command: yarn install --frozen-lockfile
       - run: yarn bootstrap
       - run: yarn workspaces info
+      - run: yarn compile
       - run: yarn lint
       - run: yarn coverage
       - run: yarn report-coverage
-      - run: yarn compile
       - store_artifacts:
           path: ~/aicejs/cov
       - persist_to_workspace:
