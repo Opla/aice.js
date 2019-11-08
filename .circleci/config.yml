@@ -4,6 +4,7 @@ executors:
   aice-executor:
     docker:
       - image: circleci/node:lts
+    working_directory: ~/aicejs
 
 jobs:
   test-lint-build:
