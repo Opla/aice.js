@@ -11,17 +11,13 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          name: Restore Yarn Package Cache
           keys:
             - v1-dependencies-{{ checksum \"yarn.lock\" }}
+            - v1-dependencies-
+    
       - run:
           name: Install Dependencies
           command: yarn install --frozen-lockfile
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: v1-dependencies-{{ checksum \"yarn.lock\" }}
-          paths:
-            - ~/.cache/yarn
       - run: yarn bootstrap
       - run: yarn lint
       - run: yarn coverage
@@ -33,6 +29,10 @@ jobs:
           root: ~/aicejs
           paths: 
             - packages
+      - save_cache:
+          key: v1-dependencies-{{ checksum \"yarn.lock\" }}
+          paths:
+            - node_modules
 
   publish-aice:
     executor: aice-executor
