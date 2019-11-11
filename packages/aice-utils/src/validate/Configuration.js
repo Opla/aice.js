@@ -9,7 +9,7 @@ import schema from '../../../../schemas/aice-configuration/v1.json';
 
 export default class Configuration extends Validator {
   constructor(ajv) {
-    super(ajv, schema);
+    super(ajv, schema, 'configuration', '1');
   }
 
   static seemsOk(data) {

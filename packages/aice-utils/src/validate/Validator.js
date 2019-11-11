@@ -5,9 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 export default class Validator {
-  constructor(ajv, schema) {
+  constructor(ajv, schema, name, version) {
     this.ajv = ajv;
     this.schema = schema;
+    this.name = name;
+    this.version = version;
   }
 
   async execute(data) {

@@ -9,7 +9,7 @@ import schema from '../../../../schemas/opennlx/v2.json';
 
 export default class OpennlxV2 extends Validator {
   constructor(ajv) {
-    super(ajv, schema);
+    super(ajv, schema, 'opennlx', '2');
   }
 
   static seemsOk(data) {

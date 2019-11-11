@@ -14,7 +14,7 @@ describe('validate configurations', () => {
   });
   it('valid threshold=0.75 without schemaName', async () => {
     const result = await aiceUtils.validateData({ configuration: { threshold: 0.75 } });
-    expect(result).to.eql({ isValid: true });
+    expect(result).to.eql({ isValid: true, schema: { name: 'configuration', version: '1' } });
   });
   it('not valid threshold=-0.75', async () => {
     const result = await aiceUtils.validateData({ configuration: { threshold: -0.75 } }, 'aice-configuration');
@@ -115,6 +115,20 @@ describe('validate configurations', () => {
     expect(result).to.eql({ isValid: true });
     aiceUtils.parameters.fileManager = null;
   });
+  it('valid json dir', async () => {
+    const fileManager = {
+      getFile: async f => (f === 'filename' ? { type: 'file' } : { type: 'dir' }),
+      loadAsJson: async () => ({ configuration: { threshold: 0.75 } }),
+      readDir: async () => [{ type: 'file', filename: 'filename' }],
+    };
+    aiceUtils.setFileManager(fileManager);
+    const result = await aiceUtils.validateData('directory');
+    expect(result).to.be.an('array');
+    expect(result[0].isValid).to.equal(true);
+    expect(result[0].schema.name).to.equal('configuration');
+    expect(result[0].schema.version).to.equal('1');
+    aiceUtils.parameters.fileManager = null;
+  });
   it('valid json file without extension', async () => {
     const fileManager = {
       getFile: async () => ({ type: 'file' }),
@@ -122,7 +136,7 @@ describe('validate configurations', () => {
     };
     aiceUtils.setFileManager(fileManager);
     const result = await aiceUtils.validateData('filename');
-    expect(result).to.eql({ isValid: true });
+    expect(result).to.eql({ isValid: true, schema: { name: 'configuration', version: '1' } });
     aiceUtils.parameters.fileManager = null;
   });
   it('non valid json file', async () => {

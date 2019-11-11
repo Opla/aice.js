@@ -29,6 +29,6 @@ describe('validate opennlxv2', () => {
       avatar: 'bot',
       intents: [{ name: '1', input: { text: '*' }, output: 'hello' }],
     });
-    expect(result).to.eql({ isValid: true });
+    expect(result).to.eql({ isValid: true, schema: { name: 'opennlx', version: '2' } });
   });
 });

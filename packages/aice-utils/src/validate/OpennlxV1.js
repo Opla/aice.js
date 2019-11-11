@@ -17,7 +17,7 @@ const regex = {
 
 export default class OpennlxV1 extends Validator {
   constructor(ajv) {
-    super(ajv, schema);
+    super(ajv, schema, 'opennlx', '1');
   }
 
   static seemsOk(data) {

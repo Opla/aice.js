@@ -48,6 +48,41 @@ describe('validate errors', () => {
     aiceUtils.parameters.fileManager = null;
     const result = await aiceUtils.validateData('dummy');
     expect(result.isValid).to.equal(false);
-    expect(result.error).to.equal('wrong data format');
+    expect(result.error).to.equal('file not found : dummy');
+  });
+  it('return non valid json from a file in a directory', async () => {
+    const fileManager = {
+      getFile: async f => (f === 'filename' ? { type: 'file' } : { type: 'dir' }),
+      loadAsJson: async () => null,
+      readDir: async () => [{ type: 'file', filename: 'filename' }],
+    };
+    aiceUtils.setFileManager(fileManager);
+    const result = await aiceUtils.validateData('directory');
+    expect(result).to.be.an('array');
+    expect(result[0].isValid).to.equal(false);
+    expect(result[0].error).to.equal('wrong data format');
+    aiceUtils.parameters.fileManager = null;
+  });
+  it('empty directory', async () => {
+    const fileManager = {
+      getFile: async () => ({ type: 'dir' }),
+      loadAsJson: async () => null,
+      readDir: async () => [],
+    };
+    aiceUtils.setFileManager(fileManager);
+    const result = await aiceUtils.validateData('directory');
+    expect(result.isValid).to.equal(false);
+    expect(result.error).to.equal('file not found : directory');
+    aiceUtils.parameters.fileManager = null;
+  });
+  it('non valid json file', async () => {
+    const fileManager = {
+      getFile: async () => null,
+      loadAsJson: async () => null,
+    };
+    aiceUtils.setFileManager(fileManager);
+    const result = await aiceUtils.validateData('filename', 'aice-configuration');
+    expect(result).to.eql({ isValid: false, error:'file not found : filename' });
+    aiceUtils.parameters.fileManager = null;
   });
 });
