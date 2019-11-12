@@ -1,6 +1,6 @@
 {
   "name": "aice",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "main": "index.js",
   "module": "index.js",
   "type": "module",
