@@ -1,6 +1,8 @@
 {
   "name": "aice-cli",
   "version": "0.1.3",
+  "main": "index.js",
+  "type": "module",
   "description": "AIce CommandLine Interface",
   "scripts": {
     "clean-dist": "rm -r -f dist && mkdir dist && mkdir dist/commonjs",
