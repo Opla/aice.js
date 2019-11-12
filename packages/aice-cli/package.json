@@ -1,6 +1,6 @@
 {
   "name": "aice-cli",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "main": "index.js",
   "type": "module",
   "description": "AIce CommandLine Interface",

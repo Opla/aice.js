@@ -20,9 +20,12 @@ export default class SimpleOutputRenderer extends OutputRenderer {
     await Promise.all(
       callables.map(async callable => {
         let ctx = {};
-        if (typeof callable === 'function') {
+        if (typeof callable === 'function' || callable.constructor.name === 'AsyncFunction') {
           ctx = await callable(context);
-        } else if (callable.func && typeof callable.func === 'function') {
+        } else if (
+          callable.func &&
+          (typeof callable.func === 'function' || callable.func.constructor.name === 'AsyncFunction')
+        ) {
           ctx = await callable.func(context);
         } else if (callable.isReference) {
           const output = this.find(callable.name);
