@@ -7,5 +7,7 @@
 
 import AICE from './AICE';
 import Tools from './Tools';
+import EnumEntity from './streamTransformers/ner/EnumEntity';
+import SystemEntities from './streamTransformers/ner/SystemEntities';
 
-export { AICE, Tools };
+export { AICE, Tools, EnumEntity, SystemEntities };
