@@ -82,7 +82,7 @@ describe('validate errors', () => {
     };
     aiceUtils.setFileManager(fileManager);
     const result = await aiceUtils.validateData('filename', 'aice-configuration');
-    expect(result).to.eql({ isValid: false, error:'file not found : filename' });
+    expect(result).to.eql({ isValid: false, error: 'file not found : filename' });
     aiceUtils.parameters.fileManager = null;
   });
 });
