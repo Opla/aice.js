@@ -54,10 +54,4 @@ workflows:
   build:
     jobs:
       - test-lint-build
-      - publish-aice:
-          requires:
-            - test-lint-build
-          filters:
-            tags:
-              only: /^aice@.*/
 
