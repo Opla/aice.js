@@ -40,24 +40,24 @@ describe('AICE NLP', () => {
 
     // Tests
     const context = {};
-    let res = await aice.evaluate('bonjour', context);
+    let res = await aice.evaluate('bonjour', context, 'fr');
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.presentation');
     expect(res.answer).to.equal('Coucou :)');
 
-    res = await aice.evaluate("Superbe, je m'appelle Morgan", context);
+    res = await aice.evaluate("Superbe, je m'appelle Morgan", context, 'fr');
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.askname');
     expect(res.answer).to.equal('Hello Morgan');
 
-    res = await aice.evaluate('Squeezie ft Joyca - Bye Bye', context);
+    res = await aice.evaluate('Squeezie ft Joyca - Bye Bye', context, 'fr');
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.bye');
     expect(res.answer).to.equal('A la prochaine!');
   });
 
   it('AICE - No intents', async () => {
-    const aice = new AICE();
+    const aice = new AICE({ threshold: 0.65 });
     await aice.train();
     const res = await aice.evaluate('Hello', context, 'en');
 
@@ -97,6 +97,12 @@ describe('AICE NLP', () => {
     expect(aice.inputs.length).to.equal(1);
   });
 
+  it('AICE - API addInput no parameters throws an error', () => {
+    const aice = new AICE();
+    const res = () => aice.addInput();
+    expect(res).to.throw(Error, 'AICE addInput - Has some missing mandatory parameters');
+  });
+
   it('AICE - API addOutput', () => {
     const aice = new AICE();
     aice.addOutput('en', 'agent.presentation', 'Hey');
@@ -110,6 +116,26 @@ describe('AICE NLP', () => {
     aice.addOutput('en', 'agent.presentation', 'Hey');
     const numberAnswers = aice.outputs[0].answers.length;
     expect(numberAnswers).to.equal(1);
+  });
+  it('AICE - API addOutput same output fr/en', () => {
+    const aice = new AICE();
+    aice.addOutput('en', 'agent.presentation', 'Hey');
+    aice.addOutput('fr', 'agent.presentation', 'Salut');
+    const numberAnswers = aice.outputs[0].answers.length;
+    expect(numberAnswers).to.equal(2);
+  });
+
+  it('AICE - API addOutput callables', () => {
+    const aice = new AICE();
+    aice.addOutput('en', 'agent.presentation', 'Hey', () => {}, [], () => {});
+    const numberAnswers = aice.outputs[0].answers.length;
+    expect(numberAnswers).to.equal(1);
+  });
+
+  it('AICE - API addOutput no parameters throws an error', () => {
+    const aice = new AICE();
+    const res = () => aice.addOutput();
+    expect(res).to.throw(Error, 'AICE addOutput - Has some missing mandatory parameters');
   });
 
   it('AICE - API clear', () => {
@@ -139,16 +165,15 @@ describe('AICE NLP', () => {
   it('AICE - Intent reference WIP', async () => {
     const aice = new AICE();
     // Initialization
-    aice.addInput('fr', 'agent.presentation', 'Hello {{name=*}}');
-    aice.addOutput('fr', 'agent.presentation', 'Hello {{name}} :)');
+    aice.addInput('en', 'agent.presentation', 'Hello {{name=*}}');
+    aice.addOutput('en', 'agent.presentation', 'Hello {{name}} :)');
 
-    aice.addInput('fr', 'agent.yeah', 'Yeah');
-    aice.addOutput('fr', 'agent.yeah', 'Your Welcome !');
+    aice.addInput('en', 'agent.yeah', 'Yeah');
+    aice.addOutput('en', 'agent.yeah', 'Your Welcome !');
     await aice.train();
 
     // Tests
-    const context = {};
-    const res = await aice.evaluate('Yeah', context);
+    const res = await aice.evaluate('Yeah');
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.yeah');
     expect(res.answer).to.equal('Your Welcome !');

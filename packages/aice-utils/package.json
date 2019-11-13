@@ -1,29 +1,30 @@
 {
-  "name": "aice-cli",
-  "version": "0.4.8",
-  "main": "index.js",
-  "type": "module",
-  "description": "AIce CommandLine Interface",
+  "name": "aice-utils",
+  "version": "0.4.7",
+  "description": "AIce utilities",
+  "author": "Mik <mik@opla.ai>",
   "bugs": "https://github.com/Opla/aice.js/issues",
   "repository": "https://github.com/Opla/aice.js",
   "homepage": "https://github.com/Opla/aice.js#readme",
   "private": false,
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "clean-dist": "rm -r -f dist && mkdir dist && mkdir dist/commonjs",
-    "copy-files": "cp -r -f ./src/* ./dist && cp -f ./package.json ./dist/package.json && cp -f ../../LICENSE ./dist/LICENSE && rm -r -f ./dist/config.j*",
-    "compile": "yarn clean-dist && babel src -s -D -d dist/commonjs && yarn copy-files",
+    "clean-lib": "rm -r -f lib && mkdir lib",
+    "compile": "yarn clean-lib && babel src -s -D -d lib && cp -f ./package.json ./lib/package.json && cp -f ../../LICENSE ./lib/LICENSE",
     "test": "yarn compile && $(yarn bin)/mocha --require babel-core/register --recursive __tests__",
     "lint": "$(yarn bin)/eslint src",
     "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test",
     "report-coverage": "$(yarn bin)/nyc report --reporter=text-lcov > coverage.lcov && $(yarn bin)/codecov",
-    "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov",
-    "dev": "yarn compile && ./bin/aice"
+    "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov"
   },
-  "bin": {
-    "aice": "./bin/aice.js"
-  },
-  "author": "Opla hello@opla.ai",
-  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
@@ -36,16 +37,11 @@
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
-    "husky": "^3.0.9",
     "mocha": "^6.2.1",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2"
   },
   "dependencies": {
-    "aice": "^0.4.7",
-    "aice-utils": "^0.4.7",
-    "node-emoji": "^1.10.0",
-    "unzipper": "^0.10.5",
-    "yargs": "^14.2.0"
+    "ajv": "^6.10.2"
   }
 }

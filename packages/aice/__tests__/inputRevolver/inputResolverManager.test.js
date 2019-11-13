@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import chai from 'chai';
-import { IntentsResolverManager, SimpleIntentsResolver } from '../../src/intentsResolver';
+import { IntentsResolverManager, SimpleIntentResolver } from '../../src/intentResolvers';
 import { InputExpressionTokenizer, AdvancedTokenizer } from '../../src/streamTransformers';
 
 const { expect } = chai;
@@ -113,7 +113,7 @@ describe('IntentsResolverManager', () => {
   });
 
   it('Should custom intentResolvers using settings', () => {
-    const resolverManager = new IntentsResolverManager({ intentResolvers: [new SimpleIntentsResolver({})] });
+    const resolverManager = new IntentsResolverManager({ intentResolvers: [new SimpleIntentResolver({})] });
     expect(resolverManager.intentResolvers.length).to.equal(1);
   });
 
@@ -129,7 +129,7 @@ describe('IntentsResolverManager', () => {
 
   it('Should add a resolver', () => {
     const resolverManager = new IntentsResolverManager();
-    resolverManager.addIntentResolver(new SimpleIntentsResolver());
+    resolverManager.addIntentResolver(new SimpleIntentResolver());
     expect(resolverManager.intentResolvers.length).to.equal(2);
   });
 });

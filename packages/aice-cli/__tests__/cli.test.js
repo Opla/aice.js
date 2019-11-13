@@ -108,3 +108,11 @@ describe('AICE CLI interact', () => {
       .and.eq("Say what? I might have heard 'gfgf'");
   });
 });
+describe('AICE CLI validate', () => {
+  it('No command', async () => {
+    const result = await execCommand('validate');
+    expect(result[0])
+      .to.be.a('string')
+      .and.match(/^AICE Validate v\d.\d.\d/);
+  });
+});

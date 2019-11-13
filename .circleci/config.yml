@@ -11,28 +11,32 @@ jobs:
     executor: aice-executor
     steps:
       - checkout
+      - run: yarn --version
+  
       - restore_cache:
-          name: Restore Yarn Package Cache
           keys:
-            - yarn-packages-{{ checksum \"yarn.lock\" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            - v1-dependencies-
+    
       - run:
           name: Install Dependencies
-          command: yarn install
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum \"yarn.lock\" }}
-          paths:
-            - ~/.cache/yarn
+          command: yarn install --frozen-lockfile
+      - run: yarn bootstrap
+      - run: yarn workspaces info
+      - run: yarn compile
       - run: yarn lint
       - run: yarn coverage
       - run: yarn report-coverage
-      - run: yarn compile
       - store_artifacts:
           path: ~/aicejs/cov
       - persist_to_workspace:
           root: ~/aicejs
           paths: 
             - packages
+      - save_cache:
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
 
   publish-aice:
     executor: aice-executor

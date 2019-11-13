@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "input-sentence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output-sentence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "botId": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "name": {
+          "type": "string"
+        },
+        "previousId": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "state": {
+          "type": "string", "enum": ["deactivated", "activated"]
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer"
+        },
+        "input": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/input-sentence"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/input-sentence"
+              }
+            }
+          ]
+        },
+        "output": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "input",
+        "output"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$id": "opennlx.v1",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+    },
+    "publishedVersionId": {
+      "type": "string",
+      "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "welcome": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "localize": {
+      "type": "string"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "intents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/intent"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "name",
+    "intents"
+  ],
+  "additionalProperties": false
+}

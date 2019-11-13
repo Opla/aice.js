@@ -7,21 +7,35 @@
 import run from './run';
 import test from './test';
 import version from './version';
+import validate from './validate';
+import FileManager from '../utils/FileManager';
 
-const commands = [run, test, version];
+const commands = [run, test, validate, version];
 
-export default (commandName, cli, yargs) => {
+export default (cli, yargs) => {
+  const fm = new FileManager(this);
+  fm.init();
   let y = yargs;
   commands.forEach(init => {
-    // const init = commands[name];
     const command = init(cli);
     const { isDefault } = command;
     let cmd = command.commandName;
     if (isDefault) {
       cmd = [cmd, '$0'];
     }
-    y = y.command(cmd, command.description, command.builder || {}, () => {
-      command.execute().then();
+    let builder = {};
+    if (command.builder) {
+      builder = yg => {
+        command.builder.forEach(el => {
+          yg.positional(el.name, {
+            describe: el.description,
+            default: el.default,
+          });
+        });
+      };
+    }
+    y = y.command(cmd, command.description, builder, argv => {
+      command.execute(argv).then();
     });
   });
 };

@@ -8,7 +8,7 @@
 export default class IntentResolver {
   constructor({ name, cbTrain, cbExecute, cbEvaluate, ...settings } = {}) {
     if (!name) {
-      throw new Error('Invalid IntentsResolver constructor - Missing name');
+      throw new Error('Invalid IntentResolverconstructor - Missing name');
     }
     this.settings = settings;
     this.name = name;

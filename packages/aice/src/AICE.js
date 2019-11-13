@@ -5,16 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { IntentsResolverManager } from './intentsResolver';
+import { IntentsResolverManager } from './intentResolvers';
 import { OutputRenderingManager } from './outputRendering';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
 import { NamedEntityTokenizer } from './streamTransformers/tokenizer';
 import { NERManager, SystemEntities } from './streamTransformers';
 
-const LANG = 'fr';
-
 export default class AICE {
-  constructor(settings = {}) {
+  constructor(settings = { defaultLanguage: 'en' }) {
     this.settings = settings;
     this.inputs = [];
     this.outputs = [];
@@ -102,7 +100,7 @@ export default class AICE {
    * @param {Array} conditions Conditions to be evaluated.
    * @param {AsyncFunction} preRenderCallable Pre-Render callables executed before redering only if conditions are checked. (can mutate context)
    */
-  addOutput(lang, intentid, output, preConditionsCallable = () => {}, conditions = [], preRenderCallable = () => {}) {
+  addOutput(lang, intentid, output, preConditionsCallable, conditions = [], preRenderCallable) {
     if (!lang || !output || !intentid) {
       throw new Error('AICE addOutput - Has some missing mandatory parameters');
     }
@@ -159,7 +157,7 @@ export default class AICE {
    * @param {String} lang Default lang is french.
    * @returns {reponse} An object containing: answer, score, intent, context
    */
-  async evaluate(utterance, context = {}, lang = LANG) {
+  async evaluate(utterance, context = {}, lang = this.settings.defaultLanguage) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
     const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);

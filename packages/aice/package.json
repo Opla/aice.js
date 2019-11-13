@@ -1,24 +1,22 @@
 {
   "name": "aice",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "main": "index.js",
   "type": "module",
   "license": "MIT",
-  "description": "Artificial Intelligence Conversational Engine",
+  "description": "AIce = Artificial Intelligence conversational engine",
   "author": "Opla <hello@opla.ai>",
+  "bugs": "https://github.com/Opla/aice.js/issues",
+  "repository": "https://github.com/Opla/aice.js",
+  "homepage": "https://github.com/Opla/aice.js#readme",
   "private": false,
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn test && yarn compile"
-    }
-  },
   "scripts": {
     "clean-dist": "rm -r -f dist && mkdir dist && mkdir dist/commonjs",
     "copy-files": "cp -r -f ./src/* ./dist && cp -f ./package.json ./dist/package.json && cp -f ../../LICENSE ./dist/LICENSE && rm -r -f ./dist/config.j*",
     "compile": "yarn clean-dist && babel src -s -D -d dist/commonjs && yarn copy-files",
-    "test": "$(yarn bin)/mocha --require babel-core/register --recursive",
+    "test": "$(yarn bin)/mocha --require babel-core/register --recursive  __tests__",
     "lint": "$(yarn bin)/eslint src",
-    "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test -- --exclude=test/nlpaice.test.js",
+    "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test -- --exclude= __tests__/nlpaice.test.js",
     "report-coverage": "$(yarn bin)/nyc report --reporter=text-lcov > coverage.lcov && $(yarn bin)/codecov",
     "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov"
   },
@@ -35,7 +33,6 @@
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
-    "husky": "^3.0.9",
     "mocha": "^6.2.1",
     "node-fetch": "^2.6.0",
     "nodemon": "^1.19.4",

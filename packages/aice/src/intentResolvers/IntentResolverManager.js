@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import SimpleIntentResolver from './SimpleIntentsResolver';
+import SimpleIntentResolver from './SimpleIntentResolver';
 import { Utils } from '../utils';
 
 export default class IntentResolverManager {
