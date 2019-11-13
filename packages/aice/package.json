@@ -4,8 +4,11 @@
   "main": "index.js",
   "type": "module",
   "license": "MIT",
-  "description": "Artificial Intelligence Conversational Engine",
+  "description": "AIce = Artificial Intelligence conversational engine",
   "author": "Opla <hello@opla.ai>",
+  "bugs": "https://github.com/Opla/aice.js/issues",
+  "repository": "https://github.com/Opla/aice.js",
+  "homepage": "https://github.com/Opla/aice.js#readme",
   "private": false,
   "husky": {
     "hooks": {

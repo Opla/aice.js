@@ -4,6 +4,10 @@
   "main": "index.js",
   "type": "module",
   "description": "AIce CommandLine Interface",
+  "bugs": "https://github.com/Opla/aice.js/issues",
+  "repository": "https://github.com/Opla/aice.js",
+  "homepage": "https://github.com/Opla/aice.js#readme",
+  "private": false,
   "scripts": {
     "clean-dist": "rm -r -f dist && mkdir dist && mkdir dist/commonjs",
     "copy-files": "cp -r -f ./src/* ./dist && cp -f ./package.json ./dist/package.json && cp -f ../../LICENSE ./dist/LICENSE && rm -r -f ./dist/config.j*",

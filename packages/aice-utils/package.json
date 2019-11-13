@@ -3,8 +3,11 @@
   "version": "0.4.7",
   "description": "AIce utilities",
   "author": "Mik <mik@opla.ai>",
+  "bugs": "https://github.com/Opla/aice.js/issues",
+  "repository": "https://github.com/Opla/aice.js",
   "homepage": "https://github.com/Opla/aice.js#readme",
-  "license": "ISC",
+  "private": false,
+  "license": "MIT",
   "main": "lib/index.js",
   "directories": {
     "lib": "lib",
@@ -13,10 +16,6 @@
   "files": [
     "lib"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Opla/aice.js.git"
-  },
   "scripts": {
     "clean-lib": "rm -r -f lib && mkdir lib",
     "compile": "yarn clean-lib && babel src -s -D -d lib && cp -f ./package.json ./lib/package.json && cp -f ../../LICENSE ./lib/LICENSE",
@@ -25,9 +24,6 @@
     "coverage": "$(yarn bin)/nyc --reporter=text --reporter=html --report-dir=cov npm run test",
     "report-coverage": "$(yarn bin)/nyc report --reporter=text-lcov > coverage.lcov && $(yarn bin)/codecov",
     "coverage:serve": "rm -rf cov; yarn coverage; npx serve cov"
-  },
-  "bugs": {
-    "url": "https://github.com/Opla/aice.js/issues"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
