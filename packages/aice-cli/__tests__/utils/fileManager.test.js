@@ -42,23 +42,23 @@ describe('FileManager', () => {
     const fm = new FileManager();
     const file = await fm.getFile('./src');
     const res = await fm.loadAsJson(file);
-    expect(res.error).to.equals('Not a file');
+    expect(res.error).to.equals('Not a valid file');
   });
   it('loadAsJson not json', async () => {
     const fm = new FileManager();
     const file = await fm.getFile('./.gitignore');
     const json = await fm.loadAsJson(file);
-    expect(json.error).to.equals('Not a valid JSON');
+    expect(json.error).to.equals('Not a valid file');
   });
   it('loadAsJson faulty file', async () => {
     const fm = new FileManager();
     const file = { type: 'file' };
     const json = await fm.loadAsJson(file);
-    expect(json.error).to.equals('Not a file');
+    expect(json.error).to.equals('Not a valid file');
   });
   it('loadAsJson faulty file', async () => {
     const fm = new FileManager();
-    const file = { type: 'file', filename: './doo' };
+    const file = { type: 'file', filename: './doo.json' };
     const json = await fm.loadAsJson(file);
     expect(json.error).to.equals("Can't read file");
   });

@@ -41,10 +41,11 @@ export default class FileManager {
   // eslint-disable-next-line class-methods-use-this
   async loadAsJson(file) {
     let result;
-    if (file.type === 'file' && file.filename) {
+    const { filename } = file;
+    if (file.type === 'file' && file.filename && filename.toLowerCase().endsWith('.json')) {
       let data;
       try {
-        data = await fsp.readFile(file.filename);
+        data = await fsp.readFile(filename);
       } catch (error) {
         result = { error: "Can't read file" };
       }
@@ -56,7 +57,7 @@ export default class FileManager {
         }
       }
     } else {
-      result = { error: 'Not a file' };
+      result = { error: 'Not a valid file' };
     }
     return result;
   }

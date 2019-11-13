@@ -8,7 +8,7 @@
 
 // These file need to be executable
 // chmod +x aice.js
-const cli = require('../lib/cli').default;
+const cli = require('../dist/commonjs/cli').default;
 
 const version = process.versions.node;
 const major = parseInt(version.split('.')[0], 10);
