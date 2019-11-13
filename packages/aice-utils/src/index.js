@@ -33,14 +33,24 @@ class AIceUtils {
   }
 
   /* istanbul ignore next */
-  validateData(data, schemaName) {
+  async validateData(data, schemaName) {
     let result;
     try {
-      result = this.validate.execute(data, schemaName);
+      result = await this.validate.execute(data, schemaName);
     } catch (e) {
       result = { error: e.message };
     }
     return result;
+  }
+
+  /* istanbul ignore next */
+  async importData(data) {
+    const res = await this.validateData(data);
+    if (res.isValid) {
+      // TODO
+      return true;
+    }
+    return false;
   }
 }
 
