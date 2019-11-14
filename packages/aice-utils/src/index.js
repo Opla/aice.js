@@ -165,6 +165,50 @@ class AIceUtils {
     }
     return result;
   }
+
+  /* istanbul ignore next */
+  async doExport(data, output, opts) {
+    // TODO export in a zip
+    const result = await this.validate.run(data, opts.schemaName);
+    if (result.isValid) {
+      const schemaName = result.schema && result.schema.name ? result.schema.name : opts.schemaName;
+      if (schemaName === 'configuration') {
+        const { configuration } = data;
+        configuration.schema = { name: 'configuration' };
+        output.push({ configuration });
+        return true;
+      }
+      let agent = data;
+      if ((result.schema && result.schema.version === '1') || opts.version === '1') {
+        // Convert v1 to v2
+        agent = await OpennlxV2.convert(data, opts);
+      }
+      agent.schema = { name: 'opennlx', version: '2' };
+      output.push({ agent });
+      return true;
+    }
+    return false;
+  }
+
+  /* istanbul ignore next */
+  async exportData(data, opts = {}) {
+    let result;
+    const output = [];
+    try {
+      await this.transformData(data, async (d, o) => this.doExport(d, output, o), opts);
+      result = output;
+    } catch (e) {
+      result = { error: e.message };
+    }
+    if (Array.isArray(result) && result.length === 1) {
+      [result] = result;
+    }
+    if (result.configuration && result.configuration.schema) {
+      //
+      delete result.configuration.schema;
+    }
+    return JSON.stringify(result);
+  }
 }
 
 const singletonInstance = new AIceUtils();
