@@ -86,10 +86,7 @@ export default class FileManager {
                 fn = fn.substring(i + 1);
               }
               if (fn[0] !== '.') {
-                const r = await handler(fn, outputDir, entry, this);
-                if (r) {
-                  shouldDrain = false;
-                }
+                shouldDrain = await handler(fn, outputDir, entry, this);
               }
             }
             if (shouldDrain) {

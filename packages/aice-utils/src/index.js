@@ -33,6 +33,24 @@ class AIceUtils {
     return this.parameters.config;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  async handleZipEntry(filename, outputDir, entry, fileManager) {
+    const result = { autoDrain: true };
+    if (filename.endsWith('.json')) {
+      const d = await fileManager.readZipEntry(entry, outputDir);
+      result.autoDrain = false;
+      try {
+        result.data = JSON.parse(d);
+      } catch (e) {
+        result.data = null;
+      }
+    } else if (outputDir) {
+      await fileManager.writeZipEntry(entry, filename, outputDir);
+      result.autoDrain = false;
+    }
+    return result;
+  }
+
   async loadData(filename, transformer, opts) {
     const fileManager = this.getFileManager();
     if (fileManager) {
@@ -59,6 +77,23 @@ class AIceUtils {
           if (output.length > 0) {
             return output;
           }
+        }
+        if (file.type === 'zip') {
+          const output = [];
+          await fileManager.extract(
+            file,
+            opts.outputDir,
+            async (f, o, e, m) => {
+              const r = await this.handleZipEntry(f, o, e, m);
+              if (r.data) {
+                const data = await transformer(r.data, opts);
+                output.push(data);
+              }
+              return r.autoDrain;
+            },
+            opts.matchExtensions,
+          );
+          return output;
         }
       }
       throw Error(`file not found : ${filename}`);
@@ -87,11 +122,10 @@ class AIceUtils {
     throw Error('empty data');
   }
 
-  /* istanbul ignore next */
   async validateData(data, schemaName) {
     let result;
     try {
-      result = await this.transformData(data, async (d, opts) => this.validate.run(d, opts), schemaName);
+      result = await this.transformData(data, async (d, opts) => this.validate.run(d, opts.schemaName), { schemaName });
     } catch (e) {
       result = { error: e.message, isValid: false };
     }
@@ -99,13 +133,23 @@ class AIceUtils {
   }
 
   /* istanbul ignore next */
-  async importData(data) {
-    const res = await this.validateData(data);
-    if (res.isValid) {
-      // TODO
+  async doImport(data, opts) {
+    const result = this.validate.run(data, opts.schemaName);
+    if (result.isValid) {
       return true;
     }
     return false;
+  }
+
+  /* istanbul ignore next */
+  async importData(data, opts) {
+    let result;
+    try {
+      result = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
+    } catch (e) {
+      result = false;
+    }
+    return result;
   }
 }
 

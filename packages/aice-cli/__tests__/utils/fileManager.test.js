@@ -104,19 +104,21 @@ describe('FileManager', () => {
         try {
           data = JSON.parse(d);
         } catch (e) {
-          // data = null;
+          //
         }
       } else if (fn.endsWith('dummy.pdf')) {
         try {
           await filem.writeZipEntry(entry, fn, output);
-        } catch (e) {
           resp = false;
+        } catch (e) {
+          //
         }
       } else {
         try {
           await filem.readZipEntry(entry, fn, output);
-        } catch (e) {
           resp = false;
+        } catch (e) {
+          //
         }
       }
       return resp;
