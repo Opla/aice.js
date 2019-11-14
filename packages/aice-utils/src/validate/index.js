@@ -41,15 +41,15 @@ export default class {
 
   // eslint-disable-next-line class-methods-use-this
   findSchemaNameAndVersion(data) {
-    let schemaNameAndVersion;
+    let schema;
     if (Configuration.seemsOk(data)) {
-      schemaNameAndVersion = { schemaName: 'aice-configuration' };
+      schema = { name: 'aice-configuration' };
     } else if (OpennlxV2.seemsOk(data)) {
-      schemaNameAndVersion = { schemaName: 'opennlx', version: '2' };
+      schema = { name: 'opennlx', version: '2' };
     } else if (OpennlxV1.seemsOk(data)) {
-      schemaNameAndVersion = { schemaName: 'opennlx' };
+      schema = { name: 'opennlx' };
     }
-    return schemaNameAndVersion;
+    return schema;
   }
 
   getValidator(schemaName, version) {
@@ -65,9 +65,9 @@ export default class {
     if (schemaName && data[schemaName] && data[schemaName].version) {
       return this.getValidator(schemaName, data[schemaName].version);
     }
-    const res = this.findSchemaNameAndVersion(data);
-    if (res) {
-      return this.getValidator(res.schemaName, res.version);
+    const schema = this.findSchemaNameAndVersion(data);
+    if (schema) {
+      return this.getValidator(schema.name, schema.version);
     }
     throw new Error(this.getErrorMessage(schemaName));
   }

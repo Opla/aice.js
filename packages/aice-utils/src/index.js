@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Validate from './validate';
+import OpennlxV2 from './validate/OpennlxV2';
 
 class AIceUtils {
   constructor() {
@@ -68,7 +69,6 @@ class AIceUtils {
           const output = [];
           await Promise.all(
             files.map(async f => {
-              // console.log('file', f);
               const d = await fileManager.loadAsJson(f);
               const data = await transformer(d, opts);
               output.push(data);
@@ -132,22 +132,36 @@ class AIceUtils {
     return result;
   }
 
-  /* istanbul ignore next */
-  async doImport(data, opts) {
-    const result = this.validate.run(data, opts.schemaName);
+  async doImport(data, output, opts) {
+    const result = await this.validate.run(data, opts.schemaName);
     if (result.isValid) {
+      const schemaName = result.schema && result.schema.name ? result.schema.name : opts.schemaName;
+      if (schemaName === 'configuration') {
+        const { configuration } = data;
+        configuration.schema = { name: 'configuration' };
+        output.push({ configuration });
+        return true;
+      }
+      let agent = data;
+      if ((result.schema && result.schema.version === '1') || opts.version === '1') {
+        // Convert v1 to v2
+        agent = await OpennlxV2.convert(data, opts);
+      }
+      agent.schema = { name: 'opennlx', version: '2' };
+      output.push({ agent });
       return true;
     }
     return false;
   }
 
-  /* istanbul ignore next */
-  async importData(data, opts) {
+  async importData(data, opts = {}) {
     let result;
+    const output = [];
     try {
-      result = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
+      await this.transformData(data, async (d, o) => this.doImport(d, output, o), opts);
+      result = output;
     } catch (e) {
-      result = false;
+      result = { error: e.message };
     }
     return result;
   }
