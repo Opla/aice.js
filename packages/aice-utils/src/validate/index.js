@@ -72,7 +72,7 @@ export default class {
     throw new Error(this.getErrorMessage(schemaName));
   }
 
-  async proceedData(data, schemaName) {
+  async run(data, schemaName) {
     const result = { isValid: false };
     if (data && !Array.isArray(data) && typeof data === 'object') {
       try {
@@ -92,61 +92,6 @@ export default class {
     } else {
       result.error = 'wrong data format';
     }
-    return result;
-  }
-
-  async loadData(filename, schemaName) {
-    const fileManager = this.utils.getFileManager();
-    if (fileManager) {
-      //  Check if it is a filename or a path
-      const file = await fileManager.getFile(filename);
-      if (file) {
-        if (file.type === 'file') {
-          //  load file
-          const data = await fileManager.loadAsJson(file);
-          return this.proceedData(data, schemaName);
-        }
-        if (file.type === 'dir') {
-          // Get all sub files
-          const files = await fileManager.readDir(file);
-          const output = [];
-          await Promise.all(
-            files.map(async f => {
-              // console.log('file', f);
-              const d = await fileManager.loadAsJson(f);
-              const r = await this.proceedData(d);
-              output.push(r);
-            }),
-          );
-          if (output.length > 0) {
-            return output;
-          }
-        }
-      }
-    }
-    return { error: `file not found : ${filename}`, isValid: false };
-  }
-
-  async execute(input, schemaName) {
-    const result = { isValid: false };
-    let data = input;
-    if (data) {
-      if (typeof data === 'string' && data.trim().length > 0) {
-        // Check if the string is JSON
-        try {
-          data = JSON.parse(data);
-        } catch (e) {
-          data = null;
-        }
-        // If not a string we try to use it as a filename
-        if (!data) {
-          return this.loadData(input, schemaName);
-        }
-      }
-      // Maybe data is an object
-      return this.proceedData(data, schemaName);
-    }
-    result.error = 'empty data';
     return result;
   }
 }

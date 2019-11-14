@@ -22,11 +22,24 @@ describe('aice-utils', () => {
     };
     aiceUtils.setFileManager(fileManager);
     expect(aiceUtils.getFileManager()).to.eql(fileManager);
-    aiceUtils.parameters.fileManager = null;
+    aiceUtils.utils.fileManager = null;
   });
   it('aiceUtils faulty setFileManager', async () => {
     expect(() => {
       aiceUtils.setFileManager();
-    }).to.throw('Invalid fileManager');
+    }).to.throw('Invalid FileManager');
+  });
+  it('aiceUtils no FileManager', async () => {
+    aiceUtils.utils.fileManager = null;
+    try {
+      await aiceUtils.transformData('filename');
+    } catch (error) {
+      expect(error.message).to.be.equal('No FileManager defined');
+    }
+  });
+  it('aiceUtils no transformer', async () => {
+    aiceUtils.utils.fileManager = null;
+    const res = await aiceUtils.transformData({ name: 'value' });
+    expect(res.name).to.be.equal('value');
   });
 });
