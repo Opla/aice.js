@@ -48,32 +48,10 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run:
           name: Publish AIce
-          command: npm publish -d ./packages/aice/dist
-  publish-aice-cli:
-    executor: aice-executor
-    steps:
-      - attach_workspace:
-          at: ~/aicejs
-      - run: 
-          name: Write NPM Token to ~/.npmrc
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc          
-      - run:
-          name: Publish AIce-cli
-          command: npm publish -d ./packages/aice-cli/lib
+          command: yarn release
 workflows:
   version: 2
   build:
     jobs:
       - test-lint-build
-#      - publish-aice:
-#          requires:
-#            - test-lint-build
-#          filters:
-#            tags:
-#              only: /^aice@.*/
-#      - publish-aice-cli:
-#          requires:
-#            - test-lint-build
-#          filters:
-#            tags:
-#              only: /^aice-cli@.*/
+

@@ -9,9 +9,6 @@
     "publish": {
        "conventionalCommits": true, 
        "yes": true
-    },
-    "version": {
-      "allowBranch": "master"
     }
 }
 }
