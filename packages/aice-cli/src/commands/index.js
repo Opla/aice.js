@@ -8,13 +8,10 @@ import run from './run';
 import test from './test';
 import version from './version';
 import validate from './validate';
-import FileManager from '../utils/FileManager';
 
 const commands = [run, test, validate, version];
 
 export default (cli, yargs) => {
-  const fm = new FileManager(this);
-  fm.init();
   let y = yargs;
   commands.forEach(init => {
     const command = init(cli);

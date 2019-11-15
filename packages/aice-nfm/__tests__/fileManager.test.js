@@ -6,14 +6,13 @@
  */
 import fs from 'fs';
 import { expect } from 'chai';
-import FileManager from '../../src/utils/FileManager';
+import FileManager from '../src/FileManager';
 
 const fsp = fs.promises;
 
 describe('FileManager', () => {
   it('init', async () => {
     const fm = new FileManager();
-    fm.init();
     expect(fm.cli).to.equals(undefined);
   });
   it('getFile no parameters', async () => {
@@ -39,7 +38,7 @@ describe('FileManager', () => {
     const fm = new FileManager();
     const file = await fm.getFile('./package.json');
     const json = await fm.loadAsJson(file);
-    expect(json.name).to.equals('aice-cli');
+    expect(json.name).to.equals('aice-nfm');
   });
   it('loadAsJson a dir', async () => {
     const fm = new FileManager();

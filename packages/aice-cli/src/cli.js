@@ -7,6 +7,7 @@
 import readline from 'readline';
 import emoji from 'node-emoji';
 import yargs from 'yargs';
+import aiceUtils from 'aice-utils';
 import { getPackageDependencyVersion } from './utils/packageUtils';
 import commands from './commands';
 
@@ -22,6 +23,11 @@ class AIceCLI {
     this.args = args;
     this.command = commands(this, yargs);
     this.exit = exit;
+    this.aiceUtils = aiceUtils;
+  }
+
+  setFileManager(fm) {
+    this.aiceUtils.setFileManager(fm);
   }
 
   log(text, ...opts) {
