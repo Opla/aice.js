@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.3](https://github.com/Opla/aice.js/compare/v0.6.2...v0.6.3) (2019-11-15)
+
+
+### Bug Fixes
+
+* aice cmd tool starting ([#53](https://github.com/Opla/aice.js/issues/53)) ([b9ecf09](https://github.com/Opla/aice.js/commit/b9ecf09770978092566c5f4f0bc625fce58053d9))
+
+
+
+
+
 ## [0.6.4](https://github.com/Opla/aice.js/compare/v0.6.3...v0.6.4) (2019-11-15)
 
 **Note:** Version bump only for package aice-cli

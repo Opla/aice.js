@@ -1,6 +1,6 @@
 {
   "name": "aice-nfm",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "AIce Node FileManager",
   "main": "index.js",
   "type": "module",
