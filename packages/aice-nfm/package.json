@@ -38,5 +38,6 @@
   },
   "dependencies": {
     "unzipper": "^0.10.5"
-  }
+  },
+  "gitHead": "cb8368a842eec82873bc61bca55a4208bdcfc42b"
 }
