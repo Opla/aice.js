@@ -11,6 +11,7 @@
     "test": "yarn workspaces run test",
     "coverage": "yarn workspaces run coverage",
     "report-coverage": "yarn workspaces run report-coverage",
+    "prepare": "yarn workspaces run compile",
     "release": "cross-env HUSKY_BYPASS=true lerna publish --contents dist"
   },
   "devDependencies": {

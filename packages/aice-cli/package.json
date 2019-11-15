@@ -1,6 +1,6 @@
 {
   "name": "aice-cli",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "main": "index.js",
   "type": "module",
   "description": "AIce CommandLine Interface",
@@ -42,9 +42,9 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
-    "aice": "^0.6.1",
-    "aice-nfm": "^0.6.1",
-    "aice-utils": "^0.6.1",
+    "aice": "^0.6.2",
+    "aice-nfm": "^0.6.2",
+    "aice-utils": "^0.6.2",
     "node-emoji": "^1.10.0",
     "yargs": "^14.2.0"
   },
