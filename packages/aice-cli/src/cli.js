@@ -12,6 +12,7 @@ import { getPackageDependencyVersion } from './utils/packageUtils';
 import commands from './commands';
 
 class AIceCLI {
+  // eslint-disable-next-line no-unused-vars
   constructor(args, output, exit, FileManager) {
     this.output = output;
     const version = getPackageDependencyVersion('aice');
