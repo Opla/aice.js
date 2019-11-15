@@ -24,6 +24,7 @@ class AIceCLI {
     this.command = commands(this, yargs);
     this.exit = exit;
     this.aiceUtils = aiceUtils;
+    /* istanbul ignore next */
     if (FileManager) {
       const fm = new FileManager();
       fm.cli = this;
