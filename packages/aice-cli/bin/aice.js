@@ -46,9 +46,9 @@
   const version = process.versions.node;
   const major = parseInt(version.split('.')[0], 10);
 
-  if (major < 8) {
+  if (major < 12) {
     // eslint-disable-next-line no-console
-    console.error(`Node version ${version} is not supported, please use Node.js 8.0 or higher.`);
+    console.error(`Node version ${version} is not supported, please use Node.js 12.0 or higher.`);
     process.exit(1);
   }
 
