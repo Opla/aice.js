@@ -8,6 +8,7 @@
 
 // These file need to be executable
 // chmod +x aice.js
+const fm = require('aice-nfm/commonjs').default;
 const cli = require('../dist/commonjs/cli').default;
 
 const version = process.versions.node;
@@ -22,4 +23,4 @@ if (major < 8) {
 
 // Grab arguments
 const [, , ...args] = process.argv;
-cli(args, console, process.exit);
+cli(args, console, process.exit, fm);
