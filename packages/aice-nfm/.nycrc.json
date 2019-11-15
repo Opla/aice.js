@@ -1,0 +1,13 @@
+{
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "test/*",
+      "bin/*"
+    ],
+    "excludeNodeModules": true
+  }
+}

@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable global-require */
+/* istanbul ignore file */
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -8,12 +10,30 @@
 
 // These file need to be executable
 // chmod +x aice.js
-const cli = require('../dist/commonjs/cli').default;
+
+let fm;
+let cli;
+
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+  try {
+    fm = require('../../aice-nfm/dist/commonjs').default;
+  } catch (e) {
+    //
+  }
+  cli = require('../dist/commonjs/cli').default;
+} else {
+  try {
+    fm = require('aice-nfm/commonjs').default;
+  } catch (e) {
+    //
+  }
+  // eslint-disable-next-line import/no-unresolved
+  cli = require('../commonjs/cli').default;
+}
 
 const version = process.versions.node;
 const major = parseInt(version.split('.')[0], 10);
 
-/* istanbul ignore next */
 if (major < 8) {
   // eslint-disable-next-line no-console
   console.error(`Node version ${version} is not supported, please use Node.js 8.0 or higher.`);
@@ -22,4 +42,4 @@ if (major < 8) {
 
 // Grab arguments
 const [, , ...args] = process.argv;
-cli(args, console, process.exit);
+cli(args, console, process.exit, fm);

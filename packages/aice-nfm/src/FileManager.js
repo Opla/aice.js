@@ -6,7 +6,6 @@
  */
 import fs from 'fs';
 import path from 'path';
-import aiceUtils from 'aice-utils';
 import unzipper from 'unzipper';
 
 const fsp = fs.promises;
@@ -14,10 +13,6 @@ const fsp = fs.promises;
 export default class FileManager {
   constructor(cli) {
     this.cli = cli;
-  }
-
-  init() {
-    aiceUtils.setFileManager(this);
   }
 
   // eslint-disable-next-line class-methods-use-this

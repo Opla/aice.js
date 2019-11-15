@@ -12,8 +12,7 @@
     "test": "yarn workspaces run test",
     "coverage": "yarn workspaces run coverage",
     "report-coverage": "yarn workspaces run report-coverage",
-    "version": "cross-env HUSKY_BYPASS=true lerna version",
-    "release": "cross-env HUSKY_BYPASS=true lerna publish"
+    "release": "cross-env HUSKY_BYPASS=true lerna publish from-git --yes"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
@@ -24,7 +23,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn compile && yarn test",
+      "pre-commit": "yarn lint",
       "commit-msg": "[[ -n $HUSKY_BYPASS ]] || commitlint -E HUSKY_GIT_PARAMS"
     },
     "commitlint": {
