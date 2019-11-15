@@ -7,8 +7,11 @@
   "version": "fixed",
   "command": {
     "publish": {
-       "conventionalCommits": true, 
        "yes": true
+    },
+    "version": {
+      "conventionalCommits": true, 
+      "message": "chore(release): release"
     }
 }
 }
