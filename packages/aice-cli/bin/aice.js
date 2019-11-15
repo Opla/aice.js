@@ -31,16 +31,18 @@
     }
   } else {
     try {
-      d = await import('aice-nfm');
+      d = require('aice-nfm/commonjs');
       fm = d.default;
-      d = await import('aice-utils/dist');
+      d = require('aice-utils/commonjs');
       aiceUtils = d.default;
+      const path = require('path');
+      // eslint-disable-next-line import/no-unresolved
+      d = require(path.join(__dirname, '../commonjs/cli'));
+      cli = d.default;
     } catch (e) {
       //
+      console.log(e);
     }
-    // eslint-disable-next-line import/no-unresolved
-      d = await import('../cli');
-      cli = d.default;
   }
 
   const version = process.versions.node;
@@ -52,7 +54,11 @@
     process.exit(1);
   }
 
-  // Grab arguments
-  const [, , ...args] = process.argv;
-  cli(args, console, process.exit, fm, aiceUtils);
+  if (cli) {
+    // Grab arguments
+    const [, , ...args] = process.argv;
+    cli(args, console, process.exit, fm, aiceUtils);
+  } else {
+    console.log(`AIce can't be started`);
+  }
 })();
