@@ -10,7 +10,7 @@
   "private": false,
   "scripts": {
     "clean-dist": "rm -r -f dist && mkdir dist && mkdir dist/commonjs",
-    "copy-files": "cp -r -f ./src/* ./dist && cp -f ./package.json ./dist/package.json && cp -f ../../LICENSE ./dist/LICENSE && rm -r -f ./dist/config.j*",
+    "copy-files": "cp -r -f ./bin ./dist && cp -r -f ./src/* ./dist && cp -f ./package.json ./dist/package.json && cp -f ../../LICENSE ./dist/LICENSE && rm -r -f ./dist/config.j*",
     "compile": "yarn clean-dist && babel src -s -D -d dist/commonjs && yarn copy-files",
     "test": "yarn compile && cross-env NODE_ENV=test $(yarn bin)/mocha --require babel-core/register --recursive __tests__",
     "lint": "$(yarn bin)/eslint src",
