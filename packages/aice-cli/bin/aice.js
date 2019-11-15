@@ -10,12 +10,24 @@
 // These file need to be executable
 // chmod +x aice.js
 let fm;
-try {
-  fm = require('aice-nfm/commonjs').default;
-} catch (e) {
-  console.log('error', e);
+let cli;
+
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+  try {
+    fm = require('../../aice-nfm/dist/commonjs').default;
+  } catch (e) {
+    //
+  }
+  cli = require('../dist/commonjs/cli').default;
+} else {
+  try {
+    fm = require('aice-nfm/commonjs').default;
+  } catch (e) {
+    console.log('error', e);
+  }
+  // eslint-disable-next-line import/no-unresolved
+  cli = require('../commonjs/cli').default;
 }
-const cli = require('../dist/commonjs/cli').default;
 
 const version = process.versions.node;
 const major = parseInt(version.split('.')[0], 10);
