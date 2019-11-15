@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable global-require */
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -8,7 +9,12 @@
 
 // These file need to be executable
 // chmod +x aice.js
-const fm = undefined; // require('aice-nfm/commonjs').default;
+let fm;
+try {
+  fm = require('aice-nfm/commonjs').default;
+} catch (e) {
+  console.log('error', e);
+}
 const cli = require('../dist/commonjs/cli').default;
 
 const version = process.versions.node;
