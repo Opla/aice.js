@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/Opla/aice.js/compare/v0.6.0...v0.6.1) (2019-11-15)
+
+
+### Bug Fixes
+
+* **aice-cli:** get aice-utils from cli ([3f61a64](https://github.com/Opla/aice.js/commit/3f61a64905e9c6d746d97b510cf3b96f831cc1a3))
+* **aice-utils:** compile to dist ([96375a4](https://github.com/Opla/aice.js/commit/96375a49a7d23908d6e2bc00f1e191f8aff79f74))
+
+
+### Features
+
+* **aice-cli:** min node.js 12 ([a5af826](https://github.com/Opla/aice.js/commit/a5af826b089c416494367eb897f501cbfbb89adc))
+
+
+
+
+
 # [0.6.0](https://github.com/Opla/aice.js/compare/v0.4.0...v0.6.0) (2019-11-15)
 
 
