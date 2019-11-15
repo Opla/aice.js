@@ -25,7 +25,8 @@ class AIceCLI {
     this.exit = exit;
     this.aiceUtils = aiceUtils;
     const fm = new FileManager();
-    fm.cli = this;
+    this.fm = fm;
+    // fm.cli = this;
     // this.setFileManager(fm);
   }
 
