@@ -12,7 +12,7 @@
     "test": "yarn workspaces run test",
     "coverage": "yarn workspaces run coverage",
     "report-coverage": "yarn workspaces run report-coverage",
-    "release": "cross-env HUSKY_BYPASS=true lerna --content dist"
+    "release": "cross-env HUSKY_BYPASS=true lerna publish --content dist"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
