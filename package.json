@@ -1,6 +1,5 @@
 {
   "private": true,
-  "version": "0.6.3",
   "name": "aice-monorepo",
   "workspaces": [
     "packages/*"
