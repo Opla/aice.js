@@ -42,9 +42,9 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
-    "aice": "^0.6.4",
-    "aice-nfm": "^0.6.4",
-    "aice-utils": "^0.6.4",
+    "aice": "^0.6.1",
+    "aice-nfm": "^0.6.1",
+    "aice-utils": "^0.6.1",
     "node-emoji": "^1.10.0",
     "yargs": "^14.2.0"
   },
