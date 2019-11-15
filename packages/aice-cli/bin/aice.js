@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable global-require */
 /* istanbul ignore file */
+
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -11,35 +12,47 @@
 // These file need to be executable
 // chmod +x aice.js
 
-let fm;
-let cli;
+(async () => {
+  let d;
+  let fm;
+  let cli;
+  let aiceUtils;
 
-if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
-  try {
-    fm = require('../../aice-nfm/dist/commonjs').default;
-  } catch (e) {
-    //
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    try {
+      d = await import('../../aice-nfm/dist');
+      fm = d.default;
+      d = await import('../../aice-utils/dist');
+      aiceUtils = d.default;
+      d = await import('../dist/cli');
+      cli = d.default;
+    } catch (e) {
+      //
+    }
+  } else {
+    try {
+      d = await import('aice-nfm');
+      fm = d.default;
+      d = await import('aice-utils/dist');
+      aiceUtils = d.default;
+    } catch (e) {
+      //
+    }
+    // eslint-disable-next-line import/no-unresolved
+      d = await import('../cli');
+      cli = d.default;
   }
-  cli = require('../dist/commonjs/cli').default;
-} else {
-  try {
-    fm = require('aice-nfm/commonjs').default;
-  } catch (e) {
-    //
+
+  const version = process.versions.node;
+  const major = parseInt(version.split('.')[0], 10);
+
+  if (major < 12) {
+    // eslint-disable-next-line no-console
+    console.error(`Node version ${version} is not supported, please use Node.js 12.0 or higher.`);
+    process.exit(1);
   }
-  // eslint-disable-next-line import/no-unresolved
-  cli = require('../commonjs/cli').default;
-}
 
-const version = process.versions.node;
-const major = parseInt(version.split('.')[0], 10);
-
-if (major < 8) {
-  // eslint-disable-next-line no-console
-  console.error(`Node version ${version} is not supported, please use Node.js 8.0 or higher.`);
-  process.exit(1);
-}
-
-// Grab arguments
-const [, , ...args] = process.argv;
-cli(args, console, process.exit, fm);
+  // Grab arguments
+  const [, , ...args] = process.argv;
+  cli(args, console, process.exit, fm, aiceUtils);
+})();

@@ -7,12 +7,11 @@
 import readline from 'readline';
 import emoji from 'node-emoji';
 import yargs from 'yargs';
-import aiceUtils from 'aice-utils';
 import { getPackageDependencyVersion } from './utils/packageUtils';
 import commands from './commands';
 
 class AIceCLI {
-  constructor(args, output, exit, FileManager) {
+  constructor(args, output, exit, FileManager, aiceUtils) {
     this.output = output;
     const version = getPackageDependencyVersion('aice');
     yargs
@@ -68,8 +67,8 @@ class AIceCLI {
   }
 }
 
-const start = (args, output, exit, fm) => {
-  const cli = new AIceCLI(args, output, exit, fm);
+const start = (args, output, exit, fm, aiceUtils) => {
+  const cli = new AIceCLI(args, output, exit, fm, aiceUtils);
   cli.execute();
   return cli;
 };

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Opla/aice.js/compare/v0.4.0...v0.6.0) (2019-11-15)
+
+
+### Bug Fixes
+
+* contents ([fc5c434](https://github.com/Opla/aice.js/commit/fc5c4344a67d7d7c4a48dc9092c0cbeaf6fc669f))
+* lerna publish ([63597d6](https://github.com/Opla/aice.js/commit/63597d65c32a8fb49457a74f7a1476025d1be4ee))
+* lerna publish package dist ([37ee8f5](https://github.com/Opla/aice.js/commit/37ee8f5853918da3177dd88dcc1e7056e605972d))
+
+
+### Features
+
+* **aice-nfm:** create package aice-nfm ([#49](https://github.com/Opla/aice.js/issues/49)) ([8f81e94](https://github.com/Opla/aice.js/commit/8f81e947bafff17ed3b6478f8e1d571979114494))
+
+
+
+
+
 # [0.5.0](https://github.com/Opla/aice.js/compare/v0.4.0...v0.5.0) (2019-11-15)
 
 

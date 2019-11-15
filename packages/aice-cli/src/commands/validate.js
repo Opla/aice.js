@@ -4,7 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import aiceUtils from 'aice-utils';
 
 class Validate {
   constructor(cli) {
@@ -17,8 +16,12 @@ class Validate {
 
   async execute(argv) {
     this.cli.header(this);
-    const result = await aiceUtils.validateData(argv.filename);
-    this.cli.log('result', result);
+    if (this.cli.aiceUtils) {
+      const result = await this.cli.aiceUtils.validateData(argv.filename);
+      this.cli.log('result', result);
+    } else {
+      this.cli.log('result : no AIce-utils configured');
+    }
   }
 }
 
