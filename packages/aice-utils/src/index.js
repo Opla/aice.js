@@ -14,6 +14,18 @@ class AIceUtils {
     this.validate = new Validate(this);
   }
 
+  setAIceClass(AIceClass) {
+    this.utils.AIceClass = AIceClass;
+  }
+
+  createAIceInstance(opts) {
+    if (this.utils.AIceClass) {
+      const { AIceClass } = this.utils;
+      return new AIceClass(opts);
+    }
+    throw new Error('No AIce class defined');
+  }
+
   setFileManager(fileManager) {
     if (fileManager && typeof fileManager.getFile === 'function' && typeof fileManager.loadAsJson === 'function') {
       this.utils.fileManager = fileManager;
