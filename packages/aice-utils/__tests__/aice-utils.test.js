@@ -7,6 +7,12 @@
 import { expect } from 'chai';
 import aiceUtils from '../src';
 
+class AICEClass {
+  constructor(opts) {
+    this.opts = opts;
+  }
+}
+
 describe('aice-utils', () => {
   it('aiceUtils constructor', async () => {
     expect(aiceUtils).to.be.a('object');
@@ -14,6 +20,21 @@ describe('aice-utils', () => {
   it('aiceUtils setConfig', async () => {
     aiceUtils.setConfiguration({});
     expect(aiceUtils.getConfiguration()).to.eql({});
+  });
+  it('aiceUtils setAIceClass', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    expect(aiceUtils.utils.AIceClass).to.eql(AICEClass);
+  });
+  it('aiceUtils createAIceInstance', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    const aice = aiceUtils.createAIceInstance({});
+    expect(aice).to.eql({ opts: {} });
+  });
+  it('aiceUtils faulty createAIceInstance', async () => {
+    aiceUtils.setAIceClass();
+    expect(() => {
+      aiceUtils.createAIceInstance();
+    }).to.throw('No AIce class defined');
   });
   it('aiceUtils setFileManager', async () => {
     const fileManager = {
