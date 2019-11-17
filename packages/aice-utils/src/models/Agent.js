@@ -4,7 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-/* istanbul ignore file */
 export default class Agent {
   constructor({ name, context, ...opts }) {
     this.name = name;
@@ -12,9 +11,14 @@ export default class Agent {
     this.context = context;
     this.conversations = {};
     this.opts = opts;
+    this.entities = {};
   }
 
   reset() {
+    this.entities = {};
+  }
+
+  resetConversations() {
     this.conversations = {};
   }
 
@@ -23,6 +27,10 @@ export default class Agent {
   }
 
   async saveContext(conversationId, context) {
-    if (context) this.conversations[conversationId] = JSON.parse(JSON.stringify(context));
+    if (context) this.conversations[conversationId] = context;
+  }
+
+  async addEntity(entity) {
+    this.entities[entity.name] = entity;
   }
 }

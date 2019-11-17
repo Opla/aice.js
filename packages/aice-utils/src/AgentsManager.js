@@ -4,26 +4,46 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-/* istanbul ignore file */
 import Agent from './models/Agent';
 
 export default class AgentsManager {
-  constructor(utils, opts = {}) {
+  constructor(utils, opts) {
     this.utils = utils;
     this.agents = {};
     this.opts = opts;
   }
 
-  createAgent(dataset, name, opts = {}) {
+  reset() {
+    this.agents = {};
+  }
+
+  createAgent({ name, dataset, ...opts }) {
     const n = name || dataset.name;
-    const agent = new Agent({ ...opts, name: n, dataset });
-    const engine = this.utils.createAIceInstance(opts);
+    const agent = new Agent({ ...opts, name: n });
+    let engine;
+    try {
+      engine = this.utils.createAIceInstance(opts);
+    } catch (e) {
+      //
+    }
     this.agents[agent.name] = { agent, engine, dataset };
     return agent;
   }
 
   getAgent(name) {
-    return this.agents[name].agent;
+    return this.agents[name] ? this.agents[name].agent : null;
+  }
+
+  saveAgentContext(name, conversationId, context) {
+    if (this.agents[name]) {
+      this.agents[name].agent.saveContext(conversationId, context);
+    }
+  }
+
+  resetAgent(name) {
+    if (this.agents[name]) {
+      this.agents[name].agent.resetConversations();
+    }
   }
 
   removeAgent(name) {
@@ -39,12 +59,19 @@ export default class AgentsManager {
     return isText ? value.slice(1, -1) : { type: 'VARIABLE', value };
   }
 
-  async train(dataset, name, opts) {
-    const n = name || dataset.name;
+  async train({ name, dataset: ds = {}, ...opts }) {
+    const n = name || ds.name;
     if (!this.agents[n]) {
-      this.createAgent(dataset, n, opts);
+      this.createAgent({ ...opts, name: n, dataset: ds });
+    }
+    const dataset = ds && ds.intents ? ds : this.agents[n].dataset;
+    if (!dataset || !Array.isArray(dataset.intents)) {
+      throw new Error('No valid datasets');
     }
     const { agent, engine } = this.agents[n];
+    if (!engine) {
+      throw new Error("Can't train this agent without an engine");
+    }
     engine.clear();
     agent.reset();
     this.agents[n].callables = {};
@@ -57,7 +84,7 @@ export default class AgentsManager {
       });
     }
     intents.forEach(intent => {
-      const language = intent.language || dataset;
+      const language = intent.language || dataset.language;
       intent.input.forEach(input => {
         engine.addInput(language, intent.name, input.text, [], intent.topic);
       });
@@ -73,7 +100,7 @@ export default class AgentsManager {
               leftOperand: this.parseValue(conditionOutput.name),
               rightOperand: this.parseValue(conditionOutput.value),
             };
-            this.agent.addOutput('fr', intent.name, conditionOutput.text, undefined, [condition], outputCallable);
+            engine.addOutput('fr', intent.name, conditionOutput.text, undefined, [condition], outputCallable);
           });
         }
       });
@@ -102,9 +129,12 @@ export default class AgentsManager {
 
   async evaluate(name, conversationId, utterance) {
     if (!this.agents[name]) {
-      throw new Error(`Unknown agent with this name :${name}`);
+      throw new Error(`Unknown agent with this name ${name}`);
     }
     const { agent, engine } = this.agents[name];
+    if (!engine) {
+      throw new Error("Can't evaluate this utterance without an engine");
+    }
     const currentContext = await agent.getContext(conversationId);
     const response = await engine.evaluate(utterance, currentContext || {});
     await agent.saveContext(conversationId, response.context);
