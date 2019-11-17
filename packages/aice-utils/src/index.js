@@ -6,6 +6,7 @@
  */
 import Validate from './validate';
 import OpennlxV2 from './validate/OpennlxV2';
+import AgentsManager from './AgentsManager';
 
 class AIceUtils {
   constructor() {
@@ -24,6 +25,13 @@ class AIceUtils {
       return new AIceClass(opts);
     }
     throw new Error('No AIce class defined');
+  }
+
+  getAgentsManager(opts) {
+    if (!this.utils.agentsManager) {
+      this.utils.agentsManager = new AgentsManager(this, opts);
+    }
+    return this.utils.agentsManager;
   }
 
   setFileManager(fileManager) {
