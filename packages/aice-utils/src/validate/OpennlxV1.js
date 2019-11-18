@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Model from './Model';
-import schema from '../../../../schemas/opennlx/v1.json';
+import schema from '../schemas/opennlx/v1.json';
 
 // eslint-disable-next-line no-unused-vars
 const regex = {
