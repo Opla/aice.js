@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Model from './Model';
-import schema from '../../../../schemas/opennlx/v2.json';
+import schema from '../schemas/opennlx/v2.json';
 
 export default class OpennlxV2 extends Model {
   constructor(ajv) {

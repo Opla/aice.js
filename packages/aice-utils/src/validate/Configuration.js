@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Model from './Model';
-import schema from '../../../../schemas/aice-configuration/v1.json';
+import schema from '../schemas/aice-configuration/v1.json';
 
 export default class Configuration extends Model {
   constructor(ajv) {
