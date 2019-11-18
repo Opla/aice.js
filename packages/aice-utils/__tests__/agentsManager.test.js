@@ -207,7 +207,6 @@ describe('AgentsManager', () => {
       },
     });
     let response = await agentsManager.evaluate('bot', 'conversation', 'hello');
-    console.log('response=', response);
     expect(response.message.text).to.be.equal('hello');
     response = await agentsManager.evaluate('bot', 'conversation', 'Yabadoo');
     expect(response.message.text).to.be.equal('No response');

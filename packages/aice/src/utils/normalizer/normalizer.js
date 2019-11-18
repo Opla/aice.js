@@ -25,7 +25,7 @@ export const charNormalizer = (char, toLowerCase = false) => {
   ) {
     s = char;
   }
-  if (toLowerCase && (c > 64 && c < 91)) {
+  if (toLowerCase && c > 64 && c < 91) {
     s = String.fromCharCode(c + (97 - 65)); // To lower case
   }
   return s;
