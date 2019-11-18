@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Validate from './validate';
-import OpennlxV2 from './validate/OpennlxV2';
+import OpennlxV2 from './models/OpennlxV2';
 import AgentsManager from './AgentsManager';
 
 class AIceUtils {

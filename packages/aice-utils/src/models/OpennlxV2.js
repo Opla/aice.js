@@ -4,10 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import ModelSchema from './ModelSchema';
+import SchemaModel from './SchemaModel';
 import schema from '../schemas/opennlx/v2.json';
 
-export default class OpennlxV2 extends ModelSchema {
+export default class OpennlxV2 extends SchemaModel {
   constructor(ajv) {
     super(ajv, schema, 'opennlx', '2');
   }

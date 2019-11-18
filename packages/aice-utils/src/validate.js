@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Ajv from 'ajv';
-import Configuration from './Configuration';
-import OpennlxV1 from './OpennlxV1';
-import OpennlxV2 from './OpennlxV2';
+import Configuration from './models/Configuration';
+import OpennlxV1 from './models/OpennlxV1';
+import OpennlxV2 from './models/OpennlxV2';
+import Testset from './models/Testset';
 
 export default class {
   constructor(utils) {
@@ -30,6 +31,9 @@ export default class {
     if (schemaName === 'aice-configuration') {
       return new Configuration(this.ajv);
     }
+    if (schemaName === 'aice-testset') {
+      return new Testset(this.ajv);
+    }
     if (schemaName === 'opennlx') {
       if (version === '2') {
         return new OpennlxV2(this.ajv);
@@ -44,6 +48,8 @@ export default class {
     let schema;
     if (Configuration.seemsOk(data)) {
       schema = { name: 'aice-configuration' };
+    } else if (Testset.seemsOk(data)) {
+      schema = { name: 'aice-testset', version: '1' };
     } else if (OpennlxV2.seemsOk(data)) {
       schema = { name: 'opennlx', version: '2' };
     } else if (OpennlxV1.seemsOk(data)) {
