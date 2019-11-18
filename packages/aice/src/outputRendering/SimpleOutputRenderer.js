@@ -24,7 +24,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
           ctx = await callable(context);
         } else if (
           callable.func &&
-          (typeof callable.func === 'function' || callable.func.constructor.name === 'AsyncFunction')
+          (callable.func.constructor.name === 'AsyncFunction' || typeof callable.func === 'function')
         ) {
           ctx = await callable.func(context);
         } else if (callable.isReference) {

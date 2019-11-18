@@ -19,7 +19,7 @@ class ExactStrategy extends StrategyWordComparator {
   }
 
   compare(a, b) {
-    const result = { match: a.toLowerCase() === b.toLowerCase(), score: this.score };
+    const result = { match: a === b, score: this.score };
     return result;
   }
 }
@@ -33,7 +33,7 @@ class LevenshteinStrategy extends StrategyWordComparator {
   compare(a, b) {
     const result = {};
 
-    const levenshteinScore = Levenshtein(a.toLowerCase(), b.toLowerCase());
+    const levenshteinScore = Levenshtein(a, b);
     result.score = levenshteinScore !== 0 ? (a.length - levenshteinScore) / a.length : 1.0;
 
     result.match = result.score > this.threshold;
@@ -50,7 +50,7 @@ class DamerauLevenshteinStrategy extends StrategyWordComparator {
   compare(a, b) {
     const result = {};
 
-    const damerauScore = Damerau.distance(a.toLowerCase(), b.toLowerCase());
+    const damerauScore = Damerau.distance(a, b);
     result.score = damerauScore !== 0 ? (a.length - damerauScore) / a.length : 1.0;
 
     // Based on score - using a cut off on DamerauScore

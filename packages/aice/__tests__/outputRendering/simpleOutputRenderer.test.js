@@ -111,7 +111,7 @@ describe('SimpleOutputRenderer', () => {
   });
 
   it('Should execute answers - preRenderCallable', async () => {
-    const getName = () => ({ name: 'slim shady' });
+    const getName = async () => ({ name: 'slim shady' });
     const renderer = new SimpleOutputRenderer({
       outputs: [
         {

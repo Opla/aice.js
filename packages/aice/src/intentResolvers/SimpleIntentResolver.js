@@ -6,25 +6,27 @@
  */
 
 import IntentResolver from './IntentResolver';
-import { Comparator, DamerauLevenshteinStrategy } from '../utils';
+import { Comparator, ExactStrategy, DamerauLevenshteinStrategy } from '../utils';
 
 export default class SimpleIntentResolver extends IntentResolver {
   constructor({ comparator = new Comparator(new DamerauLevenshteinStrategy()), ...settings } = {}) {
     super({ ...settings, name: 'simple-intents-resolver' });
+    this.exactComp = new Comparator(new ExactStrategy());
     this.comparator = comparator;
   }
 
   async execute(lang, sentence, context) {
     // Preprocess filter lang
     const inputs = await super.execute(lang, sentence, context);
-
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
       // Case - Fallback (lower score) // NOT SO GOOD even with threshold + infitesimal
       if (input.input === '{{*}}' || input.input === '{{^}}') {
         comparatorResult.confidence = this.settings.threshold + 0.01;
+        comparatorResult.score = 0.9;
+        comparatorResult.isAnyOrNothing = true;
       }
-      const score = comparatorResult.match ? comparatorResult.confidence : 0;
+      const score = comparatorResult.match ? comparatorResult.score : 0;
       return {
         intentid: input.intentid,
         input: input.input,
