@@ -33,7 +33,7 @@ export default class Comparator {
     // Expressioned equality check
     if (!result.match) {
       result.match = true;
-
+      result.size = 1;
       result.iteratorGeneratorI = linkedListI.values();
       result.iteratorGeneratorU = linkedListU.values();
       result.iteratorI = result.iteratorGeneratorI.next();
@@ -44,6 +44,7 @@ export default class Comparator {
 
         // Do we need to proceed next tokens
         if (!result.iteratorI.done) {
+          result.size += 1;
           result.iteratorI = result.iteratorGeneratorI.next();
           result.iteratorU = result.iteratorGeneratorU.next();
         }
@@ -59,6 +60,10 @@ export default class Comparator {
       delete result.iteratorGeneratorU;
       delete result.iteratorI;
       delete result.iteratorU;
+    } else {
+      result.score = 1.0;
+      result.confidence = 1.0;
+      result.exactMatch = true;
     }
 
     return result;
@@ -109,8 +114,9 @@ export default class Comparator {
         const { text: textU } = result.iteratorU.value;
         const res = this.wordComparator.compare(text.toLowerCase(), textU.toLowerCase());
         // TODO handle comparison score we may lower
-        // result.confidence = ((result.size - 1) / result.size) * result.confidence + (1 / result.size) * res.score;
+        result.confidence = ((result.size - 1) / result.size) * result.confidence + (1 / result.size) * res.score;
         result.match = res.match;
+        result.score = res.score;
       }
     }
     return result;
