@@ -83,7 +83,9 @@ class AIceUtils {
         if (file.type === 'file') {
           //  load file
           const content = await fileManager.loadAsJson(file);
-          return transformer(content, opts);
+          const data = await transformer(content, opts);
+          data.url = file.filename;
+          return data;
         }
         if (file.type === 'dir') {
           // Get all sub files
@@ -93,6 +95,7 @@ class AIceUtils {
             files.map(async f => {
               const content = await fileManager.loadAsJson(f);
               const data = await transformer(content, opts);
+              data.url = f.filename;
               output.push(data);
             }),
           );
@@ -109,6 +112,8 @@ class AIceUtils {
               const r = await this.handleZipEntry(f, o, e, m);
               if (r.content) {
                 const data = await transformer(r.content, opts);
+                data.isZipped = true;
+                data.url = f;
                 output.push(data);
               }
               return r.autoDrain;
@@ -154,19 +159,17 @@ class AIceUtils {
     return result;
   }
 
-  async doImport(content, output, opts) {
+  async doImport(content, opts) {
     const result = await this.validate.run(content, opts.schemaName);
     if (result.isValid) {
       const schemaName = result.schema && result.schema.name ? result.schema.name : opts.schemaName;
       if (schemaName === 'aice-configuration') {
         const schema = { name: 'aice-configuration' };
-        output.push({ content, schema, isValid: result.isValid });
-        return true;
+        return { content, schema, isValid: result.isValid };
       }
       if (schemaName === 'aice-testset') {
         const schema = { name: 'aice-testset' };
-        output.push({ content, schema, isValid: result.isValid });
-        return true;
+        return { content, schema, isValid: result.isValid };
       }
       let agent = content;
       if ((result.schema && result.schema.version === '1') || opts.version === '1') {
@@ -174,18 +177,19 @@ class AIceUtils {
         agent = await OpennlxV2.convert(content, opts);
       }
       const schema = { name: 'opennlx', version: '2' };
-      output.push({ content: agent, schema, isValid: result.isValid });
-      return true;
+      return { content: agent, schema, isValid: result.isValid };
     }
-    return false;
+    return null;
   }
 
   async importData(data, opts = {}) {
     let result;
-    const output = [];
     try {
-      await this.transformData(data, async (d, o) => this.doImport(d, output, o), opts);
-      result = output;
+      let output = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
+      if (output && !Array.isArray(output)) {
+        output = [output];
+      }
+      result = output || [];
     } catch (e) {
       result = { error: e.message };
     }
@@ -193,7 +197,7 @@ class AIceUtils {
   }
 
   /* istanbul ignore next */
-  async doExport(content, output, opts) {
+  async doExport(content, opts) {
     // TODO export in a zip
     const result = await this.validate.run(content, opts.schemaName);
     if (result.isValid) {
@@ -201,14 +205,12 @@ class AIceUtils {
       if (schemaName === 'aice-configuration') {
         const { configuration } = content;
         configuration.schema = { name: 'aice-configuration' };
-        output.push({ configuration });
-        return true;
+        return { configuration };
       }
       if (schemaName === 'aice-testset') {
         const data = { content };
         data.schema = { name: 'aice-testset' };
-        output.push(data);
-        return true;
+        return data;
       }
       let agent = content;
       if ((result.schema && result.schema.version === '1') || opts.version === '1') {
@@ -216,19 +218,20 @@ class AIceUtils {
         agent = await OpennlxV2.convert(content, opts);
       }
       agent.schema = { name: 'opennlx', version: '2' };
-      output.push({ agent });
-      return true;
+      return { agent };
     }
-    return false;
+    return null;
   }
 
   /* istanbul ignore next */
   async exportData(data, opts = {}) {
     let result;
-    const output = [];
     try {
-      await this.transformData(data, async (d, o) => this.doExport(d, output, o), opts);
-      result = output;
+      let output = await this.transformData(data, async (d, o) => this.doExport(d, o), opts);
+      if (output && !Array.isArray(output)) {
+        output = [output];
+      }
+      result = output || [];
     } catch (e) {
       result = { error: e.message };
     }
