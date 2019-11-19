@@ -9,7 +9,7 @@ import Command from './Command';
 
 class Run extends Command {
   constructor(cli) {
-    super(cli, '🤖', 'run', 'Run a chatbot.', true);
+    super(cli, '🤖', 'run [filename]', 'Run a chatbot.', true);
   }
 
   async execute(argv) {

@@ -20,6 +20,7 @@ class Test extends Command {
     } else {
       this.cli.log('result : no AIce-utils configured');
     }
+    this.cli.log('✨ Done in 0s.');
   }
 }
 

@@ -13,12 +13,11 @@ import commands from './commands';
 class AIceCLI {
   constructor(args, output, exit, FileManager, aiceUtils) {
     this.output = output;
-    const version = getPackageDependencyVersion('aice');
     yargs
-      .version(version, '-v, --version')
+      .version('version', 'v')
       .usage('Usage: $0 [command] [options]')
-      .help('h')
-      .alias('h', 'help');
+      .help('help')
+      .alias('help', 'h');
     this.args = args;
     this.command = commands(this, yargs);
     this.exit = exit;
