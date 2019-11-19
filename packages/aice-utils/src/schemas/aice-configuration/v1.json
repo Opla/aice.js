@@ -70,7 +70,7 @@
     "configuration": {
       "type": "object",
       "properties": {
-        "version": { "type": "string", "const": "v1" },
+        "version": { "type": "string", "const": "1" },
         "threshold": {
           "type": "number",
           "minimum": 0,

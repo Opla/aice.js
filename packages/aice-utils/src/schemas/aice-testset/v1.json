@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "message": {
+      "properties": {
+        "from": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "say": {
+          "type": "string"
+        },
+        "context": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "from",
+        "say"
+      ],
+      "additionalProperties": false
+    },
+    "actor": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "human",
+            "robot"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "story": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "description": {
+          "type": "string"
+        },
+        "context": {
+          "type": "object",
+          "default": {}
+        },
+        "actors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/actor"
+          },
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "dialogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/message"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "name",
+        "dialogs",
+        "actors"
+      ],
+      "additionalProperties": false
+    },
+    "scenario": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
+        "description": {
+          "type": "string"
+        },
+        "stories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/story"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "name",
+        "stories"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$id": "aice.testset",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+    },
+    "description": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/scenario"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "name",
+    "scenarios"
+  ],
+  "additionalProperties": false
+}
