@@ -7,6 +7,39 @@
 import { expect } from 'chai';
 import aiceUtils from '../../src';
 
+class AICEClass {
+  constructor(opts) {
+    this.opts = opts;
+    this.isTrained = false;
+  }
+
+  async clear() {
+    this.isTrained = false;
+  }
+
+  async addInput() {
+    this.isTrained = false;
+  }
+
+  async addOutput() {
+    this.isTrained = false;
+  }
+
+  async train() {
+    this.isTrained = true;
+  }
+
+  async evaluate(utterance) {
+    if (!this.isTrained) {
+      throw new Error('Not trained');
+    }
+    if (utterance === 'Yabadoo') {
+      return { score: 0, answer: utterance, context: {} };
+    }
+    return { score: 0.75, answer: utterance, context: {} };
+  }
+}
+
 describe('validate testset', () => {
   it('simple testset', async () => {
     const result = await aiceUtils.validateData({
@@ -20,8 +53,155 @@ describe('validate testset', () => {
         },
       ],
     });
-    console.log('result=', result);
     expect(result.isValid).to.equal(true);
     expect(result.schema).to.eql({ name: 'aice-testset', version: '1' });
+  });
+});
+
+describe('complete tests', () => {
+  const testset = {
+    name: 'test',
+    scenarios: [
+      {
+        name: 'sc1',
+        stories: [
+          {
+            name: 'story1',
+            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
+            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+          },
+        ],
+      },
+    ],
+  };
+  const testsetB = {
+    name: 'test',
+    scenarios: [
+      {
+        name: 'scA',
+        stories: [
+          {
+            name: 'storyA1',
+            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
+            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+          },
+          {
+            name: 'storyA2',
+            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
+            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+          },
+        ],
+      },
+      {
+        name: 'scB',
+        stories: [
+          {
+            name: 'storyB1',
+            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
+            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+          },
+        ],
+      },
+    ],
+  };
+  const dataset = {
+    name: 'bot',
+    dataset: {
+      intents: [
+        {
+          name: 'i1',
+          input: [{ text: 'hello' }],
+          output: [{ text: 'hello' }],
+        },
+      ],
+    },
+  };
+  it('simple test', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    const agentsManager = aiceUtils.getAgentsManager();
+    await agentsManager.train(dataset);
+    const response = await aiceUtils.test('bot', testset);
+    expect(response.sc1.story1.result).to.be.equal('ok');
+    expect(response.sc1.story1.count).to.be.equal(2);
+  });
+  it('test using sc1 story1', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    const agentsManager = aiceUtils.getAgentsManager();
+    await agentsManager.train(dataset);
+    const response = await aiceUtils.test('bot', testsetB, 'scA', 'storyA2');
+    expect(response.scA.storyA2.result).to.be.equal('ok');
+    expect(response.scA.storyA2.count).to.be.equal(2);
+  });
+});
+
+describe('errors test', () => {
+  it('No agent', async () => {
+    try {
+      await aiceUtils.test('dummy', {});
+    } catch (error) {
+      expect(error.message).to.be.equal("Can't find an agent for this test");
+    }
+  });
+  it('Faulty user', async () => {
+    const testsetC = {
+      name: 'test',
+      scenarios: [
+        {
+          name: 'sc1',
+          stories: [
+            {
+              name: 'story1',
+              actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
+              dialogs: [{ from: 'faulty', say: 'hello' }, { from: 'bot', say: 'hello' }],
+            },
+          ],
+        },
+      ],
+    };
+    try {
+      await aiceUtils.test('bot', testsetC);
+    } catch (error) {
+      expect(error.message).to.be.equal('Not valid user from "faulty"');
+    }
+  });
+  it('Not matching', async () => {
+    const testsetC = {
+      name: 'test',
+      scenarios: [
+        {
+          name: 'sc1',
+          stories: [
+            {
+              name: 'story1',
+              actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
+              dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'Dooh' }],
+            },
+          ],
+        },
+      ],
+    };
+    const response = await aiceUtils.test('bot', testsetC);
+    expect(response.sc1.story1.result).to.be.equal('Error : Not matching "Dooh" "hello"');
+    expect(response.sc1.story1.count).to.be.equal(1);
+  });
+  it('Unexpected flow', async () => {
+    const testsetC = {
+      name: 'test',
+      scenarios: [
+        {
+          name: 'sc1',
+          stories: [
+            {
+              name: 'story1',
+              actors: [{ name: 'user', type: 'dog' }, { name: 'bot', type: 'robot' }],
+              dialogs: [{ from: 'user', say: 'hello' }, { from: 'user', say: 'Dooh' }],
+            },
+          ],
+        },
+      ],
+    };
+    const response = await aiceUtils.test('bot', testsetC);
+    expect(response.sc1.story1.result).to.be.equal('Error : Unexpected flow "hello"');
+    expect(response.sc1.story1.count).to.be.equal(0);
   });
 });

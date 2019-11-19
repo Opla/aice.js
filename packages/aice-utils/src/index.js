@@ -7,12 +7,14 @@
 import Validate from './validate';
 import OpennlxV2 from './models/OpennlxV2';
 import AgentsManager from './AgentsManager';
+import TestsManager from './TestsManager';
 
 class AIceUtils {
   constructor() {
     this.parameters = {};
     this.utils = {};
     this.validate = new Validate(this);
+    this.testManager = new TestsManager(this);
   }
 
   setAIceClass(AIceClass) {
@@ -228,6 +230,10 @@ class AIceUtils {
       delete result.configuration.schema;
     }
     return JSON.stringify(result);
+  }
+
+  async test(agentName, testset, scenarioName, storyName) {
+    return this.testManager.test(agentName, testset, scenarioName, storyName);
   }
 }
 
