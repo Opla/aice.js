@@ -11,7 +11,7 @@ import { getPackageDependencyVersion } from './utils/packageUtils';
 import commands from './commands';
 
 class AIceCLI {
-  constructor(args, output, exit, FileManager, aiceUtils) {
+  constructor(args, output, exit, { FileManager, aiceUtils, aice }) {
     this.output = output;
     yargs
       .version('version', 'v')
@@ -22,6 +22,9 @@ class AIceCLI {
     this.command = commands(this, yargs);
     this.exit = exit;
     this.aiceUtils = aiceUtils;
+    if (aice) {
+      this.aiceUtils.setAIceClass(aice);
+    }
     /* istanbul ignore next */
     if (FileManager) {
       const fm = new FileManager();
@@ -66,8 +69,8 @@ class AIceCLI {
   }
 }
 
-const start = (args, output, exit, fm, aiceUtils) => {
-  const cli = new AIceCLI(args, output, exit, fm, aiceUtils);
+const start = (args, output, exit, packages) => {
+  const cli = new AIceCLI(args, output, exit, packages);
   cli.execute();
   return cli;
 };

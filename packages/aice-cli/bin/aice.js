@@ -17,6 +17,7 @@
   let fm;
   let cli;
   let aiceUtils;
+  let aice;
 
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     try {
@@ -26,6 +27,8 @@
       aiceUtils = d.default;
       d = await import('../dist/cli');
       cli = d.default;
+      d = await import('../../aice/dist');
+      aice = d.AICE;
     } catch (e) {
       //
     }
@@ -35,6 +38,8 @@
       fm = d.default;
       d = require('aice-utils/commonjs');
       aiceUtils = d.default;
+      d = require('aice/commonjs');
+      aice = d.AICE;
       const path = require('path');
       // eslint-disable-next-line import/no-unresolved
       d = require(path.join(__dirname, '../commonjs/cli'));
@@ -57,7 +62,7 @@
   if (cli) {
     // Grab arguments
     const [, , ...args] = process.argv;
-    cli(args, console, process.exit, fm, aiceUtils);
+    cli(args, console, process.exit, { FileManager: fm, aiceUtils, aice });
   } else {
     console.log(`AIce can't be started`);
   }

@@ -11,6 +11,7 @@ class AICEClass {
   constructor(opts) {
     this.opts = opts;
     this.isTrained = false;
+    this.settings = { defaultLanguage: 'en' };
   }
 
   async clear() {
@@ -48,7 +49,14 @@ describe('validate testset', () => {
         {
           name: 'sc1',
           stories: [
-            { name: 'story1', actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }], dialogs: [] },
+            {
+              name: 'story1',
+              actors: [
+                { name: 'user', type: 'human' },
+                { name: 'bot', type: 'robot' },
+              ],
+              dialogs: [],
+            },
           ],
         },
       ],
@@ -67,8 +75,14 @@ describe('complete tests', () => {
         stories: [
           {
             name: 'story1',
-            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
-            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
           },
         ],
       },
@@ -82,13 +96,25 @@ describe('complete tests', () => {
         stories: [
           {
             name: 'storyA1',
-            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
-            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
           },
           {
             name: 'storyA2',
-            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
-            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
           },
         ],
       },
@@ -97,8 +123,14 @@ describe('complete tests', () => {
         stories: [
           {
             name: 'storyB1',
-            actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
-            dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'hello' }],
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
           },
         ],
       },
@@ -151,8 +183,14 @@ describe('errors test', () => {
           stories: [
             {
               name: 'story1',
-              actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
-              dialogs: [{ from: 'faulty', say: 'hello' }, { from: 'bot', say: 'hello' }],
+              actors: [
+                { name: 'user', type: 'human' },
+                { name: 'bot', type: 'robot' },
+              ],
+              dialogs: [
+                { from: 'faulty', say: 'hello' },
+                { from: 'bot', say: 'hello' },
+              ],
             },
           ],
         },
@@ -173,8 +211,14 @@ describe('errors test', () => {
           stories: [
             {
               name: 'story1',
-              actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
-              dialogs: [{ from: 'user', say: 'hello' }, { from: 'bot', say: 'Dooh' }],
+              actors: [
+                { name: 'user', type: 'human' },
+                { name: 'bot', type: 'robot' },
+              ],
+              dialogs: [
+                { from: 'user', say: 'hello' },
+                { from: 'bot', say: 'Dooh' },
+              ],
             },
           ],
         },
@@ -193,8 +237,14 @@ describe('errors test', () => {
           stories: [
             {
               name: 'story1',
-              actors: [{ name: 'user', type: 'dog' }, { name: 'bot', type: 'robot' }],
-              dialogs: [{ from: 'user', say: 'hello' }, { from: 'user', say: 'Dooh' }],
+              actors: [
+                { name: 'user', type: 'dog' },
+                { name: 'bot', type: 'robot' },
+              ],
+              dialogs: [
+                { from: 'user', say: 'hello' },
+                { from: 'user', say: 'Dooh' },
+              ],
             },
           ],
         },
