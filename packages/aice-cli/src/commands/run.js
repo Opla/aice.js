@@ -5,18 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class Run {
+import Command from './Command';
+
+class Run extends Command {
   constructor(cli) {
-    this.cli = cli;
-    this.name = '🤖';
-    this.commandName = 'run';
-    this.description = 'Run a chatbot.';
-    this.isDefault = true;
+    super(cli, '🤖', 'run', 'Run a chatbot.', true);
   }
 
-  async execute(parameters) {
-    this.cli.header(this);
-    this.parameters = parameters;
+  async execute(argv) {
+    super.execute(argv);
+    this.parameters = argv;
     this.cli.interact(line => {
       let ret = false;
       switch (line) {

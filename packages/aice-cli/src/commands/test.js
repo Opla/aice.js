@@ -5,16 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class Test {
+import Command from './Command';
+
+class Test extends Command {
   constructor(cli) {
-    this.cli = cli;
-    this.name = 'test';
-    this.commandName = 'test';
-    this.description = 'Test a chatbot.';
+    super(cli, 'test', 'test [filename] [testset]', 'Test a chatbot using a testset.');
   }
 
-  async execute() {
-    this.cli.header(this);
+  async execute(argv) {
+    super.execute(argv);
+    if (this.cli.aiceUtils) {
+      const result = await this.cli.aiceUtils.importData(argv.filename);
+      this.cli.log('result', result);
+    } else {
+      this.cli.log('result : no AIce-utils configured');
+    }
   }
 }
 

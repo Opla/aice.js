@@ -5,16 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class Version {
-  constructor(cli) {
-    this.cli = cli;
-    this.name = 'version';
-    this.commandName = ['version', '--v', '-version'];
-    this.description = 'Return AIce version';
-  }
+import Command from './Command';
 
-  async execute() {
-    this.cli.header(this);
+class Version extends Command {
+  constructor(cli) {
+    super(cli, 'version', ['version', '--v', '-version'], 'Return AIce version');
   }
 }
 
