@@ -34,6 +34,12 @@ describe('FileManager', () => {
     expect(file.filename).to.equals('./src');
     expect(file.stats).to.not.equals(undefined);
   });
+  it('readdir', async () => {
+    const fm = new FileManager();
+    const dir = await fm.getFile('./__tests__/dataset');
+    const files = await fm.readDir(dir);
+    expect(files).to.be.an('array');
+  });
   it('loadAsJson a file', async () => {
     const fm = new FileManager();
     const file = await fm.getFile('./package.json');
