@@ -15,7 +15,7 @@ describe('import opennlxv1', () => {
     );
     expect(result.length).to.equal(1);
     expect(result[0]).to.eql({
-      agent: {
+      content: {
         name: 'demo',
         avatar: 'default',
         locale: 'us',
@@ -23,8 +23,9 @@ describe('import opennlxv1', () => {
         timezone: 'gmt',
         email: 'hello@domain.com',
         intents: [{ name: '1', input: '*', output: 'hello', order: 0 }],
-        schema: { name: 'opennlx', version: '2' },
       },
+      schema: { name: 'opennlx', version: '2' },
+      isValid: true,
     });
   });
   it('simple opennlxv1 with opts.schemaName+version', async () => {
@@ -38,12 +39,13 @@ describe('import opennlxv1', () => {
     );
     expect(result.length).to.equal(1);
     expect(result[0]).to.eql({
-      agent: {
+      content: {
         name: 'demo',
         avatar: 'default',
         intents: [{ name: '1', input: ['*'], output: ['hello'] }],
-        schema: { name: 'opennlx', version: '2' },
       },
+      schema: { name: 'opennlx', version: '2' },
+      isValid: true,
     });
   });
 });

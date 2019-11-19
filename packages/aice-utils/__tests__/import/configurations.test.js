@@ -11,6 +11,10 @@ describe('import configurations', () => {
   it('simple configuration', async () => {
     const result = await aiceUtils.importData('{ "configuration": { "threshold": 0.75 } }');
     expect(result.length).to.equal(1);
-    expect(result[0]).to.eql({ configuration: { threshold: 0.75, schema: { name: 'configuration' } } });
+    expect(result[0]).to.eql({
+      content: { configuration: { threshold: 0.75 } },
+      schema: { name: 'aice-configuration' },
+      isValid: true,
+    });
   });
 });

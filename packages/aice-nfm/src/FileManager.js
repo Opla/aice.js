@@ -16,6 +16,23 @@ export default class FileManager {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  async readDir(dir, list) {
+    const fileList = list || [];
+    const files = await fsp.readdir(dir.filename);
+    await Promise.all(
+      files.map(async f => {
+        const filename = path.join(dir.filename, f);
+        const file = await this.getFile(filename);
+        if (file.type === 'dir') {
+          await this.readDir(file, fileList);
+        }
+        fileList.push(file);
+      }),
+    );
+    return fileList;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   async getFile(filename) {
     const file = {};
     let stats;

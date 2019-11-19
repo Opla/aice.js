@@ -17,14 +17,20 @@ export default class AgentsManager {
     this.agents = {};
   }
 
-  createAgent({ name, dataset, ...opts }) {
-    const n = name || dataset.name;
-    const agent = new Agent({ ...opts, name: n });
+  createAgent({ name, avatar, dataset: d, settings, ...opts }) {
+    const n = name || d.name;
+    const agent = new Agent({ ...opts, name: n, avatar });
     let engine;
     try {
-      engine = this.utils.createAIceInstance(opts);
+      engine = this.utils.createAIceInstance(settings);
     } catch (e) {
       //
+    }
+    let dataset = d;
+    if (!dataset) {
+      if (opts.intents) {
+        dataset = { intents: opts.intents, callables: opts.callables, entities: opts.entities };
+      }
     }
     this.agents[agent.name] = { agent, engine, dataset };
     return agent;
@@ -84,7 +90,7 @@ export default class AgentsManager {
       });
     }
     intents.forEach(intent => {
-      const language = intent.language || dataset.language;
+      const language = intent.language || dataset.language || engine.settings.defaultLanguage;
       intent.input.forEach(input => {
         engine.addInput(language, intent.name, input.text, [], intent.topic);
       });

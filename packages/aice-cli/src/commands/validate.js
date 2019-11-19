@@ -5,17 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class Validate {
+import Command from './Command';
+
+class Validate extends Command {
   constructor(cli) {
-    this.cli = cli;
-    this.name = 'Validate';
-    this.commandName = 'validate [filename]';
-    this.description = 'Validate some files : OpenNLX v1 & v2, AIce Configuration. and tests files';
+    super(
+      cli,
+      'Validate',
+      'validate [filename]',
+      'Validate some files : OpenNLX v1 & v2, AIce Configuration. and tests files',
+    );
     this.builder = [{ name: 'filename', description: 'filename|pathTofiles to validate' }];
   }
 
   async execute(argv) {
-    this.cli.header(this);
+    super.execute(argv);
     if (this.cli.aiceUtils) {
       const result = await this.cli.aiceUtils.validateData(argv.filename);
       this.cli.log('result', result);

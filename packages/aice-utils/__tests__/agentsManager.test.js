@@ -11,6 +11,7 @@ class AICEClass {
   constructor(opts) {
     this.opts = opts;
     this.isTrained = false;
+    this.settings = { defaultLanguage: 'en' };
   }
 
   async clear() {
@@ -47,7 +48,7 @@ describe('AgentsManager', () => {
   });
   it('createAgent', async () => {
     const agentsManager = aiceUtils.getAgentsManager();
-    const agent = agentsManager.createAgent({ name: 'bot' });
+    const agent = agentsManager.createAgent({ name: 'bot', intents: [] });
     expect(agent).to.be.a('object');
   });
   it('getAgent', async () => {

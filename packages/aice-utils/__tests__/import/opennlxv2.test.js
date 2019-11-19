@@ -16,12 +16,13 @@ describe('import opennlxv2', () => {
     });
     expect(result.length).to.equal(1);
     expect(result[0]).to.eql({
-      agent: {
+      content: {
         name: 'bot',
         avatar: 'bot',
         intents: [{ name: '1', input: { text: '*' }, output: 'hello' }],
-        schema: { name: 'opennlx', version: '2' },
       },
+      schema: { name: 'opennlx', version: '2' },
+      isValid: true,
     });
   });
 });
