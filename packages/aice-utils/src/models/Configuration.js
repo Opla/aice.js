@@ -9,7 +9,7 @@ import schema from '../schemas/aice-configuration/v1.json';
 
 export default class Configuration extends SchemaModel {
   constructor(ajv) {
-    super(ajv, schema, 'configuration', '1');
+    super(ajv, schema, 'aice-configuration', '1');
   }
 
   static seemsOk(data) {

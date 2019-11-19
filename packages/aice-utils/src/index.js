@@ -60,12 +60,12 @@ class AIceUtils {
   async handleZipEntry(filename, outputDir, entry, fileManager) {
     const result = { autoDrain: true };
     if (filename.endsWith('.json')) {
-      const d = await fileManager.readZipEntry(entry, outputDir);
+      const raw = await fileManager.readZipEntry(entry, outputDir);
       result.autoDrain = false;
       try {
-        result.data = JSON.parse(d);
+        result.content = JSON.parse(raw);
       } catch (e) {
-        result.data = null;
+        result.content = null;
       }
     } else if (outputDir) {
       await fileManager.writeZipEntry(entry, filename, outputDir);
@@ -82,8 +82,8 @@ class AIceUtils {
       if (file) {
         if (file.type === 'file') {
           //  load file
-          const data = await fileManager.loadAsJson(file);
-          return transformer(data, opts);
+          const content = await fileManager.loadAsJson(file);
+          return transformer(content, opts);
         }
         if (file.type === 'dir') {
           // Get all sub files
@@ -91,8 +91,8 @@ class AIceUtils {
           const output = [];
           await Promise.all(
             files.map(async f => {
-              const d = await fileManager.loadAsJson(f);
-              const data = await transformer(d, opts);
+              const content = await fileManager.loadAsJson(f);
+              const data = await transformer(content, opts);
               output.push(data);
             }),
           );
@@ -107,8 +107,8 @@ class AIceUtils {
             opts.outputDir,
             async (f, o, e, m) => {
               const r = await this.handleZipEntry(f, o, e, m);
-              if (r.data) {
-                const data = await transformer(r.data, opts);
+              if (r.content) {
+                const data = await transformer(r.content, opts);
                 output.push(data);
               }
               return r.autoDrain;
@@ -123,23 +123,23 @@ class AIceUtils {
     throw Error('No FileManager defined');
   }
 
-  async transformData(input, transformer = d => d, opts) {
-    let data = input;
-    if (data) {
-      if (typeof data === 'string' && data.trim().length > 0) {
+  async transformData(data, transformer = d => d, opts) {
+    let content = data;
+    if (content) {
+      if (typeof content === 'string' && content.trim().length > 0) {
         // Check if the string is JSON
         try {
-          data = JSON.parse(data);
+          content = JSON.parse(content);
         } catch (e) {
-          data = null;
+          content = null;
         }
         // If not a string we try to use it as a filename
-        if (!data) {
-          return this.loadData(input, transformer, opts);
+        if (!content) {
+          return this.loadData(data, transformer, opts);
         }
       }
       // Transform at least the data
-      return transformer(data, opts);
+      return transformer(content, opts);
     }
     throw Error('empty data');
   }
@@ -154,23 +154,27 @@ class AIceUtils {
     return result;
   }
 
-  async doImport(data, output, opts) {
-    const result = await this.validate.run(data, opts.schemaName);
+  async doImport(content, output, opts) {
+    const result = await this.validate.run(content, opts.schemaName);
     if (result.isValid) {
       const schemaName = result.schema && result.schema.name ? result.schema.name : opts.schemaName;
-      if (schemaName === 'configuration') {
-        const { configuration } = data;
-        configuration.schema = { name: 'configuration' };
-        output.push({ configuration });
+      if (schemaName === 'aice-configuration') {
+        const schema = { name: 'aice-configuration' };
+        output.push({ content, schema, isValid: result.isValid });
         return true;
       }
-      let agent = data;
+      if (schemaName === 'aice-testset') {
+        const schema = { name: 'aice-testset' };
+        output.push({ content, schema, isValid: result.isValid });
+        return true;
+      }
+      let agent = content;
       if ((result.schema && result.schema.version === '1') || opts.version === '1') {
         // Convert v1 to v2
-        agent = await OpennlxV2.convert(data, opts);
+        agent = await OpennlxV2.convert(content, opts);
       }
-      agent.schema = { name: 'opennlx', version: '2' };
-      output.push({ agent });
+      const schema = { name: 'opennlx', version: '2' };
+      output.push({ content: agent, schema, isValid: result.isValid });
       return true;
     }
     return false;
@@ -189,21 +193,27 @@ class AIceUtils {
   }
 
   /* istanbul ignore next */
-  async doExport(data, output, opts) {
+  async doExport(content, output, opts) {
     // TODO export in a zip
-    const result = await this.validate.run(data, opts.schemaName);
+    const result = await this.validate.run(content, opts.schemaName);
     if (result.isValid) {
       const schemaName = result.schema && result.schema.name ? result.schema.name : opts.schemaName;
-      if (schemaName === 'configuration') {
-        const { configuration } = data;
-        configuration.schema = { name: 'configuration' };
+      if (schemaName === 'aice-configuration') {
+        const { configuration } = content;
+        configuration.schema = { name: 'aice-configuration' };
         output.push({ configuration });
         return true;
       }
-      let agent = data;
+      if (schemaName === 'aice-testset') {
+        const data = { content };
+        data.schema = { name: 'aice-testset' };
+        output.push(data);
+        return true;
+      }
+      let agent = content;
       if ((result.schema && result.schema.version === '1') || opts.version === '1') {
         // Convert v1 to v2
-        agent = await OpennlxV2.convert(data, opts);
+        agent = await OpennlxV2.convert(content, opts);
       }
       agent.schema = { name: 'opennlx', version: '2' };
       output.push({ agent });
