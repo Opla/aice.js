@@ -18,6 +18,7 @@
   let cli;
   let aiceUtils;
   let aice;
+  const output = console;
 
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     try {
@@ -38,15 +39,17 @@
       fm = d.default;
       d = require('aice-utils/commonjs');
       aiceUtils = d.default;
+      // eslint-disable-next-line import/no-unresolved
       d = require('aice/commonjs');
       aice = d.AICE;
       const path = require('path');
       // eslint-disable-next-line import/no-unresolved
+      // eslint-disable-next-line import/no-dynamic-require
       d = require(path.join(__dirname, '../commonjs/cli'));
       cli = d.default;
     } catch (e) {
       //
-      console.log(e);
+      output.error(e);
     }
   }
 
@@ -54,16 +57,15 @@
   const major = parseInt(version.split('.')[0], 10);
 
   if (major < 12) {
-    // eslint-disable-next-line no-console
-    console.error(`Node version ${version} is not supported, please use Node.js 12.0 or higher.`);
+    output.error(`Node version ${version} is not supported, please use Node.js 12.0 or higher.`);
     process.exit(1);
   }
 
   if (cli) {
     // Grab arguments
     const [, , ...args] = process.argv;
-    cli(args, console, process.exit, { FileManager: fm, aiceUtils, aice });
+    cli(args, output, process.exit, { FileManager: fm, aiceUtils, aice });
   } else {
-    console.log(`AIce can't be started`);
+    output.log(`AIce can't be started`);
   }
 })();
