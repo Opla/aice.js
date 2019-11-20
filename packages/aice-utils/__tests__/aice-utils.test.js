@@ -21,6 +21,17 @@ describe('aice-utils', () => {
     aiceUtils.setConfiguration({});
     expect(aiceUtils.getConfiguration()).to.eql({});
   });
+  it('aiceUtils.testManager.matchContext', async () => {
+    const { testManager } = aiceUtils;
+    let match = testManager.matchContext(null, {});
+    expect(match).to.equal(true);
+    match = testManager.matchContext(null, { name: 'value' });
+    expect(match).to.equal(false);
+    match = testManager.matchContext({ name: 'value', other: 'value' }, { name: 'value' });
+    expect(match).to.equal(true);
+    match = testManager.matchContext({ name: 'anothervalue', other: 'value' }, { name: 'value' });
+    expect(match).to.equal(false);
+  });
   it('aiceUtils setAIceClass', async () => {
     aiceUtils.setAIceClass(AICEClass);
     expect(aiceUtils.utils.AIceClass).to.eql(AICEClass);

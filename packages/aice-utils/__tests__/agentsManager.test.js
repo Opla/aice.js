@@ -76,6 +76,24 @@ describe('AgentsManager', () => {
     expect(agent.conversations.conversation).to.eql(undefined);
     agentsManager.saveAgentContext('dummy', 'conversation');
   });
+  it('setContext without agent', async () => {
+    const agentsManager = aiceUtils.getAgentsManager();
+    agentsManager.reset();
+    try {
+      await agentsManager.setContext('bot', 'conversation');
+    } catch (error) {
+      expect(error.message).to.be.equal('Unknown agent with this name bot');
+    }
+  });
+  it('getContext without agent', async () => {
+    const agentsManager = aiceUtils.getAgentsManager();
+    agentsManager.reset();
+    try {
+      await agentsManager.getContext('bot', 'conversation');
+    } catch (error) {
+      expect(error.message).to.be.equal('Unknown agent with this name bot');
+    }
+  });
   it('resetAgent', async () => {
     const agentsManager = aiceUtils.getAgentsManager();
     const agent = agentsManager.createAgent({ name: 'bot' });

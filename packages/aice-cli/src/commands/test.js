@@ -33,6 +33,9 @@ class Test extends Command {
       let testsetData;
       try {
         const result = await this.cli.aiceUtils.importData(argv.filename);
+        if (result.error) {
+          throw new Error(result.error);
+        }
         this.cli.log(
           `${this.cli.chalk.dim('[1/4]')} 📦 ${this.cli.chalk.green('success')} Data from "${argv.filename}" imported`,
         );
@@ -91,7 +94,8 @@ class Test extends Command {
                 } else {
                   failing += 1;
                   output += this.cli.chalk.red(`${failing})`);
-                  output += this.cli.chalk.red(` ${story} ${res.result}`);
+                  output += this.cli.chalk.dim(` ${story}`);
+                  output += this.cli.chalk.red(` [ ${res.result} ]`);
                 }
                 this.cli.log(output);
               });
