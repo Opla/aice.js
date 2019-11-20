@@ -66,6 +66,6 @@
     const [, , ...args] = process.argv;
     cli(args, output, process.exit, { FileManager: fm, aiceUtils, aice });
   } else {
-    output.log(`AIce can't be started`);
+    output.error(`AIce can't be started`);
   }
 })();
