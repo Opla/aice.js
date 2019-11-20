@@ -179,17 +179,17 @@ class AIceUtils {
       const schema = { name: 'opennlx', version: '2' };
       return { content: agent, schema, isValid: result.isValid };
     }
-    return null;
+    return result;
   }
 
   async importData(data, opts = {}) {
     let result;
     try {
       let output = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
-      if (output && !Array.isArray(output)) {
+      if (!Array.isArray(output)) {
         output = [output];
       }
-      result = output || [];
+      result = output;
     } catch (e) {
       result = { error: e.message };
     }
@@ -220,7 +220,7 @@ class AIceUtils {
       agent.schema = { name: 'opennlx', version: '2' };
       return { agent };
     }
-    return null;
+    return result;
   }
 
   /* istanbul ignore next */
