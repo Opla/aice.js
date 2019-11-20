@@ -49,33 +49,33 @@ const execCommand = async (command, args = [], inputs = []) =>
     });
   });
 
-describe('AICE CLI default', () => {
+describe('AIce CLI default', () => {
   it('No command', async () => {
     const result = await execCommand();
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE 🤖 v\d.\d.\d/);
+      .and.match(/^AIce 🤖 v\d.\d.\d/);
   });
   it('test command', async () => {
     const result = await execCommand('test');
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE test v\d.\d.\d/);
+      .and.match(/^AIce test v\d.\d.\d/);
   });
   it('version command', async () => {
     const result = await execCommand('version');
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE version v\d.\d.\d/);
+      .and.match(/^AIce version v\d.\d.\d/);
   });
 });
 
-describe('AICE CLI interact', () => {
+describe('AIce CLI interact', () => {
   it('command #exit', async () => {
     const result = await execCommand('inreact', null, ['#exit']);
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE 🤖 v\d.\d.\d/);
+      .and.match(/^AIce 🤖 v\d.\d.\d/);
     expect(result[1])
       .to.be.a('string')
       .and.eq('> #exit');
@@ -87,7 +87,7 @@ describe('AICE CLI interact', () => {
     const result = await execCommand('inreact', null, ['hello', '#exit']);
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE 🤖 v\d.\d.\d/);
+      .and.match(/^AIce 🤖 v\d.\d.\d/);
     expect(result[1])
       .to.be.a('string')
       .and.eq('> hello');
@@ -99,7 +99,7 @@ describe('AICE CLI interact', () => {
     const result = await execCommand('inreact', null, ['gfgf', '#exit']);
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE 🤖 v\d.\d.\d/);
+      .and.match(/^AIce 🤖 v\d.\d.\d/);
     expect(result[1])
       .to.be.a('string')
       .and.eq('> gfgf');
@@ -108,11 +108,11 @@ describe('AICE CLI interact', () => {
       .and.eq("Say what? I might have heard 'gfgf'");
   });
 });
-describe('AICE CLI validate', () => {
+describe('AIce CLI validate', () => {
   it('No command', async () => {
     const result = await execCommand('validate');
     expect(result[0])
       .to.be.a('string')
-      .and.match(/^AICE Validate v\d.\d.\d/);
+      .and.match(/^AIce Validate v\d.\d.\d/);
   });
 });
