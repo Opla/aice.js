@@ -65,8 +65,7 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/message"
-          },
-          "uniqueItems": true
+          }
         }
       },
       "required": [

@@ -15,6 +15,22 @@ export default class TestsManager {
     return actors.filter(a => (a.name === username ? a : null))[0];
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  matchContext(context, refContext) {
+    let match = true;
+    if (context && refContext) {
+      Object.keys(refContext).forEach(name => {
+        if (context[name] !== refContext[name]) {
+          match = false;
+        }
+      });
+    }
+    if (!context && refContext && Object.keys(refContext).length > 0) {
+      match = false;
+    }
+    return match;
+  }
+
   async test(agentName, testset, scenarioName, storyName) {
     const aManager = this.utils.getAgentsManager();
     const agent = aManager.getAgent(agentName);
@@ -35,6 +51,8 @@ export default class TestsManager {
             results[scenario.name][story.name] = {};
             const { actors, name: conversationId } = story;
             let response = null;
+            let context = {};
+            aManager.setContext(agentName, conversationId, story.context);
             // eslint-disable-next-line guard-for-in
             for (const message of story.dialogs) {
               const user = this.getUser(actors, message.from);
@@ -44,8 +62,10 @@ export default class TestsManager {
               } else if (user.type === 'human' && !response) {
                 // eslint-disable-next-line no-await-in-loop
                 response = await aManager.evaluate(agentName, conversationId, message.say);
+                // eslint-disable-next-line no-await-in-loop
+                context = await aManager.getContext(agentName, conversationId);
                 ok = true;
-              } else if (user.type === 'robot' && response) {
+              } else if (user.type === 'robot' && response && this.matchContext(context, message.context)) {
                 if (response.message.text === message.say) {
                   response = null;
                   ok = true;

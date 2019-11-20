@@ -133,6 +133,20 @@ export default class AgentsManager {
     await engine.train(dataset);
   }
 
+  async setContext(name, conversationId, context = {}) {
+    if (!this.agents[name]) {
+      throw new Error(`Unknown agent with this name ${name}`);
+    }
+    return this.agents[name].agent.saveContext(conversationId, context);
+  }
+
+  async getContext(name, conversationId) {
+    if (!this.agents[name]) {
+      throw new Error(`Unknown agent with this name ${name}`);
+    }
+    return this.agents[name].agent.getContext(conversationId);
+  }
+
   async evaluate(name, conversationId, utterance) {
     if (!this.agents[name]) {
       throw new Error(`Unknown agent with this name ${name}`);
