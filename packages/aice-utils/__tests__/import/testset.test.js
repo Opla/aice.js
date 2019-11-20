@@ -23,7 +23,10 @@ describe('import testset', () => {
               {
                 name: 'story1',
                 context: {},
-                actors: [{ name: 'user', type: 'human' }, { name: 'bot', type: 'robot' }],
+                actors: [
+                  { name: 'user', type: 'human' },
+                  { name: 'bot', type: 'robot' },
+                ],
                 dialogs: [],
               },
             ],

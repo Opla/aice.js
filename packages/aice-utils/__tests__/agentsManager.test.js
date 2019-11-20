@@ -161,7 +161,13 @@ describe('AgentsManager', () => {
             input: [{ text: 'hello' }],
             output: [
               { text: 'hello' },
-              { type: 'condition', children: [{ name: 'name', value: 'value' }, { name: 'name', value: '"value"' }] },
+              {
+                type: 'condition',
+                children: [
+                  { name: 'name', value: 'value' },
+                  { name: 'name', value: '"value"' },
+                ],
+              },
             ],
           },
         ],
