@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import chai from 'chai';
+import { AICE } from '../../src';
 import { IntentsResolverManager } from '../../src/intentResolvers';
 import { InputExpressionTokenizer, AdvancedTokenizer } from '../../src/streamTransformers';
 
@@ -15,7 +16,7 @@ const tokenizerUtterance = AdvancedTokenizer;
 
 describe('Fixes issues', async () => {
   // https://github.com/Opla/aice.js/issues/63
-  it('Should exact match the unique result', async () => {
+  it('Should exact match the unique result #63', async () => {
     const resolverManager = new IntentsResolverManager({});
     await resolverManager.train([
       { lang: 'us', topic: '*', intentid: 1, tokenizedInput: tokenizerInput.tokenize('f100a'), input: 'f100a' },
@@ -34,5 +35,44 @@ describe('Fixes issues', async () => {
     expect(result.length).to.equal(1);
     expect(result[0].intentid).to.equal(3);
     expect(result[0].score).to.equal(0.9);
+  });
+
+  // https://github.com/Opla/aice.js/issues/81
+  it('Should an intent match but output is not ok #81', async () => {
+    const aice = new AICE();
+    // Initialization
+    aice.addInput('en', 'agent.presentation', 'Hello');
+    aice.addOutput('en', 'agent.presentation', 'Hello', null, [
+      { type: 'LeftRightExpression', leftOperand: 'name', operator: 'eq', rightOperand: '"value"' },
+    ]);
+    await aice.train();
+    const res = await aice.evaluate('Hello', {}, 'en');
+    console.log('TODO res=', res.answer);
+  });
+  // https://github.com/Opla/aice.js/issues/82
+  it('Should an intent match return input & output index #82', async () => {
+    const aice = new AICE();
+    // Initialization
+    aice.addInput('en', 'agent.presentation', 'Hello');
+    aice.addInput('en', 'agent.presentation', 'Hola');
+    aice.addInput('en', 'agent.presentation', 'Hi');
+    aice.addOutput('en', 'agent.presentation', 'Hello');
+    aice.addOutput('en', 'agent.presentation', 'Your welcome');
+    await aice.train();
+    const res = await aice.evaluate('Hello', {}, 'en');
+    console.log('TODO res=', res.answer);
+  });
+  // https://github.com/Opla/aice.js/issues/83
+  it('Should an intent match return input & output index #83', async () => {
+    const aice = new AICE();
+    // Initialization
+    aice.addInput('en', 'agent.presentation', 'Welcome');
+    aice.addInput('en', 'agent.presentation', 'Hello');
+    aice.addOutput('en', 'agent.presentation', 'Your welcome');
+    aice.addInput('en', 'agent.hello', 'Hello');
+    aice.addOutput('en', 'agent.hello', 'Hello');
+    await aice.train();
+    const res = await aice.evaluate('Hello', {}, 'en');
+    console.log('TODO res=', res.answer);
   });
 });
