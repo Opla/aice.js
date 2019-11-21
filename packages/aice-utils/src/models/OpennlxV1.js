@@ -6,6 +6,7 @@
  */
 import SchemaModel from './SchemaModel';
 import schema from '../schemas/opennlx/v1.json';
+import OpennlxV2 from './OpennlxV2';
 
 // eslint-disable-next-line no-unused-vars
 const regex = {
@@ -16,11 +17,18 @@ const regex = {
 };
 
 export default class OpennlxV1 extends SchemaModel {
-  constructor(ajv) {
-    super(ajv, schema, 'opennlx', '1');
+  constructor(manager) {
+    super(manager, schema, 'opennlx', '1');
   }
 
   static seemsOk(data) {
     return !!(!data.version && data.intents && data.name);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async buildData(_content, opts) {
+    const content = await OpennlxV2.convert(_content, opts);
+    const modelV2 = this.manager.getSchemaModel('opennlx', '2');
+    return modelV2.buildData(content, opts);
   }
 }
