@@ -127,7 +127,14 @@ describe('AICE NLP', () => {
 
   it('AICE - API addOutput callables', () => {
     const aice = new AICE();
-    aice.addOutput('en', 'agent.presentation', 'Hey', () => {}, [], () => {});
+    aice.addOutput(
+      'en',
+      'agent.presentation',
+      'Hey',
+      () => {},
+      [],
+      () => {},
+    );
     const numberAnswers = aice.outputs[0].answers.length;
     expect(numberAnswers).to.equal(1);
   });

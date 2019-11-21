@@ -12,8 +12,12 @@ describe('import errors', () => {
     const result = await aiceUtils.importData();
     expect(result.error).to.equal('empty data');
   });
-  it('return empty array not valid data', async () => {
+  it('return array Unknown schema', async () => {
     const result = await aiceUtils.importData({});
-    expect(result).to.eql([]);
+    expect(result).to.eql([{ error: 'Unknown schema', isValid: false }]);
+  });
+  it('return wrong data format', async () => {
+    const result = await aiceUtils.importData([]);
+    expect(result).to.eql([{ error: 'wrong data format', isValid: false }]);
   });
 });

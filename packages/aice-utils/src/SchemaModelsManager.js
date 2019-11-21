@@ -13,7 +13,7 @@ import Testset from './models/Testset';
 export default class {
   constructor(utils) {
     this.ajv = new Ajv({ allErrors: true, useDefaults: true });
-    this.validators = {};
+    this.models = {};
     this.utils = utils;
   }
 
@@ -27,18 +27,18 @@ export default class {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getSchemaValidator(schemaName, version) {
+  createSchemaModel(schemaName, version) {
     if (schemaName === 'aice-configuration') {
-      return new Configuration(this.ajv);
+      return new Configuration(this);
     }
     if (schemaName === 'aice-testset') {
-      return new Testset(this.ajv);
+      return new Testset(this);
     }
     if (schemaName === 'opennlx') {
       if (version === '2') {
-        return new OpennlxV2(this.ajv);
+        return new OpennlxV2(this);
       }
-      return new OpennlxV1(this.ajv);
+      return new OpennlxV1(this);
     }
     throw new Error(this.getErrorMessage(schemaName, version));
   }
@@ -58,39 +58,41 @@ export default class {
     return schema;
   }
 
-  getValidator(schemaName, version) {
-    let validator = this.validators[`${schemaName}_${version}`];
-    if (!validator) {
-      validator = this.getSchemaValidator(schemaName, version);
-      this.validators[`${schemaName}_${version}`] = validator;
+  getSchemaModel(schemaName, version) {
+    let model = this.models[`${schemaName}_${version}`];
+    if (!model) {
+      model = this.createSchemaModel(schemaName, version);
+      this.models[`${schemaName}_${version}`] = model;
     }
-    return validator;
+    return model;
   }
 
-  findValidator(data, schemaName) {
+  find(data, schemaName) {
     if (schemaName && data[schemaName] && data[schemaName].version) {
-      return this.getValidator(schemaName, data[schemaName].version);
+      return this.getSchemaModel(schemaName, data[schemaName].version);
     }
     const schema = this.findSchemaNameAndVersion(data);
     if (schema) {
-      return this.getValidator(schema.name, schema.version);
+      return this.getSchemaModel(schema.name, schema.version);
     }
     throw new Error(this.getErrorMessage(schemaName));
   }
 
-  async run(data, schemaName) {
+  /* async run(data, { schemaName, saveModel = true }) {
     const result = { isValid: false };
     if (data && !Array.isArray(data) && typeof data === 'object') {
       try {
-        const validator = this.findValidator(data, schemaName);
-        result.isValid = await validator.execute(data);
+        const model = this.find(data, schemaName);
+        result.isValid = await model.validate(data);
         if (!schemaName) {
-          result.schema = { name: validator.name, version: validator.version };
+          result.schema = { name: model.name, version: model.version };
         }
         if (!result.isValid) {
           // TODO handle errors format
           // for not valid properties
-          result.error = validator.errors;
+          result.error = model.errors;
+        } else if (saveModel) {
+          result.model = model;
         }
       } catch (e) {
         result.error = e.message;
@@ -99,5 +101,5 @@ export default class {
       result.error = 'wrong data format';
     }
     return result;
-  }
+  } */
 }

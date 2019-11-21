@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import Validate from './validate';
+import SchemaModelsManager from './SchemaModelsManager';
 import OpennlxV2 from './models/OpennlxV2';
 import AgentsManager from './AgentsManager';
 import TestsManager from './TestsManager';
@@ -13,7 +13,7 @@ class AIceUtils {
   constructor() {
     this.parameters = {};
     this.utils = {};
-    this.validate = new Validate(this);
+    this.schemaManager = new SchemaModelsManager(this);
     this.testManager = new TestsManager(this);
   }
 
@@ -149,10 +149,39 @@ class AIceUtils {
     throw Error('empty data');
   }
 
+  async doValidate(data, { schemaName, saveModel = true }) {
+    const result = { isValid: false };
+    if (data && !Array.isArray(data) && typeof data === 'object') {
+      try {
+        const model = this.schemaManager.find(data, schemaName);
+        result.isValid = await model.validate(data);
+        if (!schemaName) {
+          result.schema = { name: model.name, version: model.version };
+        }
+        if (!result.isValid) {
+          // TODO handle errors format
+          // for not valid properties
+          result.error = model.errors;
+        } else if (saveModel) {
+          result.model = model;
+        }
+      } catch (e) {
+        result.error = e.message;
+      }
+    } else {
+      result.error = 'wrong data format';
+    }
+    return result;
+  }
+
   async validateData(data, schemaName) {
     let result;
     try {
-      result = await this.transformData(data, async (d, opts) => this.validate.run(d, opts.schemaName), { schemaName });
+      result = await this.transformData(
+        data,
+        async (d, opts) => this.doValidate(d, { schemaName: opts.schemaName, saveModel: false }),
+        { schemaName },
+      );
     } catch (e) {
       result = { error: e.message, isValid: false };
     }
@@ -160,36 +189,32 @@ class AIceUtils {
   }
 
   async doImport(content, opts) {
-    const result = await this.validate.run(content, opts.schemaName);
-    if (result.isValid) {
-      const schemaName = result.schema && result.schema.name ? result.schema.name : opts.schemaName;
-      if (schemaName === 'aice-configuration') {
-        const schema = { name: 'aice-configuration' };
-        return { content, schema, isValid: result.isValid };
-      }
-      if (schemaName === 'aice-testset') {
-        const schema = { name: 'aice-testset' };
-        return { content, schema, isValid: result.isValid };
-      }
-      let agent = content;
-      if ((result.schema && result.schema.version === '1') || opts.version === '1') {
-        // Convert v1 to v2
-        agent = await OpennlxV2.convert(content, opts);
-      }
-      const schema = { name: 'opennlx', version: '2' };
-      return { content: agent, schema, isValid: result.isValid };
+    const result = await this.doValidate(content, { schemaName: opts.schemaName });
+    if (result.model) {
+      return result.model.buildData(content, opts);
     }
-    return null;
+    return result;
   }
 
   async importData(data, opts = {}) {
     let result;
     try {
       let output = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
-      if (output && !Array.isArray(output)) {
+      if (!Array.isArray(output)) {
+        if (output.model) {
+          delete output.model;
+        }
         output = [output];
+      } else {
+        for (const d of output) {
+          if (d.isValid) {
+            // eslint-disable-next-line no-await-in-loop
+            await d.model.merge(d, output);
+            delete d.model;
+          }
+        }
       }
-      result = output || [];
+      result = output;
     } catch (e) {
       result = { error: e.message };
     }
@@ -199,7 +224,7 @@ class AIceUtils {
   /* istanbul ignore next */
   async doExport(content, opts) {
     // TODO export in a zip
-    const result = await this.validate.run(content, opts.schemaName);
+    const result = await this.doValidate(content, { schemaName: opts.schemaName });
     if (result.isValid) {
       const schemaName = result.schema && result.schema.name ? result.schema.name : opts.schemaName;
       if (schemaName === 'aice-configuration') {
@@ -220,7 +245,7 @@ class AIceUtils {
       agent.schema = { name: 'opennlx', version: '2' };
       return { agent };
     }
-    return null;
+    return result;
   }
 
   /* istanbul ignore next */

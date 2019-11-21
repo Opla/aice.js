@@ -8,8 +8,8 @@ import SchemaModel from './SchemaModel';
 import schema from '../schemas/opennlx/v2.json';
 
 export default class OpennlxV2 extends SchemaModel {
-  constructor(ajv) {
-    super(ajv, schema, 'opennlx', '2');
+  constructor(manager) {
+    super(manager, schema, 'opennlx', '2');
   }
 
   static seemsOk(data) {
@@ -57,5 +57,36 @@ export default class OpennlxV2 extends SchemaModel {
       converted.intents.push(convertedIntent);
     });
     return converted;
+  }
+
+  async buildData(content) {
+    return { content, schema: { name: this.name, version: this.version }, isValid: true, model: this };
+  }
+
+  async merge(_data, list) {
+    const data = _data;
+    const { content } = data;
+    content.isThis = true;
+    const l = [...list];
+    l.forEach((d, index) => {
+      if (
+        d.isValid &&
+        !d.content.isThis &&
+        d.schema.name === this.name &&
+        d.schema.version === this.version &&
+        content.name === d.content.name
+      ) {
+        content.intents = d.content.intents.reduce(
+          (intents, intent) => (intents.findIndex(i => i.name === intent.name) > -1 ? intents : [...intents, intent]),
+          content.intents,
+        );
+        if (!Array.isArray(data.url)) {
+          data.url = [data.url];
+        }
+        data.url.push(d.url);
+        list.splice(index, 1);
+      }
+    });
+    delete content.isThis;
   }
 }
