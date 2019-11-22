@@ -167,9 +167,7 @@ export default class AICE {
         this.inputs[i].done = true;
       });
       this.inputs.forEach((input, i) => {
-        if (input.done) {
-          delete this.inputs[i].done;
-        }
+        delete this.inputs[i].done;
       });
     }
   }

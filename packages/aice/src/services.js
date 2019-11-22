@@ -5,12 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const buildServices = ({ logger: _l = {}, tracker: _t = {} }) => {
+const buildServices = ({ logger: _l = {}, tracker: _t = {} } = {}, csl = console) => {
   let logger = _l.instance;
-  if (!logger && _l.enabled) {
+  if (!logger) {
     // setup  a simple logger
     logger = {};
-    const csl = console;
     const dummy = () => {};
     const log = (...args) => csl.log(...args);
     if (_l.enabled) {
@@ -40,6 +39,12 @@ const buildServices = ({ logger: _l = {}, tracker: _t = {} }) => {
     tracker.getIssues = type => (type ? tracker.issues.filter(issue => issue.type === type) : [...tracker.issues]);
     tracker.clear = () => {
       tracker.issues = [];
+    };
+  } else {
+    tracker = {
+      addIssue: v => v,
+      getIssues: () => [],
+      clear: () => {},
     };
   }
   return { logger, tracker };
