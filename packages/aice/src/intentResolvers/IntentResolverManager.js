@@ -66,7 +66,6 @@ export default class IntentResolverManager {
     // It wasn't the main one and has no result
     if (res[0] && res[0].score < this.settings.threshold && topic !== '*') {
       res = await this.match(lang, utterance, { ...context, topic: '*' });
-
       // Assign new topic
       res.forEach(r => {
         // eslint-disable-next-line no-param-reassign

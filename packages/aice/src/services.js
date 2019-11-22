@@ -33,11 +33,13 @@ const buildServices = ({ logger: _l = {}, tracker: _t = {} }) => {
       issues: [],
     };
     tracker.addIssue = ({ type, message, ...extra }) => {
-      this.issues.push({ type, message, ...extra });
+      const issue = { type, message, ...extra };
+      tracker.issues.push(issue);
+      return issue;
     };
-    tracker.getIssues = type => (type ? [...this.issues] : this.issues.filter(issue => issue.type === type));
+    tracker.getIssues = type => (type ? tracker.issues.filter(issue => issue.type === type) : [...tracker.issues]);
     tracker.clear = () => {
-      this.issues = [];
+      tracker.issues = [];
     };
   }
   return { logger, tracker };

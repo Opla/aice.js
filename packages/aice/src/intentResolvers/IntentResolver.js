@@ -45,14 +45,11 @@ export default class IntentResolver {
   async evaluate(lang, sentence, context) {
     const res = await this.execute(lang, sentence, context);
     // TODO Input intent conditions
-
     // Previous handling
     const { previous } = context;
     const r = res.map(i => ({
-      intentid: i.intentid,
-      input: i.input,
+      ...i,
       score: i.previous.length > 0 && !i.previous.includes(previous) ? 0.1 : i.score,
-      context: i.context,
     }));
     return r.sort((d1, d2) => parseFloat(d2.score) - parseFloat(d1.score))[0];
   }

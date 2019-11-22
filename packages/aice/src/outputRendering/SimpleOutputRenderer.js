@@ -81,6 +81,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
     });
 
     if (res && res.length > 0) {
+      let outputIndex = 0;
       let renderResponse;
       switch (output.outputType) {
         case 'single':
@@ -93,13 +94,11 @@ export default class SimpleOutputRenderer extends OutputRenderer {
 
         case 'random':
         default:
-          renderResponse = Renderer.render(
-            res[Math.floor(Math.random() * Math.floor(res.length))].tokenizedOutput,
-            context,
-          );
+          outputIndex = Math.floor(Math.random() * Math.floor(res.length));
+          renderResponse = Renderer.render(res[outputIndex].tokenizedOutput, context);
           break;
       }
-      return { intentid, score, renderResponse, context };
+      return { intentid, score, renderResponse, outputIndex, context };
     }
     return undefined;
   }

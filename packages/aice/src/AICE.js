@@ -143,9 +143,35 @@ export default class AICE {
   /**
    * Train all resolvers and renderers
    */
-  async train() {
+  async train(debug = false) {
     await this.IntentResolverManager.train(this.inputs);
     await this.OutputRenderingManager.train(this.outputs);
+    if (debug || this.settings.debug) {
+      // Check : inputs conflicts
+      this.inputs.forEach((input, i) => {
+        this.inputs.forEach((next, n) => {
+          if (!next.done && n !== i && next.topic === input.topic && next.input === input.input) {
+            const issue = this.services.tracker.addIssue({
+              type: 'warning',
+              message: 'Input conflict',
+              description: `Same input "${input.input}" between ${input.intentid}[${i}] and ${next.intentid}[${n}]`,
+              refs: [
+                { id: input.intentid, index: i },
+                { id: next.intentid, index: n },
+              ],
+            });
+            this.inputs[i].issues = [issue];
+            this.inputs[n].issues = [issue];
+          }
+        });
+        this.inputs[i].done = true;
+      });
+      this.inputs.forEach((input, i) => {
+        if (input.done) {
+          delete this.inputs[i].done;
+        }
+      });
+    }
   }
 
   /**
@@ -166,15 +192,33 @@ export default class AICE {
 
     // Intents Resolvers
     const result = await this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
-    const ctx = { ...context, ...((result && result[0]) || {}).context };
-
+    const r = result && result[0] ? result[0] : {};
+    const ctx = { ...context, ...r.context };
     // Output Rendering
     const answer = await this.OutputRenderingManager.execute(lang, result, ctx);
-    return {
-      answer: (answer || {}).renderResponse,
+    const a = answer || {};
+    const ret = {
+      answer: a.renderResponse,
       score: answer ? answer.score : 0,
-      intent: (answer || {}).intentid,
+      intent: a.intentid ? { id: a.intentid, inputIndex: r.inputIndex, outputIndex: a.outputIndex } : undefined,
       context: (answer && answer.context) || ctx,
     };
+    if (!ret.intent && r.intentid) {
+      ret.intent = { id: r.intentid, inputIndex: r.inputIndex };
+    }
+    if (ret.score === undefined) {
+      ret.score = r.score;
+    }
+    ret.isAnyOrNothing = r.isAnyOrNothing;
+    if (r.issues || (answer && answer.issues)) {
+      ret.issues = [];
+      if (r.issues) {
+        ret.issues.push(...r.issues);
+      }
+      if (answer && answer.issues) {
+        ret.issues.push(...answer.issues);
+      }
+    }
+    return ret;
   }
 }
