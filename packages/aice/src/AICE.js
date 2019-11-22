@@ -10,10 +10,12 @@ import { OutputRenderingManager } from './outputRendering';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
 import { NamedEntityTokenizer } from './streamTransformers/tokenizer';
 import { NERManager, SystemEntities } from './streamTransformers';
+import buildServices from './services';
 
 export default class AICE {
-  constructor(settings = { defaultLanguage: 'en' }) {
+  constructor({ services = {}, ...settings } = { defaultLanguage: 'en' }) {
     this.settings = settings;
+    this.services = buildServices(services);
     this.inputs = [];
     this.outputs = [];
     // StreamsTransformers
