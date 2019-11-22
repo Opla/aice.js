@@ -11,7 +11,7 @@ import { Utils } from '../utils';
 export default class IntentResolverManager {
   constructor({ intentResolvers, threshold, services, ...settings } = {}) {
     this.settings = { ...settings, threshold: threshold || 0.75 };
-    this.services = services || {};
+    this.services = services;
     this.intentResolvers = [];
     if (Array.isArray(intentResolvers) && intentResolvers.length > 0) {
       this.intentResolvers.push(...intentResolvers);

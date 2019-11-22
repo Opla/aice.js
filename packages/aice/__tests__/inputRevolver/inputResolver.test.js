@@ -11,11 +11,11 @@ const { expect } = chai;
 
 describe('IntentsResolver', () => {
   it('Should throw error if no settings with name provided', () => {
-    expect(() => new IntentResolver()).to.throw('Invalid IntentResolverconstructor - Missing name');
+    expect(() => new IntentResolver()).to.throw('Invalid IntentResolver constructor - Missing name');
   });
 
   it('Should throw error if no name provided', () => {
-    expect(() => new IntentResolver({})).to.throw('Invalid IntentResolverconstructor - Missing name');
+    expect(() => new IntentResolver({})).to.throw('Invalid IntentResolver constructor - Missing name');
   });
 
   it('Should train model - Empty case', async () => {
@@ -34,7 +34,10 @@ describe('IntentsResolver', () => {
 
   it('Should execute with filter using LANG', async () => {
     const resolver = new IntentResolver({ name: 'test-resolver' });
-    await resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
+    await resolver.train([
+      { lang: 'fr', topic: '*', id: 1 },
+      { lang: 'en', topic: '*', id: 2 },
+    ]);
 
     const result = await resolver.execute('fr', '', {});
     expect(result.length).to.equal(1);
@@ -44,13 +47,16 @@ describe('IntentsResolver', () => {
 
   it('Should train and execute using callbacks', async () => {
     let train;
-    const cbTrain = inputs => {
+    const trainFunc = inputs => {
       train = 'ok';
       return [inputs[1]];
     };
-    const cbExecute = () => [{ id: 1, lang: 'us' }];
-    const resolver = new IntentResolver({ name: 'test-resolver', cbTrain, cbExecute });
-    await resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
+    const executeFunc = () => [{ id: 1, lang: 'us' }];
+    const resolver = new IntentResolver({ name: 'test-resolver', trainFunc, executeFunc });
+    await resolver.train([
+      { lang: 'fr', topic: '*', id: 1 },
+      { lang: 'en', topic: '*', id: 2 },
+    ]);
     expect(resolver.inputs.length).to.equal(1);
     const result = await resolver.execute('en', '', {});
     expect(result.length).to.equal(1);
@@ -60,13 +66,16 @@ describe('IntentsResolver', () => {
   });
   it('Should train and evaluate using callbacks', async () => {
     let train;
-    const cbTrain = inputs => {
+    const trainFunc = inputs => {
       train = 'ok';
       return [inputs[1]];
     };
-    const cbEvaluate = () => [{ id: 1, lang: 'us' }];
-    const resolver = new IntentResolver({ name: 'test-resolver', cbTrain, cbEvaluate });
-    await resolver.train([{ lang: 'fr', topic: '*', id: 1 }, { lang: 'en', topic: '*', id: 2 }]);
+    const evaluateFunc = () => [{ id: 1, lang: 'us' }];
+    const resolver = new IntentResolver({ name: 'test-resolver', trainFunc, evaluateFunc });
+    await resolver.train([
+      { lang: 'fr', topic: '*', id: 1 },
+      { lang: 'en', topic: '*', id: 2 },
+    ]);
     expect(resolver.inputs.length).to.equal(1);
     const result = await resolver.evaluate('en', '', {});
     expect(result.length).to.equal(1);

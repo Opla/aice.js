@@ -6,15 +6,19 @@
  */
 
 export default class IntentResolver {
-  constructor({ name, cbTrain, cbExecute, cbEvaluate, ...settings } = {}) {
+  constructor({ name, trainFunc, executeFunc, evaluateFunc, ...settings } = {}) {
     if (!name) {
-      throw new Error('Invalid IntentResolverconstructor - Missing name');
+      throw new Error('Invalid IntentResolver constructor - Missing name');
     }
     this.settings = settings;
     this.name = name;
-    this.cbTrain = cbTrain;
-    this.cbExecute = cbExecute;
-    this.cbEvaluate = cbEvaluate;
+    this.doTrain = trainFunc || (inputs => inputs);
+    if (executeFunc) {
+      this.execute = executeFunc;
+    }
+    if (evaluateFunc) {
+      this.evaluate = evaluateFunc;
+    }
     this.inputs = [];
   }
 
@@ -22,11 +26,7 @@ export default class IntentResolver {
    * Base train function - Can be redefine to better fit needs (ML)
    */
   async train(inputs = []) {
-    if (this.cbTrain) {
-      this.inputs = this.cbTrain(inputs);
-    } else {
-      this.inputs = inputs;
-    }
+    this.inputs = this.doTrain(inputs);
   }
 
   /**
@@ -34,9 +34,6 @@ export default class IntentResolver {
    * @returns {Inputs} Inputs filtered by lang
    */
   async execute(lang, sentence, context) {
-    if (this.cbExecute) {
-      return this.cbExecute(lang, sentence, context);
-    }
     const { topic = '*' } = context;
     return this.inputs.filter(i => i.lang === lang && i.topic === topic);
   }
@@ -46,9 +43,6 @@ export default class IntentResolver {
    * @returns {Intent} Intent with the best score
    */
   async evaluate(lang, sentence, context) {
-    if (this.cbEvaluate) {
-      return this.cbEvaluate(lang, sentence, context);
-    }
     const res = await this.execute(lang, sentence, context);
     // TODO Input intent conditions
 
