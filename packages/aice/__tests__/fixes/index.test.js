@@ -47,7 +47,7 @@ describe('Fixes issues', async () => {
     ]);
     await aice.train();
     const res = await aice.evaluate('Hello', {}, 'en');
-    console.log('TODO res=', res.answer);
+    console.log('TODO res=', res);
   });
   // https://github.com/Opla/aice.js/issues/82
   it('Should an intent match return input & output index #82', async () => {
@@ -60,8 +60,11 @@ describe('Fixes issues', async () => {
     aice.addOutput('en', 'agent.presentation', 'Your welcome');
     await aice.train();
     const res = await aice.evaluate('Hello', {}, 'en');
-    console.log('TODO res=', res.answer);
+    expect(res.intent.id).to.equal('agent.presentation');
+    expect(res.intent.inputIndex).to.equal(0);
+    expect(res.intent.outputIndex).to.oneOf([0, 1]);
   });
+
   // https://github.com/Opla/aice.js/issues/83
   it('Should create an issue if an intent have inputs conflict #83', async () => {
     const aice = new AICE({ services: { logger: { enabled: true }, tracker: { enabled: true } } });
@@ -72,7 +75,7 @@ describe('Fixes issues', async () => {
     aice.addInput('en', 'agent.hello', 'Hello');
     aice.addOutput('en', 'agent.hello', 'Hello');
     await aice.train(true);
-    const issues = aice.services.tracker.getIssues();
+    let issues = aice.services.tracker.getIssues();
     expect(issues.length).to.equal(1);
     expect(issues[0].type).to.equal('warning');
     expect(issues[0].message).to.equal('Input conflict');
@@ -82,6 +85,15 @@ describe('Fixes issues', async () => {
       { id: 'agent.hello', index: 2 },
     ]);
     const res = await aice.evaluate('Hello', {}, 'en');
-    console.log('TODO res=', res);
+    expect(res.intent).to.eql({ id: 'agent.presentation', inputIndex: 1, outputIndex: 0 });
+    ({ issues } = res);
+    expect(issues.length).to.equal(1);
+    expect(issues[0].type).to.equal('warning');
+    expect(issues[0].message).to.equal('Input conflict');
+    expect(issues[0].description).to.equal('Same input "Hello" between agent.presentation[1] and agent.hello[2]');
+    expect(issues[0].refs).to.eql([
+      { id: 'agent.presentation', index: 1 },
+      { id: 'agent.hello', index: 2 },
+    ]);
   });
 });
