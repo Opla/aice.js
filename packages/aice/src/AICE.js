@@ -11,6 +11,7 @@ import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTra
 import { NamedEntityTokenizer } from './streamTransformers/tokenizer';
 import { NERManager, SystemEntities } from './streamTransformers';
 import buildServices from './services';
+import issuesFactory from './issues';
 
 export default class AICE {
   constructor({ services = {}, ...settings } = { defaultLanguage: 'en' }) {
@@ -140,6 +141,10 @@ export default class AICE {
     this.outputs = [];
   }
 
+  static addToArray(_array, element) {
+    return _array ? _array.push(element) : [element];
+  }
+
   /**
    * Train all resolvers and renderers
    */
@@ -151,21 +156,38 @@ export default class AICE {
       this.inputs.forEach((input, i) => {
         this.inputs.forEach((next, n) => {
           if (!next.done && n !== i && next.topic === input.topic && next.input === input.input) {
-            const issue = this.services.tracker.addIssue({
-              type: 'warning',
-              message: 'Input conflict',
-              description: `Same input "${input.input}" between ${input.intentid}[${i}] and ${next.intentid}[${n}]`,
+            let issue = issuesFactory.create(issuesFactory.INTENT_DUPLICATE_INPUT, [
+              input.input,
+              input.intentid,
+              i,
+              next.intentid,
+              n,
+            ]);
+            issue = this.services.tracker.addIssue({
+              ...issue,
               refs: [
                 { id: input.intentid, index: i },
                 { id: next.intentid, index: n },
               ],
             });
-            this.inputs[i].issues = [issue];
-            this.inputs[n].issues = [issue];
+            this.inputs[i].issues = AICE.addToArray(this.inputs[i].issues, issue);
+            this.inputs[n].issues = AICE.addToArray(this.inputs[n].issues, issue);
           }
         });
+        const match = this.outputs.some(
+          output => output.answers && output.answers.length && output.intentid === input.intentid,
+        );
+        if (!match) {
+          let issue = issuesFactory.create(issuesFactory.INTENT_NO_OUTPUT, [input.intentid]);
+          issue = this.services.tracker.addIssue({
+            ...issue,
+            refs: [{ id: input.intentid }],
+          });
+          this.inputs[i].issues = AICE.addToArray(this.inputs[i].issues, issue);
+        }
         this.inputs[i].done = true;
       });
+
       this.inputs.forEach((input, i) => {
         delete this.inputs[i].done;
       });

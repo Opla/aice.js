@@ -35,5 +35,10 @@
       "ForOfStatement"
     ],
     "max-classes-per-file": 0
+  },
+  "settings": {
+    "ecmaFeatures": {
+      "classes": true
+    }
   }
 }

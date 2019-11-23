@@ -38,17 +38,29 @@ describe('Fixes issues', async () => {
   });
 
   // https://github.com/Opla/aice.js/issues/81
-  it('Should an intent match but output is not ok #81', async () => {
-    const aice = new AICE();
+  it('Should an intent match without any output #81', async () => {
+    const aice = new AICE({ services: { logger: { enabled: true }, tracker: { enabled: true } } });
     // Initialization
     aice.addInput('en', 'agent.presentation', 'Hello');
-    aice.addOutput('en', 'agent.presentation', 'Hello', null, [
+    /* aice.addOutput('en', 'agent.presentation', 'Hello', null, [
       { type: 'LeftRightExpression', leftOperand: 'name', operator: 'eq', rightOperand: '"value"' },
-    ]);
-    await aice.train();
+    ]); */
+    await aice.train(true);
+    let issues = aice.services.tracker.getIssues();
+    expect(issues.length).to.equal(1);
+    expect(issues[0].type).to.equal('error');
+    expect(issues[0].message).to.equal('No output linked');
+    expect(issues[0].description).to.equal(`This intent "agent.presentation" doesn't have any output`);
+    expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
     const res = await aice.evaluate('Hello', {}, 'en');
-    console.log('TODO res=', res);
+    ({ issues } = res);
+    expect(issues.length).to.equal(1);
+    expect(issues[0].type).to.equal('error');
+    expect(issues[0].message).to.equal('No output linked');
+    expect(issues[0].description).to.equal(`This intent "agent.presentation" doesn't have any output`);
+    expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
   });
+
   // https://github.com/Opla/aice.js/issues/82
   it('Should an intent match return input & output index #82', async () => {
     const aice = new AICE();
