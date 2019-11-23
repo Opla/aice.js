@@ -18,4 +18,14 @@ export default class Utils {
     const filterMap = await Utils.mapAsync(array, callbackfn);
     return array.filter((value, index) => filterMap[index]);
   }
+
+  static addToArray(_array, element) {
+    const array = _array || [];
+    array.push(element);
+    return array;
+  }
+
+  static isEmpty(string) {
+    return typeof string === 'string' && string.trim().length;
+  }
 }

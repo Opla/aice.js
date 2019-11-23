@@ -43,6 +43,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
   }
 
   async execute(lang, intents, baseContext) {
+    const { issuesFactory } = this.services || {};
     let context = baseContext;
     const { intentid, score } = intents[0] || {}; // Best match for now
 
@@ -53,8 +54,10 @@ export default class SimpleOutputRenderer extends OutputRenderer {
     }
 
     // Retrieve all answers for this lang
-    const filtredAnswers = output.answers.filter(a => a.lang === lang);
-    const res = await Utils.filterAsync(filtredAnswers, async ans => {
+    const filteredAnswers = output.answers.filter(a => a.lang === lang);
+    let outputIndex = -1;
+    let noConditionsMatch = false;
+    const res = await Utils.filterAsync(filteredAnswers, async ans => {
       const { preCallables, conditions, callables } = ans;
 
       // Call pre-conditions callables
@@ -63,13 +66,16 @@ export default class SimpleOutputRenderer extends OutputRenderer {
       }
 
       // Check Conditions
-      const conditionChecked = conditions
+      const conditionMatch = conditions
         ? conditions.reduce(
             (accumulator, condition) => accumulator && ConditionEvaluator.evaluate(condition, context),
             true,
           )
         : true;
-      if (!conditionChecked) return false;
+      if (!conditionMatch) {
+        noConditionsMatch = true;
+        return false;
+      }
 
       // Call pre-render callables
       if (callables && callables.length > 0) {
@@ -82,24 +88,36 @@ export default class SimpleOutputRenderer extends OutputRenderer {
 
     if (res && res.length > 0) {
       let renderResponse;
+      const i = Math.floor(Math.random() * Math.floor(res.length));
       switch (output.outputType) {
         case 'single':
+          outputIndex = res[0].index;
           renderResponse = Renderer.render(res[0].tokenizedOutput, context);
           break;
 
         case 'multiple':
+          // outputIndex is a range
+          outputIndex = res[0].index;
           renderResponse = res.reduce((acc, r) => acc + Renderer.render(r.tokenizedOutput, context), '');
           break;
 
         case 'random':
         default:
-          renderResponse = Renderer.render(
-            res[Math.floor(Math.random() * Math.floor(res.length))].tokenizedOutput,
-            context,
-          );
+          outputIndex = res[i].index;
+          renderResponse = Renderer.render(res[i].tokenizedOutput, context);
           break;
       }
-      return { intentid, score, renderResponse, context };
+      return { intentid, score, renderResponse, outputIndex, context };
+    }
+    if (this.settings.debug) {
+      const issues = [];
+      // TODO handle other errors as  callable's ones
+      /* istanbul ignore next */
+      if (noConditionsMatch) {
+        const issue = issuesFactory.create(issuesFactory.EVALUATE_NO_CONDITION, [intentid]);
+        issues.push({ ...issue, refs: [{ id: intentid }] });
+      }
+      return { intentid, issues };
     }
     return undefined;
   }

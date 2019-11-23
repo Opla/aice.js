@@ -9,13 +9,14 @@ import SimpleIntentResolver from './SimpleIntentResolver';
 import { Utils } from '../utils';
 
 export default class IntentResolverManager {
-  constructor({ intentResolvers, threshold, ...settings } = {}) {
+  constructor({ intentResolvers, threshold, services, ...settings } = {}) {
     this.settings = { ...settings, threshold: threshold || 0.75 };
+    this.services = services;
     this.intentResolvers = [];
     if (Array.isArray(intentResolvers) && intentResolvers.length > 0) {
       this.intentResolvers.push(...intentResolvers);
     } else {
-      this.intentResolvers.push(new SimpleIntentResolver({ ...this.settings }));
+      this.intentResolvers.push(new SimpleIntentResolver({ ...this.settings, services: this.services }));
     }
   }
 
@@ -65,7 +66,6 @@ export default class IntentResolverManager {
     // It wasn't the main one and has no result
     if (res[0] && res[0].score < this.settings.threshold && topic !== '*') {
       res = await this.match(lang, utterance, { ...context, topic: '*' });
-
       // Assign new topic
       res.forEach(r => {
         // eslint-disable-next-line no-param-reassign

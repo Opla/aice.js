@@ -18,10 +18,11 @@ export default class SimpleIntentResolver extends IntentResolver {
   async execute(lang, sentence, context) {
     // Preprocess filter lang
     const inputs = await super.execute(lang, sentence, context);
-    const result = inputs.map(input => {
+    // TODO Need to exclude here inputs with score=0
+    const result = inputs.map((input, index) => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
       // Case - Fallback (lower score) // NOT SO GOOD even with threshold + infitesimal
-      if (input.input === '{{*}}' || input.input === '{{^}}') {
+      if (input.isAnyOrNothing) {
         comparatorResult.confidence = this.settings.threshold + 0.01;
         comparatorResult.score = 0.9;
         comparatorResult.isAnyOrNothing = true;
@@ -30,8 +31,11 @@ export default class SimpleIntentResolver extends IntentResolver {
       return {
         intentid: input.intentid,
         input: input.input,
+        inputIndex: index,
+        issues: input.issues,
         previous: input.previous ? input.previous : [],
         score,
+        isAnyOrNothing: comparatorResult.isAnyOrNothing,
         context: comparatorResult.context,
       };
     });

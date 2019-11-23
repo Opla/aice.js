@@ -10,10 +10,16 @@ import { OutputRenderingManager } from './outputRendering';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
 import { NamedEntityTokenizer } from './streamTransformers/tokenizer';
 import { NERManager, SystemEntities } from './streamTransformers';
+import buildServices from './services';
+import issuesFactory from './issues';
+import { Utils } from './utils';
 
 export default class AICE {
-  constructor(settings = { defaultLanguage: 'en' }) {
+  constructor({ services = {}, ...settings } = { defaultLanguage: 'en' }) {
     this.settings = settings;
+    this.services = buildServices(services);
+    this.services.issuesFactory = issuesFactory;
+    this.settings.services = this.services;
     this.inputs = [];
     this.outputs = [];
     // StreamsTransformers
@@ -21,7 +27,6 @@ export default class AICE {
     this.NamedEntityTokenizer = new NamedEntityTokenizer(this.NERManager);
     this.InputExpressionTokenizer = new InputExpressionTokenizer();
     this.OutputExpressionTokenizer = new OutputExpressionTokenizer();
-
     this.IntentResolverManager = new IntentsResolverManager(this.settings);
     this.OutputRenderingManager = new OutputRenderingManager(this.settings);
 
@@ -80,7 +85,7 @@ export default class AICE {
    * @param {String} topic The topic, is used to attach a input to a group that only can be reach if in that topic.
    */
   addInput(lang, intentid, input, previous = [], topic = '*') {
-    if (!lang || !input || !intentid) {
+    if (!Utils.isEmpty(lang) || !Utils.isEmpty(input) || !Utils.isEmpty(intentid)) {
       throw new Error('AICE addInput - Has some missing mandatory parameters');
     }
     const tokenizedInput = this.InputExpressionTokenizer.tokenize(input);
@@ -101,7 +106,7 @@ export default class AICE {
    * @param {AsyncFunction} preRenderCallable Pre-Render callables executed before redering only if conditions are checked. (can mutate context)
    */
   addOutput(lang, intentid, output, preConditionsCallable, conditions = [], preRenderCallable) {
-    if (!lang || !output || !intentid) {
+    if (!Utils.isEmpty(lang) || !Utils.isEmpty(output) || !Utils.isEmpty(intentid)) {
       throw new Error('AICE addOutput - Has some missing mandatory parameters');
     }
     const tokenizedOutput = this.OutputExpressionTokenizer.tokenize(output);
@@ -124,8 +129,10 @@ export default class AICE {
 
     const intentOutput = this.outputs.find(o => o.intentid === intentid);
     if (!intentOutput) {
+      answer.index = 0;
       this.outputs.push({ intentid, outputType: 'random', answers: [answer] });
     } else if (intentOutput.answers.filter(a => a.lang === lang && a.output === output).length === 0) {
+      answer.index = intentOutput.answers.length;
       intentOutput.answers.push(answer);
     }
   }
@@ -141,9 +148,61 @@ export default class AICE {
   /**
    * Train all resolvers and renderers
    */
-  async train() {
+  async train(debug = false, _rules) {
+    const rules = _rules || this.settings.rules || {};
     await this.IntentResolverManager.train(this.inputs);
     await this.OutputRenderingManager.train(this.outputs);
+    if (debug || this.settings.debug) {
+      // Check : inputs conflicts
+      let isAnyOrNothing = false;
+      this.inputs.forEach((input, i) => {
+        isAnyOrNothing = input.isAnyOrNothing ? true : isAnyOrNothing;
+        this.inputs.forEach((next, n) => {
+          if (!next.done && n !== i && next.topic === input.topic && next.input === input.input) {
+            let issue = issuesFactory.create(issuesFactory.INTENT_DUPLICATE_INPUT, [
+              input.input,
+              input.intentid,
+              i,
+              next.intentid,
+              n,
+            ]);
+            issue = this.services.tracker.addIssue({
+              ...issue,
+              refs: [
+                { id: input.intentid, index: i },
+                { id: next.intentid, index: n },
+              ],
+            });
+            this.inputs[i].issues = Utils.addToArray(this.inputs[i].issues, issue);
+            this.inputs[n].issues = Utils.addToArray(this.inputs[n].issues, issue);
+          }
+        });
+        const match = this.outputs.some(
+          output => output.answers && output.answers.length && output.intentid === input.intentid,
+        );
+        if (!match) {
+          let issue = this.services.tracker.getIssues('error', issuesFactory.codes.INTENT_NO_OUTPUT, [
+            { id: input.intentid },
+          ])[0];
+          if (!issue) {
+            issue = issuesFactory.create(issuesFactory.INTENT_NO_OUTPUT, [input.intentid]);
+            issue = this.services.tracker.addIssue({
+              ...issue,
+              refs: [{ id: input.intentid }],
+            });
+          }
+          this.inputs[i].issues = Utils.addToArray(this.inputs[i].issues, issue);
+        }
+        this.inputs[i].done = true;
+      });
+      if (!isAnyOrNothing && !rules.no_AnyOrNothing) {
+        const issue = issuesFactory.create(issuesFactory.AGENT_EXPECT_ANY);
+        this.services.tracker.addIssue(issue);
+      }
+      this.inputs.forEach((input, i) => {
+        delete this.inputs[i].done;
+      });
+    }
   }
 
   /**
@@ -163,16 +222,75 @@ export default class AICE {
     const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);
 
     // Intents Resolvers
-    const result = await this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
-    const ctx = { ...context, ...((result && result[0]) || {}).context };
-
+    const results = await this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
+    const r = results && results[0] ? results[0] : {};
+    const ctx = { ...context, ...r.context };
     // Output Rendering
-    const answer = await this.OutputRenderingManager.execute(lang, result, ctx);
-    return {
-      answer: (answer || {}).renderResponse,
+    const answer = await this.OutputRenderingManager.execute(lang, results, ctx);
+    const a = answer || {};
+    let { renderResponse } = a;
+    const { isAnyOrNothing } = r;
+    let anyOrNothing;
+    if (!renderResponse && !isAnyOrNothing) {
+      // We try to get an answer from an AnyOrNothing intent
+      // First from results
+      let an;
+      let aon;
+      /* istanbul ignore next */
+      // TODO better handling and more coverage
+      if (results) {
+        [aon] = results.filter(rs => rs && rs.isAnyOrNothing);
+        if (aon) {
+          an = await this.OutputRenderingManager.execute(lang, [aon], ctx);
+        }
+      }
+      /* istanbul ignore next */
+      if (!an) {
+        const topic = ctx.topic || '*';
+        /* istanbul ignore next */
+        [aon] = this.inputs.filter(rs => rs.isAnyOrNothing && rs.topic === topic && rs.lang === lang);
+        /* istanbul ignore next */
+        if (aon) {
+          an = await this.OutputRenderingManager.execute(lang, [aon], ctx);
+          ({ renderResponse } = an);
+        }
+        if (!renderResponse) {
+          [aon] = this.inputs.filter(rs => rs.isAnyOrNothing && rs.topic === topic && rs.lang === lang);
+          if (aon) {
+            an = await this.OutputRenderingManager.execute(lang, [aon], ctx);
+            ({ renderResponse } = an);
+          }
+        }
+      }
+      if (renderResponse) {
+        anyOrNothing = { id: an.intentid, inputIndex: aon.inputIndex || 0, outputIndex: an.outputIndex };
+      }
+    }
+    const ret = {
+      answer: renderResponse,
       score: answer ? answer.score : 0,
-      intent: (answer || {}).intentid,
+      intent: a.intentid ? { id: a.intentid, inputIndex: r.inputIndex, outputIndex: a.outputIndex } : undefined,
       context: (answer && answer.context) || ctx,
     };
+    if (anyOrNothing) {
+      ret.anyOrNothing = anyOrNothing;
+    }
+    if (!ret.intent && r.intentid) {
+      ret.intent = { id: r.intentid, inputIndex: r.inputIndex };
+    }
+    if (ret.score === undefined || (ret.score === 0 && r.score !== undefined)) {
+      ret.score = r.score;
+    }
+    ret.isAnyOrNothing = isAnyOrNothing;
+    if (r.issues || (answer && answer.issues)) {
+      ret.issues = [];
+      if (r.issues) {
+        ret.issues.push(...r.issues);
+      }
+      if (answer && answer.issues) {
+        ret.issues.push(...answer.issues);
+      }
+    }
+    return ret;
   }
 }

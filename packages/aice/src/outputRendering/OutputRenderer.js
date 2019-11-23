@@ -6,10 +6,11 @@
  */
 
 export default class OutputRenderer {
-  constructor({ name, outputs = [], ...settings } = {}) {
+  constructor({ name, outputs = [], services, ...settings } = {}) {
     if (!name) {
       throw new Error('Invalid OutputRenderer constructor - Missing name');
     }
+    this.services = services;
     this.settings = settings;
     this.name = name;
     this.outputs = outputs;
