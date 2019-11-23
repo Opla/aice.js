@@ -61,7 +61,7 @@ const issues = {
     },
     build: (template, p) => ({
       ...template,
-      description: `Conditions in this output ${p[0]}[${p[1]}] doesn't match`,
+      description: `Output conditions for this intent "${p[0]}" don't match`,
     }),
   },
 };

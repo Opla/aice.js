@@ -39,7 +39,7 @@ describe('Fixes issues', async () => {
 
   // https://github.com/Opla/aice.js/issues/81
   it('Should an intent match without any output #81', async () => {
-    const aice = new AICE({ services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
     // Initialization
     aice.addInput('en', 'agent.presentation', 'Hello');
     aice.addInput('en', 'agent.presentation', 'Hi');
@@ -62,6 +62,28 @@ describe('Fixes issues', async () => {
     expect(issues[0].type).to.equal('error');
     expect(issues[0].message).to.equal('No output linked');
     expect(issues[0].description).to.equal(`This intent "agent.presentation" doesn't have any output`);
+    expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
+  });
+  it('Should an intent match without any output #81', async () => {
+    const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    // Initialization
+    aice.addInput('en', 'agent.presentation', 'Hello');
+    aice.addInput('en', 'agent.presentation', 'Hi');
+    aice.addOutput('en', 'agent.presentation', 'Hello', null, [
+      { type: 'LeftRightExpression', leftOperand: 'name', operator: 'eq', rightOperand: '"value"' },
+    ]);
+    await aice.train(true);
+    let issues = aice.services.tracker.getIssues();
+    expect(issues.length).to.equal(0);
+    const res = await aice.evaluate('Hello', {}, 'en');
+    expect(res.score).to.equal(1);
+    expect(res.answer).to.equal(undefined);
+    expect(res.intent).to.eql({ id: 'agent.presentation', inputIndex: 0, outputIndex: undefined });
+    ({ issues } = res);
+    expect(issues.length).to.equal(1);
+    expect(issues[0].type).to.equal('error');
+    expect(issues[0].message).to.equal('No condition matched');
+    expect(issues[0].description).to.equal(`Output conditions for this intent "agent.presentation" don't match`);
     expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
   });
 

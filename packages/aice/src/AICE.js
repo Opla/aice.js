@@ -17,6 +17,8 @@ export default class AICE {
   constructor({ services = {}, ...settings } = { defaultLanguage: 'en' }) {
     this.settings = settings;
     this.services = buildServices(services);
+    this.services.issuesFactory = issuesFactory;
+    this.settings.services = this.services;
     this.inputs = [];
     this.outputs = [];
     // StreamsTransformers
@@ -24,7 +26,6 @@ export default class AICE {
     this.NamedEntityTokenizer = new NamedEntityTokenizer(this.NERManager);
     this.InputExpressionTokenizer = new InputExpressionTokenizer();
     this.OutputExpressionTokenizer = new OutputExpressionTokenizer();
-
     this.IntentResolverManager = new IntentsResolverManager(this.settings);
     this.OutputRenderingManager = new OutputRenderingManager(this.settings);
 
@@ -127,8 +128,10 @@ export default class AICE {
 
     const intentOutput = this.outputs.find(o => o.intentid === intentid);
     if (!intentOutput) {
+      answer.index = 0;
       this.outputs.push({ intentid, outputType: 'random', answers: [answer] });
     } else if (intentOutput.answers.filter(a => a.lang === lang && a.output === output).length === 0) {
+      answer.index = intentOutput.answers.length;
       intentOutput.answers.push(answer);
     }
   }
