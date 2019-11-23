@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const matchRefs = (ref1, ref2) => ref1 && ref2 && JSON.stringify(ref1) === JSON.stringify(ref2);
+
 const buildServices = ({ logger: _l = {}, tracker: _t = {} } = {}, csl = console) => {
   let logger = _l.instance;
   if (!logger) {
@@ -36,7 +38,15 @@ const buildServices = ({ logger: _l = {}, tracker: _t = {} } = {}, csl = console
       tracker.issues.push(issue);
       return issue;
     };
-    tracker.getIssues = type => (type ? tracker.issues.filter(issue => issue.type === type) : [...tracker.issues]);
+    tracker.getIssues = (type, code, refs) =>
+      type
+        ? tracker.issues.filter(
+            issue =>
+              issue.type === type &&
+              (code === undefined || code === issue.code) &&
+              (refs === undefined || matchRefs(issue.refs, refs)),
+          )
+        : [...tracker.issues];
     tracker.clear = () => {
       tracker.issues = [];
     };

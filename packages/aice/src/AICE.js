@@ -178,11 +178,16 @@ export default class AICE {
           output => output.answers && output.answers.length && output.intentid === input.intentid,
         );
         if (!match) {
-          let issue = issuesFactory.create(issuesFactory.INTENT_NO_OUTPUT, [input.intentid]);
-          issue = this.services.tracker.addIssue({
-            ...issue,
-            refs: [{ id: input.intentid }],
-          });
+          let issue = this.services.tracker.getIssues('error', issuesFactory.codes.INTENT_NO_OUTPUT, [
+            { id: input.intentid },
+          ])[0];
+          if (!issue) {
+            issue = issuesFactory.create(issuesFactory.INTENT_NO_OUTPUT, [input.intentid]);
+            issue = this.services.tracker.addIssue({
+              ...issue,
+              refs: [{ id: input.intentid }],
+            });
+          }
           this.inputs[i].issues = AICE.addToArray(this.inputs[i].issues, issue);
         }
         this.inputs[i].done = true;
@@ -226,7 +231,7 @@ export default class AICE {
     if (!ret.intent && r.intentid) {
       ret.intent = { id: r.intentid, inputIndex: r.inputIndex };
     }
-    if (ret.score === undefined) {
+    if (ret.score === undefined || (ret.score === 0 && r.score !== undefined)) {
       ret.score = r.score;
     }
     ret.isAnyOrNothing = r.isAnyOrNothing;

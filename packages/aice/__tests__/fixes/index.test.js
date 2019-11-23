@@ -42,6 +42,7 @@ describe('Fixes issues', async () => {
     const aice = new AICE({ services: { logger: { enabled: true }, tracker: { enabled: true } } });
     // Initialization
     aice.addInput('en', 'agent.presentation', 'Hello');
+    aice.addInput('en', 'agent.presentation', 'Hi');
     /* aice.addOutput('en', 'agent.presentation', 'Hello', null, [
       { type: 'LeftRightExpression', leftOperand: 'name', operator: 'eq', rightOperand: '"value"' },
     ]); */
@@ -53,6 +54,9 @@ describe('Fixes issues', async () => {
     expect(issues[0].description).to.equal(`This intent "agent.presentation" doesn't have any output`);
     expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
     const res = await aice.evaluate('Hello', {}, 'en');
+    expect(res.score).to.equal(1);
+    expect(res.answer).to.equal(undefined);
+    expect(res.intent).to.eql({ id: 'agent.presentation', inputIndex: 0 });
     ({ issues } = res);
     expect(issues.length).to.equal(1);
     expect(issues[0].type).to.equal('error');
