@@ -43,7 +43,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
   }
 
   async execute(lang, intents, baseContext) {
-    const { issuesFactory } = this.services || { create: () => {} };
+    const { issuesFactory } = this.services || {};
     let context = baseContext;
     const { intentid, score } = intents[0] || {}; // Best match for now
 
@@ -73,9 +73,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
           )
         : true;
       if (!conditionMatch) {
-        if (conditions) {
-          noConditionsMatch = true;
-        }
+        noConditionsMatch = true;
         return false;
       }
 
@@ -113,13 +111,13 @@ export default class SimpleOutputRenderer extends OutputRenderer {
     }
     if (this.settings.debug) {
       const issues = [];
+      // TODO handle other errors as  callable's ones
+      /* istanbul ignore next */
       if (noConditionsMatch) {
         const issue = issuesFactory.create(issuesFactory.EVALUATE_NO_CONDITION, [intentid]);
         issues.push({ ...issue, refs: [{ id: intentid }] });
       }
-      if (issues.length) {
-        return { intentid, issues };
-      }
+      return { intentid, issues };
     }
     return undefined;
   }

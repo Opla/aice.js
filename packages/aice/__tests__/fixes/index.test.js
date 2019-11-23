@@ -39,13 +39,14 @@ describe('Fixes issues', async () => {
 
   // https://github.com/Opla/aice.js/issues/81
   it('Should an intent match without any output #81', async () => {
-    const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    const aice = new AICE({
+      debug: true,
+      rules: { no_AnyOrNothing: true },
+      services: { logger: { enabled: true }, tracker: { enabled: true } },
+    });
     // Initialization
     aice.addInput('en', 'agent.presentation', 'Hello');
     aice.addInput('en', 'agent.presentation', 'Hi');
-    /* aice.addOutput('en', 'agent.presentation', 'Hello', null, [
-      { type: 'LeftRightExpression', leftOperand: 'name', operator: 'eq', rightOperand: '"value"' },
-    ]); */
     await aice.train(true);
     let issues = aice.services.tracker.getIssues();
     expect(issues.length).to.equal(1);
@@ -68,13 +69,12 @@ describe('Fixes issues', async () => {
     const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
     // Initialization
     aice.addInput('en', 'agent.presentation', 'Hello');
-    aice.addInput('en', 'agent.presentation', 'Hi');
     aice.addOutput('en', 'agent.presentation', 'Hello', null, [
       { type: 'LeftRightExpression', leftOperand: 'name', operator: 'eq', rightOperand: '"value"' },
     ]);
     await aice.train(true);
     let issues = aice.services.tracker.getIssues();
-    expect(issues.length).to.equal(0);
+    expect(issues.length).to.equal(1);
     const res = await aice.evaluate('Hello', {}, 'en');
     expect(res.score).to.equal(1);
     expect(res.answer).to.equal(undefined);
@@ -84,6 +84,59 @@ describe('Fixes issues', async () => {
     expect(issues[0].type).to.equal('error');
     expect(issues[0].message).to.equal('No condition matched');
     expect(issues[0].description).to.equal(`Output conditions for this intent "agent.presentation" don't match`);
+    expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
+  });
+  it('Should train in debug without any get one "any" issue #81', async () => {
+    const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    // Initialization
+    aice.addInput('en', 'agent.presentation', 'Hello');
+    aice.addOutput('en', 'agent.presentation', 'Hello');
+    await aice.train(true);
+    const issues = aice.services.tracker.getIssues();
+    expect(issues.length).to.equal(1);
+    expect(issues[0].type).to.equal('warning');
+    expect(issues[0].message).to.equal('No any intent found');
+    expect(issues[0].description).to.equal(
+      `An agent need an intent with an input containing an any or a anyorNothing entry`,
+    );
+    const res = await aice.evaluate('Hello', {}, 'en');
+    expect(res.score).to.equal(1);
+    expect(res.answer).to.equal('Hello');
+    expect(res.issues).to.equal(undefined);
+  });
+  it('Should train in debug disable rule: no_anyornothing issue #81', async () => {
+    const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    // Initialization
+    aice.addInput('en', 'agent.presentation', 'Hello');
+    await aice.train(true, { no_AnyOrNothing: true });
+    const issues = aice.services.tracker.getIssues();
+    expect(issues.length).to.equal(1);
+    const res = await aice.evaluate('Hello', {}, 'en');
+    expect(res.score).to.equal(1);
+    expect(res.answer).to.equal(undefined);
+    expect(res.issues.length).to.equal(1);
+  });
+
+  it('Should a any replace a matched intent without output #81', async () => {
+    const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    // Initialization
+    aice.addInput('en', 'agent.presentation', 'Hello');
+    aice.addInput('en', 'agent.any', '{{*}}');
+    aice.addOutput('en', 'agent.any', "I don't understand");
+    await aice.train(true);
+    let issues = aice.services.tracker.getIssues();
+    expect(issues.length).to.equal(1);
+    const res = await aice.evaluate('Hello', {}, 'en');
+    expect(res.score).to.equal(1);
+    expect(res.answer).to.equal("I don't understand");
+    expect(res.anyOrNothing).to.eql({ id: 'agent.any', inputIndex: 0, outputIndex: 0 });
+    expect(res.isAnyOrNothing).to.equal(undefined);
+    expect(res.intent).to.eql({ id: 'agent.presentation', inputIndex: 0 });
+    ({ issues } = res);
+    expect(issues.length).to.equal(1);
+    expect(issues[0].type).to.equal('error');
+    expect(issues[0].message).to.equal('No output linked');
+    expect(issues[0].description).to.equal(`This intent "agent.presentation" doesn't have any output`);
     expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
   });
 
@@ -112,7 +165,7 @@ describe('Fixes issues', async () => {
     aice.addOutput('en', 'agent.presentation', 'Your welcome');
     aice.addInput('en', 'agent.hello', 'Hello');
     aice.addOutput('en', 'agent.hello', 'Hello');
-    await aice.train(true);
+    await aice.train(true, { no_AnyOrNothing: true });
     let issues = aice.services.tracker.getIssues();
     expect(issues.length).to.equal(1);
     expect(issues[0].type).to.equal('warning');

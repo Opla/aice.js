@@ -27,6 +27,12 @@ export default class IntentResolver {
    */
   async train(inputs = []) {
     this.inputs = this.doTrain(inputs);
+    this.inputs.forEach((inp, i) => {
+      const text = inp.input ? inp.input.trim() : '';
+      if (text === '{{*}}' || text === '{{^}}') {
+        this.inputs[i].isAnyOrNothing = true;
+      }
+    });
   }
 
   /**
