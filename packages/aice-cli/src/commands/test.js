@@ -14,11 +14,19 @@ class Test extends Command {
 
   formatDataImported(result) {
     let output = `${this.cli.chalk.blue('result')} all data:\n`;
-    let i = 0;
-    result.forEach(d => {
-      i += 1;
-      output += i < result.length ? '├─ ' : '└─ ';
-      output += `${path.basename(d.url)} `;
+    const l = 0;
+    result.forEach((d, i) => {
+      output += i < l - 1 ? '├─ ' : '└─ ';
+      if (Array.isArray(d.url)) {
+        output += '[';
+        const ll = d.url.length;
+        d.url.forEach((u, ii) => {
+          output += `${path.basename(u)}`;
+          output += ii < ll - 1 ? ', ' : '] ';
+        });
+      } else {
+        output += `${path.basename(d.url)} `;
+      }
       output += d.isValid ? this.cli.chalk.green('✓') : this.cli.chalk.red('☓');
       output += this.cli.chalk.dim(` [${d.schema.name} v${d.schema.version || '1'}]`);
       output += i < result.length ? '\n' : '';
@@ -82,7 +90,8 @@ class Test extends Command {
             const result = await this.cli.aiceUtils.test(agent.name, testsetData);
             let passing = 0;
             let failing = 0;
-            Object.keys(result).forEach(scenario => {
+            const scs = Object.keys(result).sort();
+            scs.forEach(scenario => {
               this.cli.log(scenario);
               Object.keys(result[scenario]).forEach(story => {
                 const res = result[scenario][story];
