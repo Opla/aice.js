@@ -171,8 +171,8 @@ describe('import testset', () => {
     expect(result[1].isValid).to.equal(true);
     expect(result[1].schema.name).to.equal('aice-testset');
     expect(result[1].content.scenarios.length).to.equal(2);
-    expect(result[1].content.scenarios[0].name).to.equal('sc2');
-    expect(result[1].content.scenarios[1].name).to.equal('sc1');
+    expect(result[1].content.scenarios[0].name).to.equal('sc1');
+    expect(result[1].content.scenarios[1].name).to.equal('sc2');
     aiceUtils.parameters.fileManager = null;
   });
 });

@@ -199,22 +199,25 @@ class AIceUtils {
   async importData(data, opts = {}) {
     let result;
     try {
-      let output = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
+      const output = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
       if (!Array.isArray(output)) {
         if (output.model) {
           delete output.model;
         }
-        output = [output];
+        result = [output];
       } else {
+        result = [];
         for (const d of output) {
-          if (d.isValid) {
+          if (d.isValid && !d.merged) {
             // eslint-disable-next-line no-await-in-loop
             await d.model.merge(d, output);
             delete d.model;
+            result.push(d);
+          } else if (!d.isValid) {
+            result.push(d);
           }
         }
       }
-      result = output;
     } catch (e) {
       result = { error: e.message };
     }
