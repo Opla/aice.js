@@ -6,6 +6,7 @@
  */
 import { expect } from 'chai';
 import aiceUtils from '../../src';
+import SchemaModel from '../../src/models/SchemaModel';
 
 describe('import testset', () => {
   it('simple testset', async () => {
@@ -174,5 +175,17 @@ describe('import testset', () => {
     expect(result[1].content.scenarios[0].name).to.equal('sc1');
     expect(result[1].content.scenarios[1].name).to.equal('sc2');
     aiceUtils.parameters.fileManager = null;
+  });
+
+  it('merge different data format', async () => {
+    const model = new SchemaModel(null, null, 'name');
+    model.compare = () => true;
+    model.doMerge = () => {};
+    const data = { schema: { name: 'name' }, url: 'url1', isValid: true, content: {} };
+    model.merge(data, [
+      { schema: { name: 'name' }, url: 'url2', isValid: true, content: {} },
+      { schema: { name: 'name' }, url: ['url3'], isValid: true, content: {} },
+    ]);
+    expect(data.url).to.be.eql(['url1', 'url2', 'url3']);
   });
 });

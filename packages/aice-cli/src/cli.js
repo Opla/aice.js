@@ -49,7 +49,7 @@ class AIceCLI {
 
   done() {
     const hr = process.hrtime(this.hrstart);
-    this.log('✨ Done in %ds.', (hr[0] + hr[1] / 100000000).toFixed(2));
+    this.log('✨  Done in %ds.', (hr[0] + hr[1] / 100000000).toFixed(2));
   }
 
   interact(callback) {

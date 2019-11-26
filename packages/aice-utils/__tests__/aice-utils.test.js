@@ -21,6 +21,16 @@ describe('aice-utils', () => {
     aiceUtils.setConfiguration({});
     expect(aiceUtils.getConfiguration()).to.eql({});
   });
+
+  it('aiceUtils initSettings #dev', async () => {
+    let settings = aiceUtils.initSettings();
+    expect(settings).to.eql({});
+    settings = aiceUtils.initSettings({}, true);
+    expect(settings).to.eql({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    settings = aiceUtils.initSettings({ services: { logger: { enabled: false }, tracker: { enabled: false } } }, true);
+    expect(settings).to.eql({ debug: true, services: { logger: { enabled: false }, tracker: { enabled: false } } });
+  });
+
   it('aiceUtils.testManager.matchContext', async () => {
     const { testManager } = aiceUtils;
     let match = testManager.matchContext(null, {});

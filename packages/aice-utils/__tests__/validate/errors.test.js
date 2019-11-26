@@ -58,9 +58,8 @@ describe('validate errors', () => {
     };
     aiceUtils.setFileManager(fileManager);
     const result = await aiceUtils.validateData('directory');
-    expect(result).to.be.an('array');
     expect(result[0].isValid).to.equal(false);
-    expect(result[0].error).to.equal('wrong data format');
+    expect(result[0].error).to.equal('No content found');
     aiceUtils.parameters.fileManager = null;
   });
   it('empty directory', async () => {

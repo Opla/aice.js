@@ -29,6 +29,23 @@ class AIceUtils {
     throw new Error('No AIce class defined');
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  initSettings(_settings, debug) {
+    const settings = _settings || {};
+    if (debug) {
+      settings.debug = debug;
+      const services = settings.services || {};
+      if (!services.logger) {
+        services.logger = { enabled: true };
+      }
+      if (!services.tracker) {
+        services.tracker = { enabled: true };
+      }
+      settings.services = services;
+    }
+    return settings;
+  }
+
   getAgentsManager(opts) {
     if (!this.utils.agentsManager) {
       this.utils.agentsManager = new AgentsManager(this, opts);
@@ -74,6 +91,19 @@ class AIceUtils {
     return result;
   }
 
+  async loadFile(file, transformer, opts) {
+    const fileManager = this.getFileManager();
+    const content = await fileManager.loadAsJson(file);
+    let data;
+    if (content && !content.error) {
+      data = await transformer(content, opts);
+    } else {
+      data = { error: 'No content found', isValid: false };
+    }
+    data.url = file.filename;
+    return data;
+  }
+
   async loadData(filename, transformer, opts) {
     const fileManager = this.getFileManager();
     if (fileManager) {
@@ -82,10 +112,7 @@ class AIceUtils {
       if (file) {
         if (file.type === 'file') {
           //  load file
-          const content = await fileManager.loadAsJson(file);
-          const data = await transformer(content, opts);
-          data.url = file.filename;
-          return data;
+          return this.loadFile(file, transformer, opts);
         }
         if (file.type === 'dir') {
           // Get all sub files
@@ -93,9 +120,7 @@ class AIceUtils {
           const output = [];
           await Promise.all(
             files.map(async f => {
-              const content = await fileManager.loadAsJson(f);
-              const data = await transformer(content, opts);
-              data.url = f.filename;
+              const data = await this.loadFile(f, transformer, opts);
               output.push(data);
             }),
           );
@@ -219,7 +244,7 @@ class AIceUtils {
         }
       }
     } catch (e) {
-      result = { error: e.message };
+      result = [{ error: e.message, isValid: false }];
     }
     return result;
   }

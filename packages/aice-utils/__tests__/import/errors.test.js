@@ -10,7 +10,7 @@ import aiceUtils from '../../src';
 describe('import errors', () => {
   it('return error without data', async () => {
     const result = await aiceUtils.importData();
-    expect(result.error).to.equal('empty data');
+    expect(result[0].error).to.equal('empty data');
   });
   it('return array Unknown schema', async () => {
     const result = await aiceUtils.importData({});
