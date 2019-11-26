@@ -98,7 +98,8 @@ class AIceUtils {
     if (content && !content.error) {
       data = await transformer(content, opts);
     } else {
-      data = { error: 'No content found', isValid: false };
+      /* istanbul ignore next */
+      data = { error: content && content.error ? content.error : 'No content found', isValid: false };
     }
     data.url = file.filename;
     return data;
