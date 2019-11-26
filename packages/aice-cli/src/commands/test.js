@@ -19,7 +19,6 @@ class Test extends Command {
     const errors = [];
     result.forEach((d, i) => {
       output += i < l - 1 ? '├─ ' : '└─ ';
-      console.log('d', d);
       if (Array.isArray(d.url)) {
         output += '[';
         const ll = d.url.length;
@@ -114,8 +113,18 @@ class Test extends Command {
         let training = false;
         if (agent) {
           try {
-            await agentsManager.train({ name: agent.name });
+            const issues = await agentsManager.train({ name: agent.name });
+            let output = '';
+            issues.forEach((issue, i) => {
+              output += issue.type === 'warning' ? chalk.yellow(' warning') : `${chalk.red(' error')}  `;
+              output += chalk.dim(` - ${issue.description} `);
+              output += i < issues.length ? '\n' : '';
+            });
             this.cli.log(`${chalk.dim('[3/4]')} 💪 ${chalk.green(' success')} Agent "${agent.name}" trained`);
+            if (issues.length) {
+              this.cli.log(chalk.blue('issues found'));
+              this.cli.log(output);
+            }
             training = true;
           } catch (e) {
             this.cli.error(`${chalk.dim('[3/4]')} 💪 ${chalk.red(' error')} Agent "${agent.name}" training`);

@@ -130,7 +130,7 @@ export default class AgentsManager {
         });
       });
     }
-    await engine.train(dataset);
+    return engine.train(dataset);
   }
 
   async setContext(name, conversationId, context = {}) {

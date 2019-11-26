@@ -211,7 +211,9 @@ export default class AICE {
       this.inputs.forEach((input, i) => {
         delete this.inputs[i].done;
       });
+      return this.services.tracker.getIssues();
     }
+    return [];
   }
 
   /**
