@@ -159,11 +159,16 @@ export default class AgentsManager {
     const language = agent.language || engine.settings.defaultLanguage;
     const response = await engine.evaluate(utterance, currentContext || {}, language);
     await agent.saveContext(conversationId, response.context);
-    return {
+    const ret = {
       message: {
         text: response.score > 0 ? response.answer : 'No response',
       },
       debug: { intent: { name: response.intent } },
     };
+    /* istanbul ignore next */
+    if (response.issues) {
+      ret.issues = response.issues;
+    }
+    return ret;
   }
 }

@@ -61,6 +61,17 @@ class Test extends Command {
     return output;
   }
 
+  formatIssues(issues) {
+    const { chalk } = this.cli;
+    let output = '';
+    issues.forEach((issue, i) => {
+      output += issue.type === 'warning' ? chalk.yellow(' warning') : `${chalk.red(' error')}  `;
+      output += chalk.dim(` - ${issue.description} `);
+      output += i < issues.length ? '\n' : '';
+    });
+    return output;
+  }
+
   async execute(argv) {
     super.execute(argv);
     const { chalk } = this.cli;
@@ -114,15 +125,10 @@ class Test extends Command {
         if (agent) {
           try {
             const issues = await agentsManager.train({ name: agent.name });
-            let output = '';
-            issues.forEach((issue, i) => {
-              output += issue.type === 'warning' ? chalk.yellow(' warning') : `${chalk.red(' error')}  `;
-              output += chalk.dim(` - ${issue.description} `);
-              output += i < issues.length ? '\n' : '';
-            });
+            const output = this.formatIssues(issues);
             this.cli.log(`${chalk.dim('[3/4]')} 💪 ${chalk.green(' success')} Agent "${agent.name}" trained`);
             if (issues.length) {
-              this.cli.log(chalk.blue('issues found'));
+              this.cli.log(chalk.blue('some issues found'));
               this.cli.log(output);
             }
             training = true;
@@ -155,6 +161,10 @@ class Test extends Command {
                   output += chalk.red(`${failing})`);
                   output += chalk.dim(`${story}`);
                   output += chalk.red(` [ ${res.result} ]`);
+                  if (res.issues) {
+                    output += '\n';
+                    output += this.formatIssues(res.issues);
+                  }
                 }
                 this.cli.log(output);
               });

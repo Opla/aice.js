@@ -242,7 +242,7 @@ describe('SimpleOutputRenderer', () => {
       expect(err).to.have.property('message', 'AICE executeCallable - no callablesManager defined');
     });
   });
-  it('Should execute answers - faulty callableManager #dev', async () => {
+  it('Should execute answers - faulty callableManager', async () => {
     const renderer = new SimpleOutputRenderer({
       debug: true,
       outputs: [
