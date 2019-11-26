@@ -242,6 +242,28 @@ describe('SimpleOutputRenderer', () => {
       expect(err).to.have.property('message', 'AICE executeCallable - no callablesManager defined');
     });
   });
+  it('Should execute answers - faulty callableManager', async () => {
+    const renderer = new SimpleOutputRenderer({
+      debug: true,
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            {
+              lang: 'fr',
+              tokenizedOutput: tokenizerOutput.tokenize('{{body}}'),
+              preCallables: [{ name: 'function' }],
+            },
+          ],
+        },
+      ],
+    });
+
+    const res = await renderer.execute('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(res.issues[0].type).to.equal('error');
+    expect(res.issues[0].code).to.equal(4);
+    expect(res.issues[0].message).to.equal('No callablesManager defined');
+  });
 
   it('Should execute answers - return context', async () => {
     const renderer = new SimpleOutputRenderer({

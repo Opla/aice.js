@@ -22,4 +22,26 @@ export default class SchemaModel {
   async buildData(content) {
     return { content, schema: { name: this.name }, isValid: true, model: this };
   }
+
+  async merge(_data, _list) {
+    const data = _data;
+    const { content } = data;
+    content.isThis = true;
+    const list = _list;
+    list.forEach((d, index) => {
+      if (d.isValid && !d.content.isThis && d.schema.name === this.name && this.compare(d, content)) {
+        list[index].merged = true;
+        this.doMerge(d, content);
+        if (!Array.isArray(data.url)) {
+          data.url = [data.url];
+        }
+        if (Array.isArray(d.url)) {
+          data.url.push(...d.url);
+        } else {
+          data.url.push(d.url);
+        }
+      }
+    });
+    delete content.isThis;
+  }
 }

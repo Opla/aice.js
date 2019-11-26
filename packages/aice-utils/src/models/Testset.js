@@ -16,25 +16,18 @@ export default class Testset extends SchemaModel {
     return !!(data.name && data.scenarios);
   }
 
-  async merge(_data, list) {
-    const data = _data;
-    const { content } = data;
-    content.isThis = true;
-    const l = [...list];
-    l.forEach((d, index) => {
-      if (d.isValid && !d.content.isThis && d.schema.name === this.name && content.name === d.content.name) {
-        content.scenarios = d.content.scenarios.reduce(
-          (scenarios, scenario) =>
-            scenarios.findIndex(i => i.name === scenario.name) > -1 ? scenarios : [...scenarios, scenario],
-          content.scenarios,
-        );
-        if (!Array.isArray(data.url)) {
-          data.url = [data.url];
-        }
-        data.url.push(d.url);
-        list.splice(index, 1);
-      }
-    });
-    delete content.isThis;
+  // eslint-disable-next-line class-methods-use-this
+  compare(d, content) {
+    return content.name === d.content.name;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  doMerge(d, content) {
+    // eslint-disable-next-line no-param-reassign
+    content.scenarios = d.content.scenarios.reduce(
+      (scenarios, scenario) =>
+        scenarios.findIndex(i => i.name === scenario.name) > -1 ? scenarios : [...scenarios, scenario],
+      content.scenarios,
+    );
   }
 }

@@ -65,8 +65,12 @@ describe('Fixes issues', async () => {
     expect(issues[0].description).to.equal(`This intent "agent.presentation" doesn't have any output`);
     expect(issues[0].refs).to.eql([{ id: 'agent.presentation' }]);
   });
-  it('Should an intent match without any output #81', async () => {
-    const aice = new AICE({ debug: true, services: { logger: { enabled: true }, tracker: { enabled: true } } });
+  it('Should an intent match without any output #81b', async () => {
+    const aice = new AICE({
+      defaultLanguage: 'en',
+      debug: true,
+      services: { logger: { enabled: true }, tracker: { enabled: true } },
+    });
     // Initialization
     aice.addInput('en', 'agent.presentation', 'Hello');
     aice.addOutput('en', 'agent.presentation', 'Hello', null, [

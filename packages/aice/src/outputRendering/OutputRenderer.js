@@ -4,9 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import issuesFactory from '../issues';
 
 export default class OutputRenderer {
-  constructor({ name, outputs = [], services, ...settings } = {}) {
+  constructor({ name, outputs = [], services = {}, ...settings } = {}) {
     if (!name) {
       throw new Error('Invalid OutputRenderer constructor - Missing name');
     }
@@ -14,6 +15,20 @@ export default class OutputRenderer {
     this.settings = settings;
     this.name = name;
     this.outputs = outputs;
+    if (this.settings.debug) {
+      if (this.services.tracker) {
+        this.tracker = this.services.tracker;
+      } else {
+        this.issues = [];
+        this.tracker = {
+          addIssues: i => {
+            this.issues.push(i);
+            return i;
+          },
+        };
+      }
+      this.issuesFactory = this.services.issuesFactory || issuesFactory;
+    }
   }
 
   async train(outputs) {

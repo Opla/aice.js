@@ -14,9 +14,18 @@ import buildServices from './services';
 import issuesFactory from './issues';
 import { Utils } from './utils';
 
+const defaultLanguage = 'en';
+const defaultThreshold = 0.75;
+
 export default class AICE {
-  constructor({ services = {}, ...settings } = { defaultLanguage: 'en' }) {
+  constructor({ services = {}, ...settings } = {}) {
     this.settings = settings;
+    if (!this.settings.defaultLanguage) {
+      this.settings.defaultLanguage = defaultLanguage;
+    }
+    if (!this.settings.threshold) {
+      this.settings.threshold = defaultThreshold;
+    }
     this.services = buildServices(services);
     this.services.issuesFactory = issuesFactory;
     this.settings.services = this.services;
@@ -202,7 +211,9 @@ export default class AICE {
       this.inputs.forEach((input, i) => {
         delete this.inputs[i].done;
       });
+      return this.services.tracker.getIssues();
     }
+    return [];
   }
 
   /**
@@ -220,7 +231,6 @@ export default class AICE {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
     const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);
-
     // Intents Resolvers
     const results = await this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
     const r = results && results[0] ? results[0] : {};
@@ -251,13 +261,13 @@ export default class AICE {
         [aon] = this.inputs.filter(rs => rs.isAnyOrNothing && rs.topic === topic && rs.lang === lang);
         /* istanbul ignore next */
         if (aon) {
-          an = await this.OutputRenderingManager.execute(lang, [aon], ctx);
+          an = (await this.OutputRenderingManager.execute(lang, [aon], ctx)) || {};
           ({ renderResponse } = an);
         }
         if (!renderResponse) {
           [aon] = this.inputs.filter(rs => rs.isAnyOrNothing && rs.topic === topic && rs.lang === lang);
           if (aon) {
-            an = await this.OutputRenderingManager.execute(lang, [aon], ctx);
+            an = (await this.OutputRenderingManager.execute(lang, [aon], ctx)) || {};
             ({ renderResponse } = an);
           }
         }

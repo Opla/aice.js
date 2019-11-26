@@ -29,6 +29,23 @@ class AIceUtils {
     throw new Error('No AIce class defined');
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  initSettings(_settings, debug) {
+    const settings = _settings || {};
+    if (debug) {
+      settings.debug = debug;
+      const services = settings.services || {};
+      if (!services.logger) {
+        services.logger = { enabled: true };
+      }
+      if (!services.tracker) {
+        services.tracker = { enabled: true };
+      }
+      settings.services = services;
+    }
+    return settings;
+  }
+
   getAgentsManager(opts) {
     if (!this.utils.agentsManager) {
       this.utils.agentsManager = new AgentsManager(this, opts);
@@ -74,6 +91,20 @@ class AIceUtils {
     return result;
   }
 
+  async loadFile(file, transformer, opts) {
+    const fileManager = this.getFileManager();
+    const content = await fileManager.loadAsJson(file);
+    let data;
+    if (content && !content.error) {
+      data = await transformer(content, opts);
+    } else {
+      /* istanbul ignore next */
+      data = { error: content && content.error ? content.error : 'No content found', isValid: false };
+    }
+    data.url = file.filename;
+    return data;
+  }
+
   async loadData(filename, transformer, opts) {
     const fileManager = this.getFileManager();
     if (fileManager) {
@@ -82,10 +113,7 @@ class AIceUtils {
       if (file) {
         if (file.type === 'file') {
           //  load file
-          const content = await fileManager.loadAsJson(file);
-          const data = await transformer(content, opts);
-          data.url = file.filename;
-          return data;
+          return this.loadFile(file, transformer, opts);
         }
         if (file.type === 'dir') {
           // Get all sub files
@@ -93,9 +121,7 @@ class AIceUtils {
           const output = [];
           await Promise.all(
             files.map(async f => {
-              const content = await fileManager.loadAsJson(f);
-              const data = await transformer(content, opts);
-              data.url = f.filename;
+              const data = await this.loadFile(f, transformer, opts);
               output.push(data);
             }),
           );
@@ -199,24 +225,27 @@ class AIceUtils {
   async importData(data, opts = {}) {
     let result;
     try {
-      let output = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
+      const output = await this.transformData(data, async (d, o) => this.doImport(d, o), opts);
       if (!Array.isArray(output)) {
         if (output.model) {
           delete output.model;
         }
-        output = [output];
+        result = [output];
       } else {
+        result = [];
         for (const d of output) {
-          if (d.isValid) {
+          if (d.isValid && !d.merged) {
             // eslint-disable-next-line no-await-in-loop
             await d.model.merge(d, output);
             delete d.model;
+            result.push(d);
+          } else if (!d.isValid) {
+            result.push(d);
           }
         }
       }
-      result = output;
     } catch (e) {
-      result = { error: e.message };
+      result = [{ error: e.message, isValid: false }];
     }
     return result;
   }

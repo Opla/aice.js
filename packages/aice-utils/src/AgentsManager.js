@@ -90,7 +90,7 @@ export default class AgentsManager {
       });
     }
     intents.forEach(intent => {
-      const language = intent.language || dataset.language || engine.settings.defaultLanguage;
+      const language = intent.language || dataset.language || agent.language || engine.settings.defaultLanguage;
       intent.input.forEach(input => {
         engine.addInput(language, intent.name, input.text, [], intent.topic);
       });
@@ -106,7 +106,7 @@ export default class AgentsManager {
               leftOperand: this.parseValue(conditionOutput.name),
               rightOperand: this.parseValue(conditionOutput.value),
             };
-            engine.addOutput('fr', intent.name, conditionOutput.text, undefined, [condition], outputCallable);
+            engine.addOutput(language, intent.name, conditionOutput.text, undefined, [condition], outputCallable);
           });
         }
       });
@@ -130,7 +130,7 @@ export default class AgentsManager {
         });
       });
     }
-    await engine.train(dataset);
+    return engine.train(dataset);
   }
 
   async setContext(name, conversationId, context = {}) {
@@ -156,13 +156,19 @@ export default class AgentsManager {
       throw new Error("Can't evaluate this utterance without an engine");
     }
     const currentContext = await agent.getContext(conversationId);
-    const response = await engine.evaluate(utterance, currentContext || {});
+    const language = agent.language || engine.settings.defaultLanguage;
+    const response = await engine.evaluate(utterance, currentContext || {}, language);
     await agent.saveContext(conversationId, response.context);
-    return {
+    const ret = {
       message: {
         text: response.score > 0 ? response.answer : 'No response',
       },
       debug: { intent: { name: response.intent } },
     };
+    /* istanbul ignore next */
+    if (response.issues) {
+      ret.issues = response.issues;
+    }
+    return ret;
   }
 }

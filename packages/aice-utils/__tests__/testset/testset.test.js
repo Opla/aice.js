@@ -35,7 +35,7 @@ class AICEClass {
       throw new Error('Not trained');
     }
     if (utterance === 'Yabadoo') {
-      return { score: 0, answer: utterance, context: {} };
+      return { score: 0, answer: utterance, context: {}, issues: [{ message: 'error' }] };
     }
     return { score: 0.75, answer: utterance, context: {} };
   }
@@ -128,7 +128,7 @@ describe('complete tests', () => {
               { name: 'bot', type: 'robot' },
             ],
             dialogs: [
-              { from: 'user', say: 'hello' },
+              { from: 'user', say: 'Yabadoo' },
               { from: 'bot', say: 'hello' },
             ],
           },
@@ -148,7 +148,7 @@ describe('complete tests', () => {
       ],
     },
   };
-  it('simple test', async () => {
+  it('simple test #dev', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
     await agentsManager.train(dataset);

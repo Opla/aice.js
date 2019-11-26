@@ -10,6 +10,7 @@ const codes = {
   AGENT_EXPECT_ANY: 1,
   INTENT_NO_OUTPUT: 2,
   EVALUATE_NO_CONDITION: 3,
+  EVALUATE_NO_CALLABLEMANAGER: 4,
 };
 
 const refs = {
@@ -17,6 +18,7 @@ const refs = {
   AGENT_EXPECT_ANY: 'AGENT_EXPECT_ANY',
   INTENT_NO_OUTPUT: 'INTENT_NO_OUTPUT',
   EVALUATE_NO_CONDITION: 'EVALUATE_NO_CONDITION',
+  EVALUATE_NO_CALLABLEMANAGER: 'EVALUATE_NO_CALLABLEMANAGER',
 };
 
 const issues = {
@@ -62,6 +64,17 @@ const issues = {
     build: (template, p) => ({
       ...template,
       description: `Output conditions for this intent "${p[0]}" don't match`,
+    }),
+  },
+  EVALUATE_NO_CALLABLEMANAGER: {
+    template: {
+      type: 'error',
+      code: codes.EVALUATE_NO_CALLABLEMANAGER,
+      message: 'No callablesManager defined',
+    },
+    build: template => ({
+      ...template,
+      description: 'AICE executeCallable - no callablesManager defined',
     }),
   },
 };

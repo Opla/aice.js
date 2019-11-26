@@ -63,30 +63,17 @@ export default class OpennlxV2 extends SchemaModel {
     return { content, schema: { name: this.name, version: this.version }, isValid: true, model: this };
   }
 
-  async merge(_data, list) {
-    const data = _data;
-    const { content } = data;
-    content.isThis = true;
-    const l = [...list];
-    l.forEach((d, index) => {
-      if (
-        d.isValid &&
-        !d.content.isThis &&
-        d.schema.name === this.name &&
-        d.schema.version === this.version &&
-        content.name === d.content.name
-      ) {
-        content.intents = d.content.intents.reduce(
-          (intents, intent) => (intents.findIndex(i => i.name === intent.name) > -1 ? intents : [...intents, intent]),
-          content.intents,
-        );
-        if (!Array.isArray(data.url)) {
-          data.url = [data.url];
-        }
-        data.url.push(d.url);
-        list.splice(index, 1);
-      }
-    });
-    delete content.isThis;
+  // eslint-disable-next-line class-methods-use-this
+  compare(d, content) {
+    return d.schema.version === this.version && content.name === d.content.name;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  doMerge(d, content) {
+    // eslint-disable-next-line no-param-reassign
+    content.intents = d.content.intents.reduce(
+      (intents, intent) => (intents.findIndex(i => i.name === intent.name) > -1 ? intents : [...intents, intent]),
+      content.intents,
+    );
   }
 }

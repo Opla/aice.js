@@ -4,7 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { ConditionEvaluator, Renderer, Utils } from '../utils';
 import OutputRenderer from './OutputRenderer';
 
@@ -33,6 +32,8 @@ export default class SimpleOutputRenderer extends OutputRenderer {
           ctx[callable.value] = resp.renderResponse;
         } else if (this.callablesManager) {
           ctx = await this.callablesManager(callable, context, lang);
+        } else if (this.settings.debug) {
+          this.tracker.addIssues(this.issuesFactory.create(this.issuesFactory.EVALUATE_NO_CALLABLEMANAGER));
         } else {
           throw new Error('AICE executeCallable - no callablesManager defined');
         }
@@ -42,8 +43,16 @@ export default class SimpleOutputRenderer extends OutputRenderer {
     return context;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  doConditions(conditions, context) {
+    return conditions.reduce(
+      (accumulator, condition) => accumulator && ConditionEvaluator.evaluate(condition, context),
+      true,
+    );
+  }
+
   async execute(lang, intents, baseContext) {
-    const { issuesFactory } = this.services || {};
+    const issuesFactory = this.services.issuesFactory || {};
     let context = baseContext;
     const { intentid, score } = intents[0] || {}; // Best match for now
 
@@ -66,12 +75,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
       }
 
       // Check Conditions
-      const conditionMatch = conditions
-        ? conditions.reduce(
-            (accumulator, condition) => accumulator && ConditionEvaluator.evaluate(condition, context),
-            true,
-          )
-        : true;
+      const conditionMatch = conditions && conditions.length ? this.doConditions(conditions, context) : true;
       if (!conditionMatch) {
         noConditionsMatch = true;
         return false;
@@ -110,7 +114,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
       return { intentid, score, renderResponse, outputIndex, context };
     }
     if (this.settings.debug) {
-      const issues = [];
+      const issues = this.issues || [];
       // TODO handle other errors as  callable's ones
       /* istanbul ignore next */
       if (noConditionsMatch) {

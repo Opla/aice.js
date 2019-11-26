@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 export default class Agent {
-  constructor({ name, avatar, context, ...opts }) {
+  constructor({ name, avatar, language, context, ...opts }) {
     this.name = name;
     this.avatar = avatar;
+    this.language = language;
     // Global context
     this.context = context;
     this.conversations = {};

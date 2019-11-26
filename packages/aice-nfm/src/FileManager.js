@@ -131,7 +131,7 @@ export default class FileManager {
         try {
           result = JSON.parse(data);
         } catch (e) {
-          result = { error: 'Not a valid JSON' };
+          result = { error: `Not a valid JSON : ${e.message}` };
         }
       }
     } else {

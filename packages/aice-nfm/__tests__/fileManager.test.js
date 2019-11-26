@@ -68,7 +68,7 @@ describe('FileManager', () => {
     const fm = new FileManager();
     const file = await fm.getFile('./__tests__/dataset/notvalid.json');
     const json = await fm.loadAsJson(file);
-    expect(json.error).to.equals('Not a valid JSON');
+    expect(json.error).to.equals('Not a valid JSON : Unexpected token o in JSON at position 2');
   });
   it('loadAsJson faulty file', async () => {
     const fm = new FileManager();

@@ -51,6 +51,7 @@ export default class TestsManager {
             results[scenario.name][story.name] = {};
             const { actors, name: conversationId } = story;
             let response = null;
+            let issues;
             let context = {};
             aManager.setContext(agentName, conversationId, story.context);
             // eslint-disable-next-line guard-for-in
@@ -60,12 +61,14 @@ export default class TestsManager {
                 error = `Not valid user from "${message.from}"`;
                 break;
               } else if (user.type === 'human' && !response) {
+                issues = null;
                 // eslint-disable-next-line no-await-in-loop
                 response = await aManager.evaluate(agentName, conversationId, message.say);
                 // eslint-disable-next-line no-await-in-loop
                 context = await aManager.getContext(agentName, conversationId);
                 ok = true;
               } else if (user.type === 'robot' && response && this.matchContext(context, message.context)) {
+                issues = response.issues;
                 if (response.message.text === message.say) {
                   response = null;
                   ok = true;
@@ -86,6 +89,10 @@ export default class TestsManager {
               results[scenario.name][story.name].result = 'ok';
             }
             results[scenario.name][story.name].count = count;
+            /* istanbul ignore next */
+            if (issues) {
+              results[scenario.name][story.name].issues = [...issues];
+            }
           }
         }
       }
