@@ -46,12 +46,26 @@
           "type": "string",
           "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
         },
+        "id": {
+          "type": "string",
+          "pattern": "^([a-z]|[A-Z]|-|[0-9])+"
+        },
         "description": {
           "type": "string"
         },
         "context": {
           "type": "object",
           "default": {}
+        },
+        "next": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "subStory": {
+          "type": "boolean"
         },
         "actors": {
           "type": "array",
