@@ -9,7 +9,11 @@ import Command from './Command';
 
 class Test extends Command {
   constructor(cli) {
-    super(cli, 'test', 'test [filename] [testset]', 'Test a chatbot using a testset.');
+    super(cli, 'test', 'test [filename]', 'Test a chatbot using a testset.');
+    this.builder = [
+      { name: 'scenario', description: 'scenarioName to test' },
+      { name: 'story', description: 'storyName to test' },
+    ];
   }
 
   formatDataImported(result) {
@@ -143,7 +147,7 @@ class Test extends Command {
         if (training) {
           try {
             this.cli.log(`${chalk.dim('[4/4] 💬  -------')} Tests "${testsetData.name}"`);
-            const result = await this.cli.aiceUtils.test(agent.name, testsetData);
+            const result = await this.cli.aiceUtils.test(agent.name, testsetData, argv.scenario, argv.story);
             let passing = 0;
             let failing = 0;
             const scs = Object.keys(result).sort();
