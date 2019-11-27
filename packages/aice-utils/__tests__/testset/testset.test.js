@@ -136,6 +136,52 @@ describe('complete tests', () => {
       },
     ],
   };
+  const testsetC = {
+    name: 'test',
+    scenarios: [
+      {
+        name: 'sc1',
+        stories: [
+          {
+            name: 'story1',
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
+            next: ['story2', 'story3'],
+          },
+          {
+            name: 'story2',
+            subStory: true,
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
+          },
+          {
+            name: 'story3',
+            subStory: true,
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
+          },
+        ],
+      },
+    ],
+  };
   const dataset = {
     name: 'bot',
     dataset: {
@@ -148,7 +194,7 @@ describe('complete tests', () => {
       ],
     },
   };
-  it('simple test #dev', async () => {
+  it('simple test', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
     await agentsManager.train(dataset);
@@ -163,6 +209,18 @@ describe('complete tests', () => {
     const response = await aiceUtils.test('bot', testsetB, 'scA', 'storyA2');
     expect(response.scA.storyA2.result).to.be.equal('ok');
     expect(response.scA.storyA2.count).to.be.equal(2);
+  });
+  it('substory test', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    const agentsManager = aiceUtils.getAgentsManager();
+    await agentsManager.train(dataset);
+    const response = await aiceUtils.test('bot', testsetC);
+    expect(response.sc1.story1.result).to.be.equal('ok');
+    expect(response.sc1.story1.count).to.be.equal(2);
+    expect(response.sc1['story1 > story2'].result).to.be.equal('ok');
+    expect(response.sc1['story1 > story2'].count).to.be.equal(4);
+    expect(response.sc1['story1 > story3'].result).to.be.equal('ok');
+    expect(response.sc1['story1 > story3'].count).to.be.equal(4);
   });
 });
 
@@ -253,5 +311,34 @@ describe('errors test', () => {
     const response = await aiceUtils.test('bot', testsetC);
     expect(response.sc1.story1.result).to.be.equal('Error : Unexpected flow "hello"');
     expect(response.sc1.story1.count).to.be.equal(0);
+  });
+  it("Can't find subStory", async () => {
+    const testsetC = {
+      name: 'test',
+      scenarios: [
+        {
+          name: 'sc1',
+          stories: [
+            {
+              name: 'story1',
+              actors: [
+                { name: 'user', type: 'dog' },
+                { name: 'bot', type: 'robot' },
+              ],
+              dialogs: [
+                { from: 'user', say: 'hello' },
+                { from: 'user', say: 'Dooh' },
+              ],
+              next: ['substoryA'],
+            },
+          ],
+        },
+      ],
+    };
+    try {
+      await aiceUtils.test('bot', testsetC);
+    } catch (error) {
+      expect(error.message).to.be.equal("Can't find this substory : substoryA");
+    }
   });
 });
