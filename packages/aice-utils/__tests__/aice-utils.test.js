@@ -22,7 +22,7 @@ describe('aice-utils', () => {
     expect(aiceUtils.getConfiguration()).to.eql({});
   });
 
-  it('aiceUtils initSettings #dev', async () => {
+  it('aiceUtils initSettings', async () => {
     let settings = aiceUtils.initSettings();
     expect(settings).to.eql({});
     settings = aiceUtils.initSettings({}, true);
@@ -44,7 +44,7 @@ describe('aice-utils', () => {
   });
   it('aiceUtils setAIceClass', async () => {
     aiceUtils.setAIceClass(AICEClass);
-    expect(aiceUtils.utils.AIceClass).to.eql(AICEClass);
+    expect(aiceUtils.services.AIceClass).to.eql(AICEClass);
   });
   it('aiceUtils createAIceInstance', async () => {
     aiceUtils.setAIceClass(AICEClass);
@@ -64,7 +64,7 @@ describe('aice-utils', () => {
     };
     aiceUtils.setFileManager(fileManager);
     expect(aiceUtils.getFileManager()).to.eql(fileManager);
-    aiceUtils.utils.fileManager = null;
+    aiceUtils.services.fileManager = null;
   });
   it('aiceUtils faulty setFileManager', async () => {
     expect(() => {
@@ -72,7 +72,7 @@ describe('aice-utils', () => {
     }).to.throw('Invalid FileManager');
   });
   it('aiceUtils no FileManager', async () => {
-    aiceUtils.utils.fileManager = null;
+    aiceUtils.services.fileManager = null;
     try {
       await aiceUtils.transformData('filename');
     } catch (error) {
@@ -80,7 +80,7 @@ describe('aice-utils', () => {
     }
   });
   it('aiceUtils no transformer', async () => {
-    aiceUtils.utils.fileManager = null;
+    aiceUtils.services.fileManager = null;
     const res = await aiceUtils.transformData({ name: 'value' });
     expect(res.name).to.be.equal('value');
   });
@@ -100,6 +100,6 @@ describe('aice-utils', () => {
     aiceUtils.setFileManager(fileManager);
     const res = await aiceUtils.loadData('archive.zip', d => d, {});
     expect(res[0].name).to.be.equal('value');
-    aiceUtils.utils.fileManager = null;
+    aiceUtils.services.fileManager = null;
   });
 });

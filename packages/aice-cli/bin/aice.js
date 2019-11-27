@@ -18,6 +18,7 @@
   let cli;
   let aiceUtils;
   let aice;
+  let fetch;
   const output = console;
 
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
@@ -30,6 +31,8 @@
       cli = d.default;
       d = await import('../../aice/dist');
       aice = d.AICE;
+      d = await import('node-fetch');
+      fetch = d.fetch;
     } catch (e) {
       //
     }
@@ -47,6 +50,8 @@
       // eslint-disable-next-line import/no-dynamic-require
       d = require(path.join(__dirname, '../commonjs/cli'));
       cli = d.default;
+      d = require('node-fetch');
+      fetch = d.default;
     } catch (e) {
       //
       output.error(e);
@@ -64,7 +69,7 @@
   if (cli) {
     // Grab arguments
     const [, , ...args] = process.argv;
-    cli(args, output, process.exit, { FileManager: fm, aiceUtils, aice });
+    cli(args, output, process.exit, { FileManager: fm, aiceUtils, aice, fetch });
   } else {
     output.error(`AIce can't be started`);
   }

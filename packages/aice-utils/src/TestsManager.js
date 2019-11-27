@@ -6,8 +6,8 @@
  */
 
 export default class TestsManager {
-  constructor(utils) {
-    this.utils = utils;
+  constructor(services) {
+    this.services = services;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -32,7 +32,7 @@ export default class TestsManager {
   }
 
   async runStory(conversationId, agentName, dialogs, actors, storyContext) {
-    const aManager = this.utils.getAgentsManager();
+    const aManager = this.services.getAgentsManager();
     let ok = false;
     let error;
     let count = 0;
@@ -90,7 +90,7 @@ export default class TestsManager {
   }
 
   async test(agentName, testset, scenarioName, storyName) {
-    const aManager = this.utils.getAgentsManager();
+    const aManager = this.services.getAgentsManager();
     const agent = aManager.getAgent(agentName);
     if (!agent) {
       throw new Error("Can't find an agent for this test");
@@ -102,14 +102,16 @@ export default class TestsManager {
         for (const story of scenario.stories) {
           if (!story.subStory && (story.name === storyName || !storyName)) {
             const { actors, dialogs, context: storyContext, name: conversationId } = story;
-            // eslint-disable-next-line no-await-in-loop
-            results[scenario.name][story.name] = await this.runStory(
-              conversationId,
-              agentName,
-              dialogs,
-              actors,
-              storyContext,
-            );
+            if (!story.disabled && dialogs.length) {
+              // eslint-disable-next-line no-await-in-loop
+              results[scenario.name][story.name] = await this.runStory(
+                conversationId,
+                agentName,
+                dialogs,
+                actors,
+                storyContext,
+              );
+            }
             if (story.next) {
               for (const subStoryName of story.next) {
                 const subStory = this.findSubStory(scenario.stories, subStoryName);
@@ -118,7 +120,7 @@ export default class TestsManager {
                 }
                 // Merge 2 dialogs
                 const d = [...dialogs, ...subStory.dialogs];
-                const name = `${story.name} > ${subStoryName}`;
+                const name = `${story.name} => ${subStoryName}`;
                 // eslint-disable-next-line no-await-in-loop
                 results[scenario.name][name] = await this.runStory(name, agentName, d, actors, storyContext);
               }

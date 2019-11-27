@@ -48,6 +48,7 @@
     "aice-utils": "^0.6.3",
     "chalk": "^3.0.0",
     "node-emoji": "^1.10.0",
+    "node-fetch": "^2.6.0",
     "yargs": "^14.2.0"
   },
   "gitHead": "e8202fd9ef222725709f239d9a962dc71540bfc1"

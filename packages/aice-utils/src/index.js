@@ -12,18 +12,25 @@ import TestsManager from './TestsManager';
 class AIceUtils {
   constructor() {
     this.parameters = {};
-    this.utils = {};
+    this.services = {};
     this.schemaManager = new SchemaModelsManager(this);
     this.testManager = new TestsManager(this);
   }
 
   setAIceClass(AIceClass) {
-    this.utils.AIceClass = AIceClass;
+    this.services.AIceClass = AIceClass;
+  }
+
+  setServices(services) {
+    Object.keys(services).forEach(name => {
+      this.services[name] = services[name];
+      console.log('service=', services[name]);
+    });
   }
 
   createAIceInstance(opts) {
-    if (this.utils.AIceClass) {
-      const { AIceClass } = this.utils;
+    if (this.services.AIceClass) {
+      const { AIceClass } = this.services;
       return new AIceClass(opts);
     }
     throw new Error('No AIce class defined');
@@ -47,22 +54,22 @@ class AIceUtils {
   }
 
   getAgentsManager(opts) {
-    if (!this.utils.agentsManager) {
-      this.utils.agentsManager = new AgentsManager(this, opts);
+    if (!this.services.agentsManager) {
+      this.services.agentsManager = new AgentsManager(this, opts);
     }
-    return this.utils.agentsManager;
+    return this.services.agentsManager;
   }
 
   setFileManager(fileManager) {
     if (fileManager && typeof fileManager.getFile === 'function' && typeof fileManager.loadAsJson === 'function') {
-      this.utils.fileManager = fileManager;
+      this.services.fileManager = fileManager;
     } else {
       throw new Error('Invalid FileManager');
     }
   }
 
   getFileManager() {
-    return this.utils.fileManager;
+    return this.services.fileManager;
   }
 
   setConfiguration(config) {
