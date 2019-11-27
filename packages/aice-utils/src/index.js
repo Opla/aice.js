@@ -24,7 +24,6 @@ class AIceUtils {
   setServices(services) {
     Object.keys(services).forEach(name => {
       this.services[name] = services[name];
-      console.log('service=', services[name]);
     });
   }
 
