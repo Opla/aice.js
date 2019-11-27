@@ -177,6 +177,19 @@ describe('complete tests', () => {
               { from: 'user', say: 'hello' },
               { from: 'bot', say: 'hello' },
             ],
+            next: ['story4'],
+          },
+          {
+            name: 'story4',
+            subStory: true,
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
           },
         ],
       },
@@ -210,7 +223,7 @@ describe('complete tests', () => {
     expect(response.scA.storyA2.result).to.be.equal('ok');
     expect(response.scA.storyA2.count).to.be.equal(2);
   });
-  it('substory test', async () => {
+  it('substory test #dev', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
     await agentsManager.train(dataset);
@@ -221,6 +234,8 @@ describe('complete tests', () => {
     expect(response.sc1['story1 => story2'].count).to.be.equal(4);
     expect(response.sc1['story1 => story3'].result).to.be.equal('ok');
     expect(response.sc1['story1 => story3'].count).to.be.equal(4);
+    expect(response.sc1['story1 => story3 => story4'].result).to.be.equal('ok');
+    expect(response.sc1['story1 => story3 => story4'].count).to.be.equal(6);
   });
 });
 
