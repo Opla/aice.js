@@ -9,7 +9,7 @@ import { IntentsResolverManager } from './intentResolvers';
 import { OutputRenderingManager } from './outputRendering';
 import { InputExpressionTokenizer, OutputExpressionTokenizer } from './streamTransformers/expression';
 import { NamedEntityTokenizer } from './streamTransformers/tokenizer';
-import { NERManager, SystemEntities } from './streamTransformers';
+import { NERManager, SystemEntities, EnumEntity } from './streamTransformers';
 import buildServices from './services';
 import issuesFactory from './issues';
 import { Utils } from './utils';
@@ -82,9 +82,14 @@ export default class AICE {
    * Adds an named entity.
    * @param {NamedEntity} namedEntity Devivated NamedEntity class.
    */
-  addEntity(namedEntity) {
-    if (this.NERManager.entities.filter(e => e.name === namedEntity.name).length === 0)
-      this.NERManager.addNamedEntity(namedEntity);
+  addEntity(namedEntity, type) {
+    if (this.NERManager.entities.filter(e => e.name === namedEntity.name).length === 0) {
+      if (type === 'enum') {
+        this.NERManager.addNamedEntity(new EnumEntity(namedEntity));
+      } else {
+        this.NERManager.addNamedEntity(namedEntity);
+      }
+    }
   }
 
   /**

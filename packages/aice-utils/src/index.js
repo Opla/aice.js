@@ -13,6 +13,7 @@ class AIceUtils {
   constructor() {
     this.parameters = {};
     this.services = {};
+    this.opts = {};
     this.schemaManager = new SchemaModelsManager(this);
     this.testManager = new TestsManager(this);
   }

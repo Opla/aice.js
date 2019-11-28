@@ -11,7 +11,7 @@ export default class AgentsManager {
   constructor(utils, opts) {
     this.utils = utils;
     this.agents = {};
-    this.opts = opts;
+    this.opts = {};
     this.callableFactory = new CallableFactory(utils.services, opts);
   }
 
@@ -130,11 +130,16 @@ export default class AgentsManager {
             values: v.tags,
           }));
         }
-        agent.addEntity({
+        const entity = {
           name: e.name,
           scope: 'global',
           enumeration,
-        });
+        };
+        agent.addEntity(entity);
+        console.log('engine.settings', engine.settings);
+        if (!engine.settings.entities || !engine.settings.entities.disabled) {
+          engine.addEntity(entity, 'enum');
+        }
       });
     }
     return engine.train(dataset);
