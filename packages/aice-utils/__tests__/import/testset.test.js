@@ -149,6 +149,14 @@ describe('import testset', () => {
               ],
               dialogs: [],
             },
+            {
+              name: 'story2',
+              actors: [
+                { name: 'user', type: 'human' },
+                { name: 'bot', type: 'robot' },
+              ],
+              dialogs: [],
+            },
           ],
         },
       ],
