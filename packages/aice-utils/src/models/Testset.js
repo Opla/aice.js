@@ -22,12 +22,26 @@ export default class Testset extends SchemaModel {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  mergeStories(_source, target) {
+    const source = _source;
+    source.stories = target.stories.reduce(
+      (stories, story) => (stories.findIndex(s => s.name === story.name) > -1 ? stories : [...stories, story]),
+      source.stories,
+    );
+    return source;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   doMerge(d, content) {
     // eslint-disable-next-line no-param-reassign
-    content.scenarios = d.content.scenarios.reduce(
-      (scenarios, scenario) =>
-        scenarios.findIndex(i => i.name === scenario.name) > -1 ? scenarios : [...scenarios, scenario],
-      content.scenarios,
-    );
+    content.scenarios = d.content.scenarios.reduce((scenarios, scenario) => {
+      const index = scenarios.findIndex(i => i.name === scenario.name);
+      if (index > -1) {
+        // eslint-disable-next-line no-param-reassign
+        scenarios[index] = this.mergeStories(scenarios[index], scenario);
+        return scenarios;
+      }
+      return [...scenarios, scenario];
+    }, content.scenarios);
   }
 }
