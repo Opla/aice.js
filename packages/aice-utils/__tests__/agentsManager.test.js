@@ -193,7 +193,7 @@ describe('AgentsManager', () => {
     });
     expect(agentsManager.agents.bot.engine.isTrained).to.be.equal(true);
   });
-  it('train callable datasets #dev', async () => {
+  it('train callable datasets', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
     await agentsManager.train({
