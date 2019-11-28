@@ -136,7 +136,6 @@ export default class AgentsManager {
           enumeration,
         };
         agent.addEntity(entity);
-        console.log('engine.settings', engine.settings);
         if (!engine.settings.entities || !engine.settings.entities.disabled) {
           engine.addEntity(entity, 'enum');
         }
