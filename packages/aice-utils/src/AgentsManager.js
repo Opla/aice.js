@@ -97,9 +97,12 @@ export default class AgentsManager {
         engine.addInput(language, intent.name, input.text, [], intent.topic);
       });
       intent.output.forEach(output => {
-        const callable = instanciatedCallables[output.callable]
-          ? async ctx => instanciatedCallables[output.callable].call(ctx)
-          : undefined;
+        let callable;
+        const instance = instanciatedCallables[output.callable];
+        if (instance) {
+          const { call } = instance;
+          callable = call.bind(instance);
+        }
         if (output.type !== 'condition') {
           engine.addOutput(language, intent.name, output.text, undefined, undefined, callable);
         } else {

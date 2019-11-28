@@ -25,7 +25,7 @@ export default class JsonWebserviceCallable extends AbstractCallable {
   }
 
   async call(ctxt) {
-    const params = super.call(ctxt);
+    const params = super.call(ctxt, JsonWebserviceCallable.getParametersSchema());
     const res = await this.services.fetch(params.url, {
       method: params.method,
       body: params.body,

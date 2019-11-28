@@ -13,12 +13,16 @@ export default class CallableFactory {
   }
 
   newCallable(callable) {
-    let parameters;
-    let callParameters;
-    try {
-      ({ parameters, callParameters } = JSON.parse(callable.values));
-    } catch (err) {
-      //
+    let parameters = [];
+    let callParameters = [];
+    if (typeof callable.values === 'object') {
+      ({ parameters = [], callParameters = [] } = callable.values);
+    } else {
+      try {
+        ({ parameters, callParameters } = JSON.parse(callable.values));
+      } catch (err) {
+        //
+      }
     }
     let category;
     let className;

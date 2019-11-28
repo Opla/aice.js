@@ -22,10 +22,12 @@ export default class AbstractCallable {
     return 'none';
   }
 
-  setParameters(parameters) {
-    if (this.validateParameters(parameters)) {
+  setParameters(parameters, schema) {
+    if (this.validateParameters(parameters, schema)) {
       this.parameters = parameters;
+      return true;
     }
+    return false;
   }
 
   setCallParameters(cp) {
@@ -51,7 +53,7 @@ export default class AbstractCallable {
 
   validateParameters(parameters, schema = AbstractCallable.getParametersSchema()) {
     try {
-      Object.entries(schema).forEach(([ks, { type, child }]) => {
+      Object.entries(schema).forEach(([ks, { type, properties }]) => {
         const p = Object.entries(parameters).find(([k]) => ks === k);
         if (!p) {
           throw new Error(`Missing property ${ks}`);
@@ -64,19 +66,20 @@ export default class AbstractCallable {
           throw new Error(`Property ${ks} must be an instance of ${type}`);
         }
 
-        if (type === Object) {
-          this.validateParameters(vp, child);
+        if (type === 'object') {
+          this.validateParameters(vp, properties);
         }
       });
       return true;
     } catch (error) {
-      throw new Error(`Invalid parameters: ${error.message}`);
+      // throw new Error(`Invalid parameters: ${error.message}`);
     }
+    return false;
   }
 
-  call(ctxt) {
+  call(ctxt, schema) {
     const parameters = this.prepare(ctxt);
-    if (this.validateParameters(parameters, AbstractCallable.getCallParametersSchema())) {
+    if (this.validateParameters(parameters, schema)) {
       return parameters;
     }
     throw new Error('Cannot call call - Invalid call parameters');

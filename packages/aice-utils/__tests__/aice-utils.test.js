@@ -22,6 +22,11 @@ describe('aice-utils', () => {
     expect(aiceUtils.getConfiguration()).to.eql({});
   });
 
+  it('aiceUtils setServices', async () => {
+    aiceUtils.setServices({ empty: {} });
+    expect(aiceUtils.services.empty).to.eql({});
+  });
+
   it('aiceUtils initSettings', async () => {
     let settings = aiceUtils.initSettings();
     expect(settings).to.eql({});

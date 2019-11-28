@@ -193,10 +193,32 @@ describe('AgentsManager', () => {
     });
     expect(agentsManager.agents.bot.engine.isTrained).to.be.equal(true);
   });
-  it('train callable datasets', async () => {
+  it('train callable datasets #dev', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
-    await agentsManager.train({ name: 'bot', dataset: { intents: [], callables: [{}] } });
+    await agentsManager.train({
+      name: 'bot',
+      dataset: {
+        intents: [
+          {
+            name: 'i1',
+            input: [{ text: 'hello' }],
+            output: [
+              { text: 'hello' },
+              {
+                type: 'condition',
+                callable: 'callableA',
+                children: [
+                  { name: 'name', value: 'value' },
+                  { name: 'name', value: '"value"' },
+                ],
+              },
+            ],
+          },
+        ],
+        callables: [{ name: 'callableA', values: {} }],
+      },
+    });
     expect(agentsManager.agents.bot.engine.isTrained).to.be.equal(true);
   });
   it('train entities datasets', async () => {
