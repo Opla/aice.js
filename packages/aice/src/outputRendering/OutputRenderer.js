@@ -21,7 +21,7 @@ export default class OutputRenderer {
       } else {
         this.issues = [];
         this.tracker = {
-          addIssues: i => {
+          addIssue: i => {
             this.issues.push(i);
             return i;
           },

@@ -33,7 +33,7 @@ export default class SimpleOutputRenderer extends OutputRenderer {
         } else if (this.callablesManager) {
           ctx = await this.callablesManager(callable, context, lang);
         } else if (this.settings.debug) {
-          this.tracker.addIssues(this.issuesFactory.create(this.issuesFactory.EVALUATE_NO_CALLABLEMANAGER));
+          this.tracker.addIssue(this.issuesFactory.create(this.issuesFactory.EVALUATE_NO_CALLABLEMANAGER));
         } else {
           throw new Error('AICE executeCallable - no callablesManager defined');
         }

@@ -5,12 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Agent from './models/Agent';
+import CallableFactory from './CallableFactory';
 
 export default class AgentsManager {
   constructor(utils, opts) {
     this.utils = utils;
     this.agents = {};
     this.opts = opts;
+    this.callableFactory = new CallableFactory(utils.services, opts);
   }
 
   reset() {
@@ -80,13 +82,13 @@ export default class AgentsManager {
     }
     engine.clear();
     agent.reset();
-    this.agents[n].callables = {};
+    const instanciatedCallables = {};
     const { intents, entities, callables } = dataset;
     if (callables) {
       callables.forEach(callable => {
         const { name: cn } = callable;
-        // TODO instanciate callable function
-        this.agents[n].callables[cn] = callable;
+        const func = this.callableFactory.newCallable(callable);
+        instanciatedCallables[cn] = func;
       });
     }
     intents.forEach(intent => {
@@ -95,9 +97,14 @@ export default class AgentsManager {
         engine.addInput(language, intent.name, input.text, [], intent.topic);
       });
       intent.output.forEach(output => {
-        const outputCallable = this.agents[n].callables[output.callable];
+        let callable;
+        const instance = instanciatedCallables[output.callable];
+        if (instance) {
+          const { call } = instance;
+          callable = call.bind(instance);
+        }
         if (output.type !== 'condition') {
-          engine.addOutput(language, intent.name, output.text, undefined, undefined, outputCallable);
+          engine.addOutput(language, intent.name, output.text, undefined, undefined, callable);
         } else {
           output.children.forEach(conditionOutput => {
             const condition = {
@@ -106,7 +113,7 @@ export default class AgentsManager {
               leftOperand: this.parseValue(conditionOutput.name),
               rightOperand: this.parseValue(conditionOutput.value),
             };
-            engine.addOutput(language, intent.name, conditionOutput.text, undefined, [condition], outputCallable);
+            engine.addOutput(language, intent.name, conditionOutput.text, undefined, [condition], callable);
           });
         }
       });

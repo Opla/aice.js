@@ -169,6 +169,20 @@ describe('complete tests', () => {
           {
             name: 'story3',
             subStory: true,
+            disabled: true,
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
+            next: ['story4'],
+          },
+          {
+            name: 'story4',
+            subStory: true,
             actors: [
               { name: 'user', type: 'human' },
               { name: 'bot', type: 'robot' },
@@ -217,10 +231,11 @@ describe('complete tests', () => {
     const response = await aiceUtils.test('bot', testsetC);
     expect(response.sc1.story1.result).to.be.equal('ok');
     expect(response.sc1.story1.count).to.be.equal(2);
-    expect(response.sc1['story1 > story2'].result).to.be.equal('ok');
-    expect(response.sc1['story1 > story2'].count).to.be.equal(4);
-    expect(response.sc1['story1 > story3'].result).to.be.equal('ok');
-    expect(response.sc1['story1 > story3'].count).to.be.equal(4);
+    expect(response.sc1['story1 => story2'].result).to.be.equal('ok');
+    expect(response.sc1['story1 => story2'].count).to.be.equal(4);
+    expect(response.sc1['story1 => story3']).to.be.equal(undefined);
+    expect(response.sc1['story1 => story3 => story4'].result).to.be.equal('ok');
+    expect(response.sc1['story1 => story3 => story4'].count).to.be.equal(6);
   });
 });
 

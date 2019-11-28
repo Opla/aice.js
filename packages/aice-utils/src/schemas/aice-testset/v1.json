@@ -53,6 +53,9 @@
         "description": {
           "type": "string"
         },
+        "disabled": {
+          "type": "boolean"
+        },
         "context": {
           "type": "object",
           "default": {}

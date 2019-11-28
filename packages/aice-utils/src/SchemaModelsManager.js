@@ -11,10 +11,10 @@ import OpennlxV2 from './models/OpennlxV2';
 import Testset from './models/Testset';
 
 export default class {
-  constructor(utils) {
+  constructor(services) {
     this.ajv = new Ajv({ allErrors: true, useDefaults: true });
     this.models = {};
-    this.utils = utils;
+    this.services = services;
   }
 
   // eslint-disable-next-line class-methods-use-this

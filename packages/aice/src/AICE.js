@@ -13,6 +13,7 @@ import { NERManager, SystemEntities } from './streamTransformers';
 import buildServices from './services';
 import issuesFactory from './issues';
 import { Utils } from './utils';
+import Tools from './Tools';
 
 const defaultLanguage = 'en';
 const defaultThreshold = 0.75;
@@ -302,5 +303,9 @@ export default class AICE {
       }
     }
     return ret;
+  }
+
+  static evaluateFromContext(nlxSyntax, context, isMandatory = false) {
+    return Tools.evaluateFromContext(nlxSyntax, context, isMandatory);
   }
 }
