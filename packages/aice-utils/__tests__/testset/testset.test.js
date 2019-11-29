@@ -37,6 +37,9 @@ class AICEClass {
     if (utterance === 'Yabadoo') {
       return { score: 0, answer: utterance, context: {}, issues: [{ message: 'error' }] };
     }
+    if (utterance === 'Duuh' || utterance === 'Dooh') {
+      return { score: 1, answer: null, context: {}, issues: [{ message: 'error' }] };
+    }
     return { score: 0.75, answer: utterance, context: {} };
   }
 }
@@ -301,6 +304,50 @@ describe('errors test', () => {
     expect(response.sc1.story1.result).to.be.equal('Error : Not matching "Dooh" "hello"');
     expect(response.sc1.story1.count).to.be.equal(1);
   });
+
+  it('Not matching no intent found', async () => {
+    const testsetC = {
+      name: 'test',
+      scenarios: [
+        {
+          name: 'scenario1',
+          stories: [
+            {
+              name: 'story1',
+              actors: [
+                { name: 'user', type: 'human' },
+                { name: 'bot', type: 'robot' },
+              ],
+              dialogs: [
+                { from: 'user', say: 'Duuh' },
+                { from: 'bot', say: 'Dooh' },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const dataset = {
+      name: 'bot',
+      dataset: {
+        intents: [
+          {
+            name: 'i1',
+            input: [{ text: 'hello' }],
+            output: [{ text: 'hello' }],
+          },
+        ],
+      },
+    };
+    aiceUtils.setAIceClass(AICEClass);
+    const agentsManager = aiceUtils.getAgentsManager();
+    agentsManager.reset();
+    await agentsManager.train(dataset);
+    const response = await aiceUtils.test('bot', testsetC);
+    expect(response.scenario1.story1.result).to.be.equal('Error : Not matching "Dooh" "undefined"');
+    expect(response.scenario1.story1.count).to.be.equal(1);
+  });
+
   it('Unexpected flow', async () => {
     const testsetC = {
       name: 'test',

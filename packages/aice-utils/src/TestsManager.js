@@ -62,7 +62,7 @@ export default class TestsManager {
         ok = true;
       } else if (user.type === 'robot' && response && this.matchContext(context, message.context)) {
         issues = response.issues;
-        const textA = response.message.text ? response.message.text.trim() : 'undefined';
+        const textA = response.message.text ? response.message.text.trim() : undefined;
         const textB = message.say.trim();
         if (textA === textB) {
           response = null;
