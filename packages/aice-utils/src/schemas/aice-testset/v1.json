@@ -65,8 +65,7 @@
           "default": {}
         },
         "finalContext": {
-          "type": "object",
-          "default": {}
+          "type": "object"
         },
         "next": {
           "type": "array",
