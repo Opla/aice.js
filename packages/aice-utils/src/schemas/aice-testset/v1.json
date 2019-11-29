@@ -64,6 +64,10 @@
           "type": "object",
           "default": {}
         },
+        "finalContext": {
+          "type": "object",
+          "default": {}
+        },
         "next": {
           "type": "array",
           "items": {
