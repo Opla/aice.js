@@ -19,7 +19,7 @@ export default class SimpleIntentResolver extends IntentResolver {
     // Preprocess filter lang
     const inputs = await super.execute(lang, sentence, context);
     // TODO Need to exclude here inputs with score=0
-    const result = inputs.map((input, index) => {
+    const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
       // Case - Fallback (lower score) // NOT SO GOOD even with threshold + infitesimal
       if (input.isAnyOrNothing) {
@@ -31,7 +31,7 @@ export default class SimpleIntentResolver extends IntentResolver {
       return {
         intentid: input.intentid,
         input: input.input,
-        inputIndex: index,
+        inputIndex: input.index,
         issues: input.issues,
         previous: input.previous ? input.previous : [],
         score,

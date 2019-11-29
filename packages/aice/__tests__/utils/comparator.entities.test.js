@@ -24,7 +24,11 @@ describe('Entities Comparator', () => {
     new EnumEntity({
       name: 'size',
       scope: 'global',
-      enumeration: [{ key: 'S', values: ['small'] }, { key: 'M', values: ['medium'] }, { key: 'L', values: ['large'] }],
+      enumeration: [
+        { key: 'S', values: ['small'] },
+        { key: 'M', values: ['medium'] },
+        { key: 'L', values: ['large'] },
+      ],
     }),
   );
   const tokenizerUtterance = new NamedEntityTokenizer(ner);

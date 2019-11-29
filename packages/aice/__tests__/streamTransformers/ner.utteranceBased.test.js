@@ -14,18 +14,18 @@ const LANG = 'fr';
 
 describe('EmailRegExpEntity', () => {
   it('Should find a single match for entity email', () => {
-    const utterance = 'Mon mail est jeff@example.fr si cela vous convient';
+    const utterance = 'Mon mail est harry@example.fr si cela vous convient';
     const result = EmailRegExpEntity.extract(LANG, utterance);
-    expect(result[0]).to.deep.include({ match: 'jeff@example.fr' });
+    expect(result[0]).to.deep.include({ match: 'harry@example.fr' });
   });
   it('Should find multiple if sentences contains more than one email', () => {
-    const utterance = 'Mon mail est jeff@example.fr, mais celui de mon collègue est morgan@example2.de';
+    const utterance = 'Mon mail est harry@example.fr, mais celui de mon collègue est lloyd@example2.de';
     const result = EmailRegExpEntity.extract(LANG, utterance);
-    expect(result[0]).to.deep.include({ match: 'jeff@example.fr' });
-    expect(result[1]).to.deep.include({ match: 'morgan@example2.de' });
+    expect(result[0]).to.deep.include({ match: 'harry@example.fr' });
+    expect(result[1]).to.deep.include({ match: 'lloyd@example2.de' });
   });
   it('Should find nothing if no mail is in the utterance - with a twist', () => {
-    const utterance = 'Mon mail est jeff@opla';
+    const utterance = 'Mon mail est harry@opla';
     const result = EmailRegExpEntity.extract(LANG, utterance);
     expect(result).to.deep.equal([]);
   });
@@ -117,18 +117,18 @@ describe('EmojiEntity', () => {
 
 describe('URLRegExpEntity', () => {
   it('Should find a single match for entity email', () => {
-    const utterance = 'Mon site est https://www.jeffladiray.com voilà';
+    const utterance = 'Mon site est https://www.harry.com voilà';
     const entities = UrlRegExpEntity.extract(LANG, utterance);
-    expect(entities[0]).to.deep.include({ match: 'https://www.jeffladiray.com' });
+    expect(entities[0]).to.deep.include({ match: 'https://www.harry.com' });
   });
   it('Should find multiple if sentences contains more than one url', () => {
-    const utterance = 'Mon site est https://www.jeffladiray.com et le sien www.morgan.xxx';
+    const utterance = 'Mon site est https://www.harry.com et le sien www.lloyd.xxx';
     const entities = UrlRegExpEntity.extract(LANG, utterance);
-    expect(entities[0]).to.deep.include({ match: 'https://www.jeffladiray.com' });
-    expect(entities[1]).to.deep.include({ match: 'www.morgan.xxx' });
+    expect(entities[0]).to.deep.include({ match: 'https://www.harry.com' });
+    expect(entities[1]).to.deep.include({ match: 'www.lloyd.xxx' });
   });
   it('Should find nothing if no url is in the utterance - with a twist', () => {
-    const utterance = "Il n'y a pas de match dans cette phrase: http://morgan";
+    const utterance = "Il n'y a pas de match dans cette phrase: http://lloyd";
     const ner = new NERManager();
     ner.addNamedEntity(UrlRegExpEntity);
     const entities = ner.findEntitiesFromUtterance(LANG, utterance);
@@ -138,17 +138,17 @@ describe('URLRegExpEntity', () => {
 
 describe('NERManager', () => {
   it('Should find a match for both email and url', () => {
-    const utterance = "C'est un test avec un mail JeFf@eXamPle.fr et une url https://morgan.corp merci bien";
+    const utterance = "C'est un test avec un mail HarRy@eXamPle.fr et une url https://lloyd.corp merci bien";
     const ner = new NERManager();
     ner.addNamedEntity(EmailRegExpEntity);
     ner.addNamedEntity(UrlRegExpEntity);
     const entities = ner.findEntitiesFromUtterance(LANG, utterance);
-    expect(entities[0]).to.deep.include({ match: 'JeFf@eXamPle.fr', resolution: 'jeff@example.fr' });
-    expect(entities[1]).to.deep.include({ match: 'https://morgan.corp' });
+    expect(entities[0]).to.deep.include({ match: 'HarRy@eXamPle.fr', resolution: 'harry@example.fr' });
+    expect(entities[1]).to.deep.include({ match: 'https://lloyd.corp' });
   });
 
   it('Should get normalized utterance for email and url', () => {
-    const utterance = "C'est un test avec un mail jeff@example.fr et une url https://morgan.corp merci bien";
+    const utterance = "C'est un test avec un mail harry@example.fr et une url https://lloyd.corp merci bien";
     const ner = new NERManager();
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
@@ -157,7 +157,7 @@ describe('NERManager', () => {
   });
 
   it('Should get normalized utterance for url and email', () => {
-    const utterance = "C'est un test avec un url https://morgan.corp et un mail jeff@example.fr";
+    const utterance = "C'est un test avec un url https://lloyd.corp et un mail harry@example.fr";
     const ner = new NERManager();
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
@@ -167,30 +167,30 @@ describe('NERManager', () => {
 
   it('Should get normalized utterance for many entities', () => {
     const utterance =
-      "C'est un test 😾 avec un mail jeff@example.fr et une url https://morgan.corp merci bien. Je crois que Jeff Boss est parti voici son numéro 0651382265. Appelle le rapidement. https://underthelimits.fr est un superbe site ! Mon chat a 9 ans dans une semaine.";
+      "C'est un test 😾 avec un mail harry@example.fr et une url https://lloyd.corp merci bien. Je crois que Harry Boss est parti voici son numéro 0651382265. Appelle le rapidement. https://underthelimits.fr est un superbe site ! Mon chat a 9 ans dans une semaine.";
     const ner = new NERManager();
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     ner.addNamedEntity(EmojiRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance);
     expect(results).to.equal(
-      "C'est un test @emoji avec un mail @email et une url @url merci bien. Je crois que Jeff Boss est parti voici son numéro 0651382265. Appelle le rapidement. @url est un superbe site ! Mon chat a 9 ans dans une semaine.",
+      "C'est un test @emoji avec un mail @email et une url @url merci bien. Je crois que Harry Boss est parti voici son numéro 0651382265. Appelle le rapidement. @url est un superbe site ! Mon chat a 9 ans dans une semaine.",
     );
   });
 
   it('Should not find a match for entity email - SystemEntity Not Added', () => {
-    const utterance = 'Mon mail est jeff@example.fr si cela vous convient';
+    const utterance = 'Mon mail est harry@example.fr si cela vous convient';
     const ner = new NERManager();
     const entities = ner.findEntitiesFromUtterance(LANG, utterance);
     expect(entities).to.deep.equal([]);
   });
 
   it('Should only find whitelisted entity email', () => {
-    const utterance = "C'est un test avec un mail jeff@example.fr et une url https://morgan.corp merci bien";
+    const utterance = "C'est un test avec un mail harry@example.fr et une url https://lloyd.corp merci bien";
     const ner = new NERManager();
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance, [EmailRegExpEntity]);
-    expect(results).to.equal("C'est un test avec un mail @email et une url https://morgan.corp merci bien");
+    expect(results).to.equal("C'est un test avec un mail @email et une url https://lloyd.corp merci bien");
   });
 });

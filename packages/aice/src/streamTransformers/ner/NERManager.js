@@ -26,12 +26,12 @@ export default class NERManager {
    * @param {NamedEntity[]} whitelist List of entities to extract.
    * @returns {Entity[]} A list of extracted entities from the utterance.
    */
-  findEntitiesFromUtterance(lang, utterance, whitelist) {
+  findEntitiesFromUtterance(lang, utterance, whitelist, separator) {
     let entitiesFound = [];
     this.entities
       .filter(e => !whitelist || whitelist.includes(e))
       .forEach(entity => {
-        const res = entity.extract(lang, utterance);
+        const res = entity.extract(lang, utterance, separator);
         entitiesFound = entitiesFound.concat(res);
       });
     return entitiesFound;
@@ -44,8 +44,8 @@ export default class NERManager {
    * @param {NamedEntity[]} whitelist List of entities to extract.
    * @returns {String} Normalized utterance with entities replaced by entity code name.
    */
-  normalizeEntityUtterance(lang, utterance, whitelist) {
-    const entities = this.findEntitiesFromUtterance(lang, utterance, whitelist);
+  normalizeEntityUtterance(lang, utterance, whitelist, separator) {
+    const entities = this.findEntitiesFromUtterance(lang, utterance, whitelist, separator);
     let result = '';
     let index = 0;
     const sortEntities = entities.sort((e1, e2) => e1.start - e2.start);

@@ -191,4 +191,35 @@ describe('Fixes issues', async () => {
       { id: 'agent.hello', index: 2 },
     ]);
   });
+
+  // https://github.com/Opla/aice.js/issues/93
+  it('Should entities separated #93', async () => {
+    const aice = new AICE({ services: { logger: { enabled: true }, tracker: { enabled: true } } });
+    // Initialization
+    aice.addInput('en', 'agent.hello', 'Hello Maxi');
+    aice.addOutput('en', 'agent.hello', 'Hello');
+    aice.addInput('en', 'agent.discussion', 'Do you like our discussion');
+    aice.addOutput('en', 'agent.discussion', 'Yes');
+    aice.addInput('en', 'agent.cd', 'Do you like {{@CD}}');
+    aice.addOutput('en', 'agent.cd', 'some');
+    aice.addInput('en', 'agent.disco', 'Disco');
+    aice.addOutput('en', 'agent.disco', 'a little');
+    aice.addEntity(
+      {
+        name: 'CD',
+        scope: 'global',
+        enumeration: [{ key: 'CD', values: ['disc', 'ep', 'cd', 'maxi 45'] }],
+      },
+      'enum',
+    );
+    await aice.train(true, { no_AnyOrNothing: true });
+    let res = await aice.evaluate('Hello Maxi', {}, 'en');
+    expect(res.intent).to.eql({ id: 'agent.hello', inputIndex: 0, outputIndex: 0 });
+    res = await aice.evaluate('Do you like our discussion', {}, 'en');
+    expect(res.intent).to.eql({ id: 'agent.discussion', inputIndex: 0, outputIndex: 0 });
+    res = await aice.evaluate('Do you like maxi 45', {}, 'en');
+    expect(res.intent).to.eql({ id: 'agent.cd', inputIndex: 0, outputIndex: 0 });
+    res = await aice.evaluate('Disco', {}, 'en');
+    expect(res.intent).to.eql({ id: 'agent.disco', inputIndex: 0, outputIndex: 0 });
+  });
 });

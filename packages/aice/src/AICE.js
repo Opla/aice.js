@@ -104,7 +104,8 @@ export default class AICE {
       throw new Error('AICE addInput - Has some missing mandatory parameters');
     }
     const tokenizedInput = this.InputExpressionTokenizer.tokenize(input);
-    const document = { lang, input, tokenizedInput, intentid, previous, topic };
+    const index = this.inputs.filter(i => i.lang === lang && i.intentid === intentid).length;
+    const document = { lang, input, tokenizedInput, intentid, previous, topic, index };
 
     if (this.inputs.filter(i => i.lang === lang && i.input === input && i.intentid === intentid).length === 0) {
       this.inputs.push(document);
@@ -236,7 +237,7 @@ export default class AICE {
   async evaluate(utterance, context = {}, lang = this.settings.defaultLanguage) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
-    const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance);
+    const tokenizedUtterance = this.NamedEntityTokenizer.tokenize(lang, utterance, undefined, true, true);
     // Intents Resolvers
     const results = await this.IntentResolverManager.evaluate(lang, tokenizedUtterance, context);
     const r = results && results[0] ? results[0] : {};
