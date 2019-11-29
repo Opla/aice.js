@@ -79,6 +79,7 @@
         "debug": { "type": "boolean" },
         "rules": { "type": "object" },
         "services": { "type": "object" },
+        "entities": { "type": "object" },
         "resolvers": {
           "type": "array",
           "items": {

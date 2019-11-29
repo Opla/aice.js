@@ -18,6 +18,10 @@ class AICEClass {
     this.isTrained = false;
   }
 
+  async addEntity() {
+    this.isTrained = false;
+  }
+
   async addInput() {
     this.isTrained = false;
   }

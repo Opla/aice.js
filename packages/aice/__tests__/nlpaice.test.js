@@ -45,14 +45,14 @@ describe('AICE NLP', () => {
     expect(res.intent).to.eql({ id: 'agent.presentation', inputIndex: 0, outputIndex: 0 });
     expect(res.answer).to.equal('Coucou :)');
 
-    res = await aice.evaluate("Superbe, je m'appelle Morgan", context, 'fr');
+    res = await aice.evaluate("Superbe, je m'appelle lloyd", context, 'fr');
     expect(res.score).to.equal(1.0);
-    expect(res.intent).to.eql({ id: 'agent.askname', inputIndex: 4, outputIndex: 0 });
-    expect(res.answer).to.equal('Hello Morgan');
+    expect(res.intent).to.eql({ id: 'agent.askname', inputIndex: 1, outputIndex: 0 });
+    expect(res.answer).to.equal('Hello lloyd');
 
     res = await aice.evaluate('Squeezie ft Joyca - Bye Bye', context, 'fr');
     expect(res.score).to.equal(1.0);
-    expect(res.intent).to.eql({ id: 'agent.bye', inputIndex: 5, outputIndex: 0 });
+    expect(res.intent).to.eql({ id: 'agent.bye', inputIndex: 0, outputIndex: 0 });
     expect(res.answer).to.equal('A la prochaine!');
   });
 
@@ -182,7 +182,7 @@ describe('AICE NLP', () => {
     // Tests
     const res = await aice.evaluate('Yeah');
     expect(res.score).to.equal(1.0);
-    expect(res.intent).to.eql({ id: 'agent.yeah', inputIndex: 1, outputIndex: 0 });
+    expect(res.intent).to.eql({ id: 'agent.yeah', inputIndex: 0, outputIndex: 0 });
     expect(res.answer).to.equal('Your Welcome !');
   });
 });

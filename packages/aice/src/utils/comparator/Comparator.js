@@ -25,7 +25,7 @@ export default class Comparator {
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
   compare(linkedListI, linkedListU) {
-    let result = { context: [], match: false, confidence: 1.0 };
+    let result = { context: {}, match: false, confidence: 1.0 };
 
     // Simpliest strict word token equality check
     result.match = equalsText([...linkedListI.values()], [...linkedListU.values()]);
@@ -102,6 +102,7 @@ export default class Comparator {
             // TODO Will change after the NER TOKEN Implementation => ner.value ? ner.row ? ner.match ...
             const varName = expression.contextName || expression.name.toLowerCase();
             if (affectation) ContextMutator.addVariableToContext(result.context, { name: varName, value: textU });
+            result.score = 0.96;
           }
         }
         break;

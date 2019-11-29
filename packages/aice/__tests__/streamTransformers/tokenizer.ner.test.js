@@ -21,17 +21,17 @@ describe('NER Tokenizer', () => {
   const nerTokenizer = new NamedEntityTokenizer(ner);
 
   it('Should tokenize (with NER pipe) - One Token', () => {
-    const textToTokenize = 'jeff@opla.ai';
+    const textToTokenize = 'harry@opla.ai';
     const tokenized = nerTokenizer.tokenize(LANG, textToTokenize);
 
-    expect(tokenized.get(0).value.ner.match).to.equal('jeff@opla.ai');
+    expect(tokenized.get(0).value.ner.match).to.equal('harry@opla.ai');
   });
 
   it('Should tokenize (with NER pipe) - Multiple Token', () => {
-    const textToTokenize = 'My email is jeff@opla.ai';
+    const textToTokenize = 'My email is harry@opla.ai';
     const tokenized = nerTokenizer.tokenize(LANG, textToTokenize);
 
-    expect(tokenized.get(3).value.ner.match).to.equal('jeff@opla.ai');
+    expect(tokenized.get(3).value.ner.match).to.equal('harry@opla.ai');
   });
 
   it('Should tokenize (with NER pipe) - Multiple Token Entities', () => {
@@ -66,9 +66,9 @@ describe('NER Tokenizer', () => {
   });
 
   it('Should tokenize (with NER pipe) using normalize=false', () => {
-    const textToTokenize = 'jeff@opla.ai ok';
+    const textToTokenize = 'harry@opla.ai ok';
     const tokenized = nerTokenizer.tokenize(LANG, textToTokenize, new DoubleLinkedList(), false);
 
-    expect(tokenized.get(0).value.ner.match).to.equal('jeff@opla.ai');
+    expect(tokenized.get(0).value.ner.match).to.equal('harry@opla.ai');
   });
 });

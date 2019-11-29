@@ -4,7 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * Authors: Morgan Perre
  */
 
 import { DoubleLinkedList } from '../models';
@@ -25,17 +24,16 @@ export default class NamedEntityTokenizer {
     this.namedEntityRecognizer = namedEntityRecognizer;
   }
 
-  tokenize(lang, stream, list = new DoubleLinkedList(), normalize = true) {
-    const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
+  tokenize(lang, raw, list = new DoubleLinkedList(), normalize = true, separator) {
+    const normalized = normalize ? raw.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : raw;
     const appendToken = (acc, entity = {}) => {
       if (acc !== '') {
         list.append({ text: acc, ner: entity });
       }
     };
 
-    const entities = this.namedEntityRecognizer.findEntitiesFromUtterance(lang, normalized);
+    const entities = this.namedEntityRecognizer.findEntitiesFromUtterance(lang, normalized, undefined, separator);
     const sortEntities = entities.sort((e1, e2) => e1.start - e2.start);
-
     let acc = '';
     let index = 0;
     let entity = null;
