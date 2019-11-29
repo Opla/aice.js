@@ -56,6 +56,10 @@
         "disabled": {
           "type": "boolean"
         },
+        "state": {
+          "type": "string",
+          "enum": ["todo", "wip", "done"]
+        },
         "context": {
           "type": "object",
           "default": {}

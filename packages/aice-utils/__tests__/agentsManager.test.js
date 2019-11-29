@@ -241,6 +241,26 @@ describe('AgentsManager', () => {
     });
     expect(agentsManager.agents.bot.engine.isTrained).to.be.equal(true);
   });
+
+  it('train entities datasets disabled', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    const agentsManager = aiceUtils.getAgentsManager();
+    agentsManager.createAgent({ name: 'bot', intents: [] });
+    agentsManager.agents.bot.engine.settings.entities = { disabled: true };
+    await agentsManager.train({
+      name: 'bot',
+      dataset: {
+        language: 'fr',
+        intents: [],
+        entities: [
+          { name: 'e', values: '[{"name":"n","tags":"value"}]', extra: {} },
+          { name: 'e2', values: '[]', extra: { type: 'enum' } },
+        ],
+      },
+    });
+    expect(agentsManager.agents.bot.engine.isTrained).to.be.equal(true);
+  });
+
   it('evaluate simple agent', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
