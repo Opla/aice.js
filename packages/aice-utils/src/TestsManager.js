@@ -62,11 +62,13 @@ export default class TestsManager {
         ok = true;
       } else if (user.type === 'robot' && response && this.matchContext(context, message.context)) {
         issues = response.issues;
-        if (response.message.text === message.say) {
+        const textA = response.message.text ? response.message.text.trim() : 'undefined';
+        const textB = message.say.trim();
+        if (textA === textB) {
           response = null;
           ok = true;
         } else {
-          error = `Not matching "${message.say}" "${response.message.text}"`;
+          error = `Not matching "${textB}" "${textA}"`;
           ok = false;
           break;
         }
