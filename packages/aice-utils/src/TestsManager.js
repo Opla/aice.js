@@ -36,7 +36,8 @@ export default class TestsManager {
     return stories.find(story => story.name === name || story.id === name);
   }
 
-  async runStory(conversationId, agentName, dialogs, actors, storyContext) {
+  async runStory(conversationId, agentName, story) {
+    const { actors, dialogs, context: storyContext, finalContext } = story;
     const aManager = this.services.getAgentsManager();
     let ok = false;
     let error;
@@ -81,7 +82,19 @@ export default class TestsManager {
     if (!ok) {
       output.result = `Error : ${error}`;
     } else {
-      output.result = 'ok';
+      let r = 'ok';
+      if (finalContext) {
+        context = await aManager.getContext(agentName, conversationId);
+        const fcNames = Object.keys(finalContext);
+        const cNames = Object.keys(context);
+        const match =
+          fcNames.length === cNames.length &&
+          fcNames.every(name => finalContext[name] === '*' || context[name] === finalContext[name]);
+        if (!match) {
+          r = `Unmatch context : "${JSON.stringify(context)}" expected ${JSON.stringify(finalContext)}`;
+        }
+      }
+      output.result = r;
     }
     output.count = count;
     /* istanbul ignore next */
@@ -91,12 +104,12 @@ export default class TestsManager {
     return output;
   }
 
-  async runAllStory(story, conversationId, _result, agentName, stories, depth = 0) {
+  async runFullStory(story, conversationId, _result, agentName, stories, depth = 0) {
     const result = _result;
-    const { actors, dialogs, context: storyContext } = story;
+    const { dialogs, context, finalContext } = story;
     if (!story.disabled && dialogs.length) {
       // eslint-disable-next-line no-await-in-loop
-      result[conversationId] = await this.runStory(conversationId, agentName, dialogs, actors, storyContext);
+      result[conversationId] = await this.runStory(conversationId, agentName, story);
     }
     if (story.next) {
       for (const subStoryName of story.next) {
@@ -108,8 +121,8 @@ export default class TestsManager {
         const d = [...dialogs, ...subStory.dialogs];
         const name = `${conversationId} => ${subStoryName}`;
         // eslint-disable-next-line no-await-in-loop
-        await this.runAllStory(
-          { ...subStory, dialogs: d, context: storyContext },
+        await this.runFullStory(
+          { ...subStory, dialogs: d, context, finalContext: subStory.finalContext || finalContext },
           name,
           result,
           agentName,
@@ -133,7 +146,7 @@ export default class TestsManager {
         for (const story of scenario.stories) {
           if (!story.subStory && (story.name === storyName || !storyName)) {
             // eslint-disable-next-line no-await-in-loop
-            await this.runAllStory(story, story.name, results[scenario.name], agentName, scenario.stories);
+            await this.runFullStory(story, story.name, results[scenario.name], agentName, scenario.stories);
           }
         }
       }

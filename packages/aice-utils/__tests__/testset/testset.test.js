@@ -30,17 +30,17 @@ class AICEClass {
     this.isTrained = true;
   }
 
-  async evaluate(utterance) {
+  async evaluate(utterance, context = {}) {
     if (!this.isTrained) {
       throw new Error('Not trained');
     }
     if (utterance === 'Yabadoo') {
-      return { score: 0, answer: utterance, context: {}, issues: [{ message: 'error' }] };
+      return { score: 0, answer: utterance, context, issues: [{ message: 'error' }] };
     }
     if (utterance === 'Duuh' || utterance === 'Dooh') {
-      return { score: 1, answer: null, context: {}, issues: [{ message: 'error' }] };
+      return { score: 1, answer: null, context, issues: [{ message: 'error' }] };
     }
-    return { score: 0.75, answer: utterance, context: {} };
+    return { score: 0.75, answer: utterance, context };
   }
 }
 
@@ -91,6 +91,30 @@ describe('complete tests', () => {
       },
     ],
   };
+  const testsetD = {
+    name: 'test',
+    scenarios: [
+      {
+        name: 'scA',
+        stories: [
+          {
+            name: 'storyA1b',
+            context: { var: 'value' },
+            finalContext: { var: 'value' },
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
   const testsetB = {
     name: 'test',
     scenarios: [
@@ -99,6 +123,21 @@ describe('complete tests', () => {
         stories: [
           {
             name: 'storyA1',
+            context: { },
+            finalContext: { name: 'value', any: '*' },
+            actors: [
+              { name: 'user', type: 'human' },
+              { name: 'bot', type: 'robot' },
+            ],
+            dialogs: [
+              { from: 'user', say: 'hello' },
+              { from: 'bot', say: 'hello' },
+            ],
+          },
+          {
+            name: 'storyA1b',
+            context: { var: 'value' },
+            finalContext: { var: 'value' },
             actors: [
               { name: 'user', type: 'human' },
               { name: 'bot', type: 'robot' },
@@ -110,6 +149,20 @@ describe('complete tests', () => {
           },
           {
             name: 'storyA2',
+            context: {
+              var: 'value',
+              array1: [],
+              array2: ['value'],
+              obj1: {},
+              obj2: { name: 'value ' },
+              any: 'any',
+              anyornothing: 'a',
+              var2: '*',
+              var3: undefined,
+              var4: null,
+              var5: 1,
+              var6: '',
+            },
             actors: [
               { name: 'user', type: 'human' },
               { name: 'bot', type: 'robot' },
@@ -219,13 +272,30 @@ describe('complete tests', () => {
     expect(response.sc1.story1.result).to.be.equal('ok');
     expect(response.sc1.story1.count).to.be.equal(2);
   });
-  it('test using sc1 story1', async () => {
+  it('test using scA storyA2', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
     await agentsManager.train(dataset);
     const response = await aiceUtils.test('bot', testsetB, 'scA', 'storyA2');
     expect(response.scA.storyA2.result).to.be.equal('ok');
     expect(response.scA.storyA2.count).to.be.equal(2);
+  });
+  it('should test context match finalContext #dev', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    const agentsManager = aiceUtils.getAgentsManager();
+    agentsManager.reset();
+    await agentsManager.train(dataset);
+    const response = await aiceUtils.test('bot', testsetD);
+    expect(response.scA.storyA1b.result).to.be.equal('ok');
+    expect(response.scA.storyA1b.count).to.be.equal(2);
+  });
+  it('should test context not match finalContext', async () => {
+    aiceUtils.setAIceClass(AICEClass);
+    const agentsManager = aiceUtils.getAgentsManager();
+    await agentsManager.train(dataset);
+    const response = await aiceUtils.test('bot', testsetB, 'scA', 'storyA1');
+    expect(response.scA.storyA1.result).to.be.equal('Unmatch context : "{}" expected {"name":"value","any":"*"}');
+    expect(response.scA.storyA1.count).to.be.equal(2);
   });
   it('substory test', async () => {
     aiceUtils.setAIceClass(AICEClass);

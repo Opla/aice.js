@@ -29,7 +29,26 @@ export default class Agent {
   }
 
   async saveContext(conversationId, context) {
-    if (context) this.conversations[conversationId] = context;
+    if (context && typeof conversationId === 'string' && conversationId.trim().length) {
+      const sanitizedContext = {};
+      Object.keys(context).forEach(name => {
+        const value = context[name];
+        let ok = true;
+        if (typeof value === 'string') {
+          ok = value.trim().length && value !== '*' && name.indexOf('anyornothing') === -1 && name !== 'any';
+        } else if (typeof value === 'object') {
+          ok = !!Object.keys(context).length;
+        } /* else if (Array.isArray(value)) {
+          ok = !!value.length;
+        } else if (value === undefined && value === null) {
+          ok = false;
+        } */
+        if (ok) {
+          sanitizedContext[name] = value;
+        }
+      });
+      this.conversations[conversationId] = sanitizedContext;
+    }
   }
 
   async addEntity(entity) {
