@@ -64,6 +64,9 @@
           "type": "object",
           "default": {}
         },
+        "finalContext": {
+          "type": "object"
+        },
         "next": {
           "type": "array",
           "items": {
