@@ -1,6 +1,6 @@
 {
   "name": "aice",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "main": "index.js",
   "type": "module",
   "license": "MIT",
@@ -40,6 +40,5 @@
     "nyc": "^14.1.1",
     "prettier": "^1.18.2"
   },
-  "gitHead": "e8202fd9ef222725709f239d9a962dc71540bfc1",
-  "dependencies": {}
+  "gitHead": "e8202fd9ef222725709f239d9a962dc71540bfc1"
 }

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Opla/aice.js/compare/v0.6.3...v0.7.0) (2019-12-01)
+
+
+### Bug Fixes
+
+* error EsLint dynamic import ([#74](https://github.com/Opla/aice.js/issues/74)) ([c1738b2](https://github.com/Opla/aice.js/commit/c1738b2ef2d65663a8cf3fe2ce46537f75b92c96))
+
+
+### Features
+
+* **aice-cli:** test command ([#67](https://github.com/Opla/aice.js/issues/67)) ([6d26fe5](https://github.com/Opla/aice.js/commit/6d26fe5c2feca2d03dd7631e789e46ad2ffeec46))
+
+
+
+
+
 ## [0.6.3](https://github.com/Opla/aice.js/compare/v0.6.2...v0.6.3) (2019-11-15)
 
 **Note:** Version bump only for package aice-nfm
