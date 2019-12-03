@@ -123,7 +123,7 @@ describe('complete tests', () => {
         stories: [
           {
             name: 'storyA1',
-            context: { },
+            context: {},
             finalContext: { name: 'value', any: '*' },
             actors: [
               { name: 'user', type: 'human' },
