@@ -71,10 +71,13 @@ export default class FileManager {
 
   // eslint-disable-next-line class-methods-use-this
   async readZipEntry(entry, filename, outputDir = this.settings.outputDir) {
-    const content = await entry.buffer();
+    let content;
     if (filename) {
+      this.writeZipEntry(entry, filename, outputDir);
       const f = path.join(outputDir, filename);
-      await fsp.writeFile(f, content);
+      content = await fsp.readFile(f, content);
+    } else {
+      content = await entry.buffer();
     }
     return content;
   }
