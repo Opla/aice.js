@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/Opla/aice.js/compare/v0.7.2...v0.7.3) (2019-12-04)
+
+
+### Bug Fixes
+
+* **aice-nfm:** readZipEntry out of order ([#111](https://github.com/Opla/aice.js/issues/111)) ([494891d](https://github.com/Opla/aice.js/commit/494891d0e55ae211e01cb221f024d3739a80d982))
+
+
+
+
+
 ## [0.7.2](https://github.com/Opla/aice.js/compare/v0.7.1...v0.7.2) (2019-12-04)
 
 
