@@ -11,8 +11,8 @@ import unzipper from 'unzipper';
 const fsp = fs.promises;
 
 export default class FileManager {
-  constructor(cli) {
-    this.cli = cli;
+  constructor(settings) {
+    this.settings = settings || {};
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -70,7 +70,7 @@ export default class FileManager {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async readZipEntry(entry, filename, outputDir) {
+  async readZipEntry(entry, filename, outputDir = this.settings.outputDir) {
     const content = await entry.buffer();
     if (filename) {
       const f = path.join(outputDir, filename);

@@ -84,7 +84,7 @@ class AIceUtils {
   async handleZipEntry(filename, outputDir, entry, fileManager) {
     const result = { autoDrain: true };
     if (filename.endsWith('.json')) {
-      const raw = await fileManager.readZipEntry(entry, outputDir);
+      const raw = await fileManager.readZipEntry(entry, filename, outputDir);
       result.autoDrain = false;
       try {
         result.content = JSON.parse(raw);
