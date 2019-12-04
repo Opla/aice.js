@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/Opla/aice.js/compare/v0.7.1...v0.7.2) (2019-12-04)
+
+
+### Bug Fixes
+
+* filemanager readZipEntry filename was not sent ([#110](https://github.com/Opla/aice.js/issues/110)) ([6a3a6f4](https://github.com/Opla/aice.js/commit/6a3a6f405fdf95bdb82d6e95297f07ac4912749b))
+
+
+
+
+
 ## [0.7.1](https://github.com/Opla/aice.js/compare/v0.7.0...v0.7.1) (2019-12-03)
 
 **Note:** Version bump only for package aice-monorepo

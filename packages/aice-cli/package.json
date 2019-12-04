@@ -1,6 +1,6 @@
 {
   "name": "aice-cli",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "main": "index.js",
   "type": "module",
   "description": "AIce CommandLine Interface",
@@ -44,8 +44,8 @@
   },
   "dependencies": {
     "aice": "^0.7.1",
-    "aice-nfm": "^0.7.1",
-    "aice-utils": "^0.7.1",
+    "aice-nfm": "^0.7.2",
+    "aice-utils": "^0.7.2",
     "chalk": "^3.0.0",
     "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.0",
