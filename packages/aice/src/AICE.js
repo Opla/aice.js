@@ -244,6 +244,7 @@ export default class AICE {
     const ctx = { ...context, ...r.context };
     // Output Rendering
     const answer = await this.OutputRenderingManager.execute(lang, results, ctx);
+    console.log('answer', answer, lang, results);
     const a = answer || {};
     let { renderResponse } = a;
     const { isAnyOrNothing } = r;

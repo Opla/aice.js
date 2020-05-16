@@ -94,33 +94,22 @@ describe('FileManager', () => {
     const res = await fm.extract(file);
     expect(res.ok).to.equals('Extracted');
   });
-  it('Extract zip file with handler', async () => {
+  it('Extract zip file with handler #dev', async () => {
     const fm = new FileManager();
     try {
       await fsp.mkdir('./temp-test');
     } catch (e) {
       //
     }
-    let data;
-    const handler = async (fn, output, entry, filem) => {
+    const outputPath = './temp-test';
+    const entryHandler = async entry => {
       let resp = true;
-      if (fn.endsWith('.json')) {
-        const d = await filem.readZipEntry(entry);
+      const fn = entry.filename;
+      console.log('handler:', fn);
+      if (fn.endsWith('dummy.pdf')) {
         try {
-          data = JSON.parse(d);
-        } catch (e) {
-          //
-        }
-      } else if (fn.endsWith('dummy.pdf')) {
-        try {
-          await filem.writeZipEntry(entry, fn, output);
-          resp = false;
-        } catch (e) {
-          //
-        }
-      } else {
-        try {
-          await filem.readZipEntry(entry, fn, output);
+          console.log('saveTo:', fn);
+          await entry.saveTo(outputPath);
           resp = false;
         } catch (e) {
           //
@@ -129,10 +118,22 @@ describe('FileManager', () => {
       return resp;
     };
     const file = await fm.getFile('./__tests__/dataset/valid.zip');
-    const res = await fm.extract(file, './temp-test', handler);
+    const res = await fm.extract(file, {
+      outputPath,
+      pattern: /(^(?!\.))(.+(.png|.jpeg|.jpg|.svg|.pdf|.json))$/i,
+      flattenPath: true,
+      disableSave: true,
+      disableOutput: true,
+      rules: [
+        { pattern: /(^(?!\.))(test.json)$/i, outputContent: true },
+        { pattern: /(^(?!\.))(.+(.png|.jpeg|.jpg|.svg|.pdf))$/i, entryHandler },
+      ],
+    });
 
-    await fsp.rmdir('./temp-test', { recursive: true });
+    // await fsp.rmdir('./temp-test', { recursive: true });
     expect(res.ok).to.equals('Extracted');
+    console.log('res', res);
+    const data = JSON.parse(res.files[0].content.toString());
     expect(data.var).to.equals('value');
   });
 });

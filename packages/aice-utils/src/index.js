@@ -83,16 +83,21 @@ class AIceUtils {
   // eslint-disable-next-line class-methods-use-this
   async handleZipEntry(filename, outputDir, entry, fileManager) {
     const result = { autoDrain: true };
+    console.log('> handleZip Entry', filename);
     if (filename.endsWith('.json')) {
       const raw = await fileManager.readZipEntry(entry, filename, outputDir);
+      console.log('>> raw', filename);
       result.autoDrain = false;
       try {
         result.content = JSON.parse(raw);
+        console.log('>> content', filename);
       } catch (e) {
         result.content = null;
+        console.log('>> error', e);
       }
     } else if (outputDir) {
       await fileManager.writeZipEntry(entry, filename, outputDir);
+      console.log('>> written');
       result.autoDrain = false;
     }
     return result;

@@ -6,7 +6,7 @@
  */
 import fs from 'fs';
 import path from 'path';
-import unzipper from 'unzipper';
+import anzip from 'anzip';
 
 const fsp = fs.promises;
 
@@ -73,7 +73,7 @@ export default class FileManager {
   async readZipEntry(entry, filename, outputDir = this.settings.outputDir) {
     let content;
     if (filename) {
-      this.writeZipEntry(entry, filename, outputDir);
+      await this.writeZipEntry(entry, filename, outputDir);
       const f = path.join(outputDir, filename);
       content = await fsp.readFile(f, content);
     } else {
@@ -83,12 +83,12 @@ export default class FileManager {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async extract(file, outputDir, handler = () => false, matchExtensions = /.+(.png|.jpeg|.jpg|.svg|.pdf|.json)$/i) {
+  async extract(file, opts) {
     let result;
     const { filename } = file;
     if (file.type === 'zip' && file.filename && filename.toLowerCase().endsWith('.zip')) {
       try {
-        await fs
+        /* await fs
           .createReadStream(filename)
           .pipe(unzipper.Parse())
           .on('entry', async entry => {
@@ -108,8 +108,10 @@ export default class FileManager {
               entry.autodrain();
             }
           })
-          .promise();
-        result = { ok: 'Extracted' };
+          .promise(); */
+
+        result = await anzip(filename, opts);
+        result.ok = 'Extracted';
       } catch (error) {
         result = { error: "Can't unzip file" };
       }

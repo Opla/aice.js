@@ -24,6 +24,8 @@ export default class ValueEvaluator {
   }
 
   static evaluateContext(variable, context) {
-    return !variable || variable === '' || context[variable];
+    const v = !variable || variable === '' || context[variable];
+    console.log('evaluate value', variable, v);
+    return v;
   }
 }

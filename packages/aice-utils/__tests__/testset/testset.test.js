@@ -280,7 +280,7 @@ describe('complete tests', () => {
     expect(response.scA.storyA2.result).to.be.equal('ok');
     expect(response.scA.storyA2.count).to.be.equal(2);
   });
-  it('should test context match finalContext #dev', async () => {
+  it('should test context match finalContext', async () => {
     aiceUtils.setAIceClass(AICEClass);
     const agentsManager = aiceUtils.getAgentsManager();
     agentsManager.reset();

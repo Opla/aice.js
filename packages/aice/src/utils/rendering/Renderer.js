@@ -28,6 +28,7 @@ export default class Renderer {
         } else {
           throw new Error('Invalid OutputRendering isRenderable - Unknown expression');
         }
+        console.log('exp', renderable, expression, context);
       }
     }
     return renderable;

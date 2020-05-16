@@ -62,6 +62,9 @@ export default class AgentsManager {
 
   // eslint-disable-next-line class-methods-use-this
   parseValue(match) {
+    if (!match) {
+      return { type: 'VARIABLE', value: null };
+    }
     const isText = match.includes("'") || match.includes('"');
     const value = match.trim();
     return isText ? value.slice(1, -1) : { type: 'VARIABLE', value };
@@ -94,7 +97,12 @@ export default class AgentsManager {
     intents.forEach(intent => {
       const language = intent.language || dataset.language || agent.language || engine.settings.defaultLanguage;
       intent.input.forEach(input => {
-        engine.addInput(language, intent.name, input.text, [], intent.topic);
+        console.log('add Input :', intent.name, input.text, input);
+        let text = input.text || input;
+        if (text) {
+          text = text === '*' ? '{{*}}' : text;
+          engine.addInput(language, intent.name, text, [], intent.topic);
+        }
       });
       intent.output.forEach(output => {
         let callable;
@@ -103,8 +111,13 @@ export default class AgentsManager {
           const { call } = instance;
           callable = call.bind(instance);
         }
+        // console.log('add output :', intent.name, output.text, output);
         if (output.type !== 'condition') {
-          engine.addOutput(language, intent.name, output.text, undefined, undefined, callable);
+          const text = output.text || output;
+          console.log('add output', language, intent.name, text);
+          if (text) {
+            engine.addOutput(language, intent.name, text, undefined, undefined, callable);
+          }
         } else {
           output.children.forEach(conditionOutput => {
             const condition = {
@@ -168,6 +181,7 @@ export default class AgentsManager {
     }
     const currentContext = await agent.getContext(conversationId);
     const language = agent.language || engine.settings.defaultLanguage;
+    console.log('language=', language);
     const response = await engine.evaluate(utterance, currentContext || {}, language);
     await agent.saveContext(conversationId, response.context);
     const ret = {

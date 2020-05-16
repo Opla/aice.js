@@ -58,6 +58,7 @@ export default class TestsManager {
         issues = null;
         // eslint-disable-next-line no-await-in-loop
         response = await aManager.evaluate(agentName, conversationId, message.say);
+        console.log('response=', response.debug.intent);
         // eslint-disable-next-line no-await-in-loop
         context = await aManager.getContext(agentName, conversationId);
         ok = true;

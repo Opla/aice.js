@@ -38,6 +38,7 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
+    "anzip": "^0.1.0",
     "unzipper": "^0.10.5"
   }
 }

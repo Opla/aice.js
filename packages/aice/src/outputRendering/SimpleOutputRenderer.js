@@ -61,11 +61,12 @@ export default class SimpleOutputRenderer extends OutputRenderer {
     if (!output) {
       return undefined;
     }
-
+    // console.log('output=', intentid, output);
     // Retrieve all answers for this lang
     const filteredAnswers = output.answers.filter(a => a.lang === lang);
     let outputIndex = -1;
     let noConditionsMatch = false;
+    // console.log('flitered=', intentid, filteredAnswers);
     const res = await Utils.filterAsync(filteredAnswers, async ans => {
       const { preCallables, conditions, callables } = ans;
 
@@ -87,9 +88,11 @@ export default class SimpleOutputRenderer extends OutputRenderer {
       }
 
       // Final Check Context Evaluation
-      return Renderer.isRenderable(ans.tokenizedOutput, context);
+      const isRend = Renderer.isRenderable(ans.tokenizedOutput, context);
+      console.log('isRend=', isRend);
+      return isRend;
     });
-
+    console.log('res=', res);
     if (res && res.length > 0) {
       let renderResponse;
       const i = Math.floor(Math.random() * Math.floor(res.length));
