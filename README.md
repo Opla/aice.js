@@ -5,7 +5,7 @@
   </a>
 </div>
 <h1 align="center">
-  AIce.js
+  [Deprecated]AIce.js
 </h1>
 
 <div align="center">
